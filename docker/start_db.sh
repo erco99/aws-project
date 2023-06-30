@@ -3,8 +3,8 @@
 
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
-if [ -f .env ]; then
-  export $(cat .env | sed 's/#.*//g' | xargs)
+if [ -f config.env ]; then
+  export $(cat config.env | sed 's/#.*//g' | xargs)
 fi
 
 docker compose -f docker-compose-mongo-db.yml up -d --remove-orphans

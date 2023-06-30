@@ -19,7 +19,7 @@ services:
         mongosh --quiet $${host}/test --eval 'quit(db.runCommand({ ping: 1 }).ok ? 0 : 2)' && echo 0 || echo 1
       interval: 5s
     env_file:
-      - .env
+      - config.env
 
   mongodb-seed:
     image: mongo:latest
@@ -32,4 +32,4 @@ services:
       - ./db-data/:/db-data
     command: /bin/bash -c "mongorestore --host=mongodb -d aws-project-db -c users /db-data/aws-project-db/users.bson"
     env_file:
-      - .env
+      - config.env
