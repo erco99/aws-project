@@ -5,7 +5,7 @@
 # >_ docker compose -f docker-compose-mongo-db.yml up
 # ========================================================
 
-version: '1.0'
+version: '2.2'
 services:
   mongodb:
     image: mongo:latest
