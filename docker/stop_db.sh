@@ -1,2 +1,2 @@
 #!/bin/bash
-docker compose -f docker-compose-mongo-db.yml down --remove-orphans
+docker compose -f docker-compose-mongo-db.yml --env-file=config.env down --remove-orphans
