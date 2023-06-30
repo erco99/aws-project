@@ -22,6 +22,17 @@ if [ -d "${OUTDIR}" ] && [ "$(ls -A ${OUTDIR})" ]; then
 
 fi
 
+if command -v mongodump &> /dev/null; then
+  echo "ERROR: mongodump command not found!"
+  while true; do
+      read -p "Would you like to install it?[Yes/No]" yn
+      case $yn in
+        [Yy]* ) break;;
+        [Nn]* ) exit;;
+        * ) echo "Please answer yer or no.";;
+      esac
+  done
+  pkexec apt-get install -y mongodb-database-tools
+fi
+
 mongodump -d "${DBNAME}" -o "${OUTDIR}"
-
-
