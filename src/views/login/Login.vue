@@ -29,7 +29,7 @@ const submit = handleSubmit(values => {
     <v-row justify="center" align="center">
       <v-col>
         <v-card
-            class="mx-auto pa-5 pb-10"
+            class="mx-auto pa-5 pb-0"
             elevation="1"
             rounded="lg"
             width="400px"
@@ -72,11 +72,29 @@ const submit = handleSubmit(values => {
                   label="Resta connesso"
               ></v-checkbox>
 
-              <v-col class="text-center" cols="12">
+              <a
+                  class="text-caption text-decoration-none text-blue pl-3"
+                  href="#"
+                  rel="noopener noreferrer"
+                  target="_blank">Password dimenticata?</a>
+
+              <v-col class="text-center pt-16" cols="12">
                 <v-btn type="submit" rounded="xl" variant="tonal" size="large">
                   Login
                 </v-btn>
               </v-col>
+
+              <v-card-text class="text-center">
+                <span class="text-medium-emphasis text-subtitle-2">
+                Non sei iscritto?
+                <a
+                  class="text-blue text-decoration-none"
+                  href="#"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                  >Iscriviti <v-icon icon="mdi-chevron-right"></v-icon></a></span>
+              </v-card-text>
+
             </v-form>
           </v-card-text>
         </v-card>
