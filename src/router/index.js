@@ -1,16 +1,10 @@
 import { createRouter, createWebHistory } from "vue-router";
-import HomeView from "../views/HomeView.vue";
 import BookingPanel from "../views/BookingPanel.vue";
 import Login from "../views/login/Login.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
-    {
-      path: "/",
-      name: "home",
-      component: HomeView,
-    },
     {
       path: "/booking-panel",
       name: "booking-panel",
@@ -23,7 +17,7 @@ const router = createRouter({
       path: "/login",
       name: "login",
       component: Login,
-    }
+    },
   ],
 });
 
