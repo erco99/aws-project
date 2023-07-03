@@ -1,6 +1,7 @@
 $scriptDir=$PSScriptRoot
 $outDir="$scriptDir\db-data\"
 $dbName="aws-project-db"
+$mongoConfig = Get-Content ".\config.env" | Out-String | ConvertFrom-StringData
 
 function Prompt() {
     param (
@@ -56,9 +57,9 @@ if (-Not (Where-Object mongodump)) {
         if($YN -match '[Nn]') { Write-Host "No program has been installed, can't save data"; Exit }
         Install-DBTools
     }
-    powershell -Command $scriptDir\utils\db-tools\bin\mongodump.exe -d $dbName -o $outDir
+    powershell -Command $scriptDir\utils\db-tools\bin\mongodump.exe --host=$mongoConfig.MONGO_URL --port=$mongoConfig.MONGO_PORT -d $dbName -o $outDir
 } else {
-    powershell -Command mongodump -d $dbName -o $outDir
+    powershell -Command mongodump --host=$mongoConfig.MONGO_URL --port=$mongoConfig.MONGO_PORT -d $dbName -o $outDir
 }
 
 if ($LASTEXITCODE -ne 0) {

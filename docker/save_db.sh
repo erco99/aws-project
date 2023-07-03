@@ -22,7 +22,7 @@ if [ -d "${OUTDIR}" ] && [ "$(ls -A ${OUTDIR})" ]; then
 
 fi
 
-if command -v mongodump &> /dev/null; then
+if ! command -v mongodump &> /dev/null; then
   echo "ERROR: mongodump command not found!"
   while true; do
       read -p "Would you like to install it?[Yes/No]" yn
@@ -35,4 +35,4 @@ if command -v mongodump &> /dev/null; then
   pkexec apt-get install -y mongodb-database-tools
 fi
 
-mongodump -d "${DBNAME}" -o "${OUTDIR}"
+mongodump --host=${MONGO_URL} --port=${MONGO_PORT} -d "${DBNAME}" -o "${OUTDIR}"
