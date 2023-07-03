@@ -1,5 +1,5 @@
 <script setup>
-import Field from "./Field.vue";
+import Field from "../components/Field.vue";
 </script>
 
 <script>
@@ -7,12 +7,24 @@ export default {
   data() {
     return {
       fields: [
-        "Campo 1",
-        "Campo 2",
-        "Campo 3",
-        "Campo 4",
-        "Campo 5",
-        "Campo 6",
+        {
+          name: "Campo 1",
+        },
+        {
+          name: "Campo 2",
+        },
+        {
+          name: "Campo 3",
+        },
+        {
+          name: "Campo 4",
+        },
+        {
+          name: "Campo 5",
+        },
+        {
+          name: "Campo 6",
+        },
       ],
     };
   },
@@ -22,8 +34,7 @@ export default {
 <template>
   <div class="container-fluid overflow-x-auto">
     <div class="py-2" v-for="field in fields">
-      <h4>{{ field }}</h4>
-      <Field />
+      <Field v-bind="field" />
     </div>
   </div>
 </template>
