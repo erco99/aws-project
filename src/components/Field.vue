@@ -11,7 +11,27 @@
   </div>
   <v-dialog v-model="dialog" scrollable width="auto"
     ><v-card>
-      <v-card-title> Nuova prenotazione </v-card-title>
+      <v-row>
+        <v-col>
+          <v-card-title>
+            {{ name }}
+          </v-card-title>
+          <v-card-subtitle>
+            dalle
+            {{ stringfy(newBooking.hour.hours, newBooking.hour.minutes) }} alle
+            {{ stringfy(newBooking.hour.hours + 1, newBooking.hour.minutes) }}
+          </v-card-subtitle>
+        </v-col>
+        <v-col>
+          <v-card-title class="pb-0 text-center"> 14 </v-card-title>
+          <v-card-subtitle class="text-center"> Mercoledi </v-card-subtitle>
+          <v-card-subtitle class="text-center"> Giugno </v-card-subtitle>
+        </v-col>
+        <v-col>
+          <v-card-title class="pb-0 text-center"> 23C° </v-card-title>
+          <v-card-subtitle class="text-center"> Soleggiato </v-card-subtitle>
+        </v-col>
+      </v-row>
       <v-card-actions>
         <v-btn color="primary" @click="dialog = false">Annulla</v-btn>
         <v-btn color="primary">Prenota ora</v-btn>
