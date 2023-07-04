@@ -1,6 +1,7 @@
-import "./assets/main.css"
+import "./assets/main.css";
 
 import { createApp } from "vue";
+import { createStore } from "vuex";
 import App from "./App.vue";
 import router from "./router";
 
@@ -25,9 +26,20 @@ const vuetify = createVuetify({
   directives,
 });
 
+// -------VUEX STORE---------
+const store = createStore({
+  state() {
+    return {};
+  },
+  mutations: {},
+  getters: {},
+  actions: {},
+});
+
 const app = createApp(App);
 
 app.use(router);
 app.use(vuetify);
+app.use(store);
 
 app.mount("#app");
