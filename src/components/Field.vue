@@ -9,27 +9,52 @@
       {{ stringfy(opening + n - 1, minutes) }}
     </div>
   </div>
-  <v-dialog v-model="dialog" scrollable width="auto"
+  <v-dialog v-model="dialog" scrollable width="800"
     ><v-card>
       <v-row>
-        <v-col>
-          <v-card-title>
+        <v-col cols="12" sm="4">
+          <v-card-title class="text-center text-sm-left">
             {{ name }}
           </v-card-title>
-          <v-card-subtitle>
+          <v-card-subtitle class="text-center text-sm-left">
             dalle
-            {{ stringfy(newBooking.hour.hours, newBooking.hour.minutes) }} alle
+            {{ stringfy(newBooking.hour.hours, newBooking.hour.minutes) }}
+            alle
             {{ stringfy(newBooking.hour.hours + 1, newBooking.hour.minutes) }}
           </v-card-subtitle>
         </v-col>
-        <v-col>
-          <v-card-title class="pb-0 text-center"> 14 </v-card-title>
-          <v-card-subtitle class="text-center"> Mercoledi </v-card-subtitle>
-          <v-card-subtitle class="text-center"> Giugno </v-card-subtitle>
+        <v-col cols="12" sm="4">
+          <v-card-title class="text-center"> 14 </v-card-title>
+          <v-card-subtitle class="text-center">
+            Mercoledì <br />
+            Giugno
+          </v-card-subtitle>
         </v-col>
-        <v-col>
-          <v-card-title class="pb-0 text-center"> 23C° </v-card-title>
-          <v-card-subtitle class="text-center"> Soleggiato </v-card-subtitle>
+        <v-col cols="12" sm="4">
+          <v-card-title class="text-center text-sm-right">
+            23&deg;C
+          </v-card-title>
+          <v-card-subtitle class="text-center text-sm-right">
+            Soleggiato
+          </v-card-subtitle>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col cols="12" sm="4">
+          <v-card-text class="text-center">Durata</v-card-text>
+          <v-card-text class="text-center">Cosa vuoi prenotare?</v-card-text>
+        </v-col>
+        <v-col cols="12" sm="4">
+          <v-card-text class="text-center"
+            >Quali servizi vuoi attivare?</v-card-text
+          >
+          <v-card-text class="text-center"
+            >Totale costo prenotazione</v-card-text
+          >
+          <v-card-text class="text-center">Saldo disponibile</v-card-text>
+        </v-col>
+        <v-col cols="12" sm="4">
+          <v-card-text class="text-center">Con chi giochi?</v-card-text>
         </v-col>
       </v-row>
       <v-card-actions>
