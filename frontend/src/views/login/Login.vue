@@ -1,29 +1,3 @@
-<script setup>
-import {ref} from 'vue'
-import {useField, useForm} from 'vee-validate'
-
-const {handleSubmit, handleReset} = useForm({
-  validationSchema: {
-    email (value) {
-      if (/^[a-z.-]+@[a-z.-]+\.[a-z]+$/i.test(value)) return true
-      return 'L\'email deve essere valida.'
-    },
-    password (value) {
-      if (value?.length >= 8) return true
-      return 'La password deve contenere almeno 8 caratteri'
-    }
-  },
-})
-const email = useField('email')
-const password = useField('password')
-const stayConnected = useField('checkbox')
-stayConnected.value.value = false
-
-const submit = handleSubmit(values => {
-  console.log(JSON.stringify(values, null, 2))
-})
-</script>
-
 <template>
   <v-container class="fill-height">
     <v-row justify="center" align="center">
@@ -67,7 +41,7 @@ const submit = handleSubmit(values => {
 
               <v-checkbox
                   class="pt-n10"
-                  v-model="stayConnected.value.value"
+                  v-model="staySignedIn"
                   type="checkbox"
                   label="Resta connesso"
               ></v-checkbox>
@@ -104,11 +78,36 @@ const submit = handleSubmit(values => {
 </template>
 
 <script>
+import {ref} from "vue";
+import {useField, useForm} from 'vee-validate'
 export default {
   data: () => ({
     visible: false,
   }),
+  setup() {
+    const {handleSubmit, handleReset} = useForm({
+      validationSchema: {
+        email (value) {
+          if (/^[a-z.-]+@[a-z.-]+\.[a-z]+$/i.test(value)) return true
+          return 'L\'email deve essere valida.'
+        },
+        password (value) {
+          if (value?.length >= 8) return true
+          return 'La password deve contenere almeno 8 caratteri'
+        }
+      },
+    })
+    const email = useField('email')
+    const password = useField('password')
+
+    const staySignedIn = ref(false);
+
+    const submit = handleSubmit(values => {
+      console.log(JSON.stringify(values, null, 2))
+      console.log(staySignedIn.value)
+    })
+
+    return {email, password, staySignedIn, submit, handleSubmit}
+  }
 }
 </script>
-
-<style></style>
