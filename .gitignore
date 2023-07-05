@@ -7,7 +7,7 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-backend/docker/utils
+backend/docker/utils/db-tools/
 frontend/node_modules
 backend/node_modules
 .DS_Store
