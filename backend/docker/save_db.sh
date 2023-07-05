@@ -2,7 +2,6 @@
 
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 OUTDIR="${SCRIPT_DIR}/db-data"
-DBNAME="aws-project-db"
 
 if [ -d "${OUTDIR}" ] && [ "$(ls -A ${OUTDIR})" ]; then
     echo "Output directory is not empty, found data inside:"
@@ -35,4 +34,4 @@ if ! command -v mongodump &> /dev/null; then
   pkexec apt-get install -y mongodb-database-tools
 fi
 
-mongodump --host=${MONGO_URL} --port=${MONGO_PORT} -d "${DBNAME}" -o "${OUTDIR}"
+mongodump --host=${MONGO_URL} --port=${MONGO_PORT} -d "${DB_NAME}" -o "${OUTDIR}"
