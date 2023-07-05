@@ -3,11 +3,11 @@ require('dotenv').config({path: join(__dirname, "docker", "config.env")})
 
 const express = require('express');
 const mongoose = require('mongoose');
-const connectDB = require('./config/database');
+const db_config = require('./src/configs/db_config');
 const server = express();
 const port = 10000;
 
-connectDB()
+mongoose.connect(db_config.connection.uri)
     .then(() => console.log("Mongodb connected successfully"))
     .catch(console.error);
 
