@@ -24,6 +24,15 @@ const vuetify = createVuetify({
   },
   components,
   directives,
+  display: {
+    thresholds: {
+      xs: 0,
+      sm: 340,
+      md: 540,
+      lg: 800,
+      xl: 1280,
+    },
+  }
 });
 
 // -------VUEX STORE---------
