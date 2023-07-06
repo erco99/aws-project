@@ -5,11 +5,12 @@
       role="button"
       class="border border-dark p-2 bg-success"
       v-for="n in closing - opening + 1"
+      :key="n"
       @click="book({ hours: opening + n - 1, minutes: minutes })">
       {{ stringfy(opening + n - 1, minutes) }}
     </div>
   </div>
-  <v-dialog v-model="dialog" scrollable width="800"
+  <v-dialog v-model="dialog" scrollable width="1024"
     ><v-card>
       <v-row>
         <v-col cols="12" sm="4">
@@ -40,21 +41,61 @@
         </v-col>
       </v-row>
       <v-row>
-        <v-col cols="12" sm="4">
+        <v-col cols="12" md="4">
           <v-card-text class="text-center">Durata</v-card-text>
+          <v-row>
+            <v-col cols="2"></v-col>
+            <v-col cols="8">
+              <v-radio-group v-model="howManyBooks" inline>
+                <v-radio label="1 Ora" value="1"></v-radio>
+                <v-spacer></v-spacer>
+                <v-radio label="2 Ore" value="2"></v-radio>
+              </v-radio-group>
+            </v-col>
+            <v-col cols="2"></v-col>
+          </v-row>
           <v-card-text class="text-center">Cosa vuoi prenotare?</v-card-text>
+          <v-row>
+            <v-col cols="2"></v-col>
+            <v-col cols="8">
+              <v-radio-group v-model="singleOrDouble" inline>
+                <v-radio label="Singolo" value="single"></v-radio>
+                <v-spacer></v-spacer>
+                <v-radio label="Doppio" value="double"></v-radio>
+              </v-radio-group>
+            </v-col>
+            <v-col cols="2"></v-col>
+          </v-row>
         </v-col>
-        <v-col cols="12" sm="4">
+        <v-col cols="12" md="4">
           <v-card-text class="text-center"
             >Quali servizi vuoi attivare?</v-card-text
           >
+          <v-row>
+            <v-col cols="3" sm="1"></v-col>
+            <v-col cols="6" sm="10">
+              <v-switch hide-details label="Illuminazione"></v-switch>
+              <v-switch hide-details label="Riscaldamento"></v-switch>
+            </v-col>
+            <v-col cols="3" sm="1"></v-col>
+          </v-row>
           <v-card-text class="text-center"
             >Totale costo prenotazione</v-card-text
           >
           <v-card-text class="text-center">Saldo disponibile</v-card-text>
         </v-col>
-        <v-col cols="12" sm="4">
+        <v-col cols="12" md="4">
           <v-card-text class="text-center">Con chi giochi?</v-card-text>
+          <v-row>
+            <v-col cols="2"></v-col>
+            <v-col cols="8" class="px-0">
+              <v-combobox
+                label="Combobox"
+                :items="['Giacomo Romagnoli']"
+                variant="outlined"></v-combobox>
+            </v-col>
+            <v-col cols="2"></v-col>
+          </v-row>
         </v-col>
       </v-row>
       <v-card-actions>
@@ -79,6 +120,8 @@ export default {
         hour: {},
       },
       dialog: false,
+      howManyBooks: 0,
+      singleOrDouble: "",
     };
   },
   methods: {
@@ -95,9 +138,12 @@ export default {
       return String(hours).concat(":", String(minutes));
     },
     book(hour) {
+      this.singleOrDouble = "";
+      this.howManyBooks = 0;
       this.newBooking.hour = hour;
       this.dialog = true;
     },
   },
 };
 </script>
+<style></style>

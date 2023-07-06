@@ -51,7 +51,7 @@ export default {
 
 <template>
   <div class="container-fluid overflow-x-auto">
-    <div class="py-2" v-for="field in fields">
+    <div class="py-2" v-for="field in fields" :key="field.name">
       <Field v-bind="field" />
     </div>
   </div>
