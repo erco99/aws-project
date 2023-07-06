@@ -25,11 +25,8 @@
           </v-card-subtitle>
         </v-col>
         <v-col cols="12" sm="4">
-          <v-card-title class="text-center"> 14 </v-card-title>
-          <v-card-subtitle class="text-center">
-            Mercoledì <br />
-            Giugno
-          </v-card-subtitle>
+          <v-card-title class="text-center"> 14 Giugno </v-card-title>
+          <v-card-subtitle class="text-center"> Mercoledì </v-card-subtitle>
         </v-col>
         <v-col cols="12" sm="4">
           <v-card-title class="text-center text-sm-right">
@@ -41,60 +38,50 @@
         </v-col>
       </v-row>
       <v-row>
-        <v-col cols="12" md="4">
+        <v-col cols="12" sm="4">
           <v-card-text class="text-center">Durata</v-card-text>
-          <v-row>
-            <v-col cols="2"></v-col>
-            <v-col cols="8">
-              <v-radio-group v-model="howManyBooks" inline>
+          <v-row class="justify-center">
+            <v-col style="min-width: 120px" class="flex-grow-0">
+              <v-radio-group v-model="howManyBooks">
                 <v-radio label="1 Ora" value="1"></v-radio>
-                <v-spacer></v-spacer>
                 <v-radio label="2 Ore" value="2"></v-radio>
               </v-radio-group>
             </v-col>
-            <v-col cols="2"></v-col>
           </v-row>
           <v-card-text class="text-center">Cosa vuoi prenotare?</v-card-text>
-          <v-row>
-            <v-col cols="2"></v-col>
-            <v-col cols="8">
-              <v-radio-group v-model="singleOrDouble" inline>
+          <v-row class="justify-center">
+            <v-col style="min-width: 130px" class="flex-grow-0">
+              <v-radio-group v-model="singleOrDouble">
                 <v-radio label="Singolo" value="single"></v-radio>
-                <v-spacer></v-spacer>
                 <v-radio label="Doppio" value="double"></v-radio>
               </v-radio-group>
             </v-col>
-            <v-col cols="2"></v-col>
           </v-row>
         </v-col>
-        <v-col cols="12" md="4">
+        <v-col cols="12" sm="4">
           <v-card-text class="text-center"
             >Quali servizi vuoi attivare?</v-card-text
           >
-          <v-row>
-            <v-col cols="3" sm="1"></v-col>
-            <v-col cols="6" sm="10">
+          <v-row class="justify-center">
+            <v-col style="min-width: 180px" class="flex-grow-0">
               <v-switch hide-details label="Illuminazione"></v-switch>
               <v-switch hide-details label="Riscaldamento"></v-switch>
             </v-col>
-            <v-col cols="3" sm="1"></v-col>
           </v-row>
           <v-card-text class="text-center"
             >Totale costo prenotazione</v-card-text
           >
           <v-card-text class="text-center">Saldo disponibile</v-card-text>
         </v-col>
-        <v-col cols="12" md="4">
+        <v-col cols="12" sm="4">
           <v-card-text class="text-center">Con chi giochi?</v-card-text>
-          <v-row>
-            <v-col cols="2"></v-col>
-            <v-col cols="8" class="px-0">
+          <v-row class="justify-center">
+            <v-col cols="10">
               <v-combobox
                 label="Combobox"
                 :items="['Giacomo Romagnoli']"
                 variant="outlined"></v-combobox>
             </v-col>
-            <v-col cols="2"></v-col>
           </v-row>
         </v-col>
       </v-row>
