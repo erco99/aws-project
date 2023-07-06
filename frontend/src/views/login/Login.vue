@@ -11,7 +11,7 @@
             max-width="400px"
         >
           <v-card-text>
-            <v-form @submit.prevent="submit">
+            <v-form @submit.prevent="submitForm">
 
               <div class="text-center text-medium-emphasis text-subtitle-1 font-weight-bold">ASD Forum Tennis</div>
 
@@ -81,6 +81,7 @@
 import {ref} from "vue";
 import {useField, useForm} from 'vee-validate'
 export default {
+  inject: ['axios'],
   data: () => ({
     visible: false,
   }),
@@ -102,12 +103,18 @@ export default {
 
     const staySignedIn = ref(false);
 
-    const submit = handleSubmit(values => {
-      console.log(JSON.stringify(values, null, 2))
-      console.log(staySignedIn.value)
-    })
+    /*const submit = handleSubmit(values => {
+      const data = JSON.stringify(values, null, 2)
+      this.formSubmit(data);
+    })*/
 
-    return {email, password, staySignedIn, submit, handleSubmit}
-  }
+    return {email, password, staySignedIn, handleSubmit}
+  },
+  methods: {
+    submitForm: function () {
+      console.log(this.email.value.value);
+      this.axios.post('/login', JSON.stringify({email: this.email.value.value}));
+    }
+  },
 }
 </script>

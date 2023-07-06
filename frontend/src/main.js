@@ -4,6 +4,7 @@ import { createApp } from "vue";
 import { createStore } from "vuex";
 import App from "./App.vue";
 import router from "./router";
+import axios from "./plugins/axios";
 
 import "vuetify/styles";
 import { createVuetify } from "vuetify";
@@ -50,5 +51,8 @@ const app = createApp(App);
 app.use(router);
 app.use(vuetify);
 app.use(store);
+
+// Axios
+app.use(axios);
 
 app.mount("#app");
