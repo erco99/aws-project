@@ -15,9 +15,6 @@ mongoose.connect(db_config.connection.uri)
     .then(() => console.log("Mongodb connected successfully"))
     .catch(console.error);
 
-// CORS
-server.use(cors(corsOptions));
-
 // Allow credentials
 server.use(credentials);
 
