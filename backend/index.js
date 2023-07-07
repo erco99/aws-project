@@ -7,16 +7,12 @@ const db_config = require('./src/configs/db_config');
 const login = require('./src/routes/login');
 const cors = require('cors');
 const corsOptions = require('./src/configs/cors');
-const credentials = require('./src/middlewares/credentials')
 const server = express();
 const port = 10000;
 
 mongoose.connect(db_config.connection.uri)
     .then(() => console.log("Mongodb connected successfully"))
     .catch(console.error);
-
-// Allow credentials
-server.use(credentials);
 
 // Register login route
 server.use("/login", cors(corsOptions), login);
