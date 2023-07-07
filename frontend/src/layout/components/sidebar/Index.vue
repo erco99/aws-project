@@ -2,8 +2,9 @@
   <v-navigation-drawer
     v-model="drawer"
     :rail="rail"
-    permanent
-    @click="rail = false"
+    :temporary="temporary"
+    :permanent="permanent"
+    @click="rail = !rail"
   >
     <v-list-item
       prepend-avatar="https://randomuser.me/api/portraits/men/85.jpg"
@@ -38,7 +39,10 @@ export default {
       { text: "Audience", icon: "mdi-account" },
       { text: "Conversions", icon: "mdi-flag" },
     ],
-    drawer: true
+    drawer: true,
+    permanent: false,
+    temporary: false,
+    rail: false
   }),
   mounted() { 
     this.emitter.on("toggle-sidebar", drawer => {
@@ -46,14 +50,27 @@ export default {
     });
     this.$nextTick(() => {
       window.addEventListener('resize', this.onResize);
-    })
+    });
+    if(this.$vuetify.display.xs) {
+        this.drawer = false;
+        this.temporary = true;
+        this.permanent = false;
+      } else {
+        this.drawer = true;
+        this.temporary = false;
+        this.permanent = true;
+      }
   },
   methods: {
     onResize() {
       if(this.$vuetify.display.xs) {
         this.drawer = false;
+        this.temporary = true;
+        this.permanent = false;
       } else {
         this.drawer = true;
+        this.temporary = false;
+        this.permanent = true;
       }
     }
   }
