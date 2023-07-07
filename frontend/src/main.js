@@ -5,6 +5,7 @@ import { createStore } from "vuex";
 import App from "./App.vue";
 import router from "./router";
 import axios from "./plugins/axios";
+import mitt from 'mitt';
 
 import "vuetify/styles";
 import { createVuetify } from "vuetify";
@@ -27,11 +28,11 @@ const vuetify = createVuetify({
   directives,
   display: {
     thresholds: {
-      xs: 0,
-      sm: 340,
-      md: 540,
-      lg: 800,
-      xl: 1280,
+      xs: 600,
+      sm: 960,
+      md: 1280,
+      lg: 1920,
+      xl: 2560,
     },
   }
 });
@@ -46,6 +47,8 @@ const store = createStore({
   actions: {},
 });
 
+const emitter = mitt();
+
 const app = createApp(App);
 
 app.use(router);
@@ -54,5 +57,7 @@ app.use(store);
 
 // Axios
 app.use(axios);
+
+app.config.globalProperties.emitter = emitter;
 
 app.mount("#app");
