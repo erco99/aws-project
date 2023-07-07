@@ -1,24 +1,31 @@
 <template>
-  <div>
-    <v-navigation-drawer
-      absolute
-      left
-      class="blue lighten-5 px-3 py-3"
-      v-model="drawer"
+  <v-navigation-drawer
+    v-model="drawer"
+    :rail="rail"
+    permanent
+    @click="rail = false"
+  >
+    <v-list-item
+      prepend-avatar="https://randomuser.me/api/portraits/men/85.jpg"
+      title="John Leider"
+      nav
     >
-      <v-list dense class="pt-0">
-        <v-list-tile>
-          <v-list-tile-action>
-            <v-icon>dashboard</v-icon>
-          </v-list-tile-action>
+      <template v-slot:append>
+        <v-btn
+          variant="text"
+          icon="mdi-chevron-left"
+          @click.stop="rail = !rail"
+        ></v-btn>
+      </template>
+    </v-list-item>
 
-          <v-list-tile-content>
-            <v-list-tile-title>Home</v-list-tile-title>
-          </v-list-tile-content>
-        </v-list-tile>
-      </v-list>
-    </v-navigation-drawer>
-  </div>
+    <v-divider></v-divider>
+    <v-list density="compact" nav>
+      <v-list-item prepend-icon="mdi-home-city" title="Home" value="home"></v-list-item>
+      <v-list-item prepend-icon="mdi-account" title="My Account" value="account"></v-list-item>
+      <v-list-item prepend-icon="mdi-account-group-outline" title="Users" value="users"></v-list-item>
+    </v-list>
+  </v-navigation-drawer>
 </template>
 
 <script>
@@ -31,6 +38,24 @@ export default {
       { text: "Audience", icon: "mdi-account" },
       { text: "Conversions", icon: "mdi-flag" },
     ],
+    drawer: true
   }),
+  mounted() { 
+    this.emitter.on("toggle-sidebar", drawer => {
+      this.drawer = drawer;
+    });
+    this.$nextTick(() => {
+      window.addEventListener('resize', this.onResize);
+    })
+  },
+  methods: {
+    onResize() {
+      if(this.$vuetify.display.xs) {
+        this.drawer = false;
+      } else {
+        this.drawer = true;
+      }
+    }
+  }
 };
 </script>
