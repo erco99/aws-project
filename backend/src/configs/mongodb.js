@@ -1,4 +1,4 @@
-const db_config = {
+const mongodbConfig = {
     connection: {
         host: process.env.MONGO_URL,
         port: process.env.MONGO_PORT,
@@ -9,4 +9,4 @@ const db_config = {
     },
 }
 
-module.exports = db_config;
+module.exports = mongodbConfig;
