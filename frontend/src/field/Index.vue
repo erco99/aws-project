@@ -1,7 +1,7 @@
 <script setup>
 import Header from "./components/dialog/Header.vue";
 import Body from "./components/dialog/Body.vue";
-import { stringfy } from "./commons";
+import { stringfy, defaultDuration, defaultMatch } from "./commons";
 </script>
 
 <script>
@@ -14,13 +14,23 @@ export default {
   },
   data() {
     return {
+      duration: Number(defaultDuration),
+      match: defaultMatch,
       newBooking: {
         hour: {},
+        owner: "",
+        players: [],
       },
       dialog: false,
     };
   },
   methods: {
+    reset() {
+      this.duration = Number(defaultDuration);
+      this.match = defaultMatch;
+      this.newBooking.players = [];
+      this.newBooking.hour = {};
+    },
     book(hour) {
       this.newBooking.hour = hour;
       this.dialog = true;
@@ -41,16 +51,28 @@ export default {
       {{ stringfy(opening + n - 1, minutes) }}
     </div>
   </div>
-  <v-dialog v-model="dialog" scrollable width="1024"
+  <v-dialog @update:modelValue="reset" v-model="dialog" scrollable width="1024"
     ><v-card>
       <Header
         :hours="newBooking.hour.hours"
         :minutes="newBooking.hour.minutes"
         :name="name"></Header>
-      <Body></Body>
+      <Body
+        next
+        @duration-update="(value) => (duration = value)"
+        @match-update="(value) => (match = value)"></Body>
       <v-card-actions class="justify-center">
-        <v-btn color="primary" @click="dialog = false">Annulla</v-btn>
-        <v-btn color="primary">Prenota ora</v-btn>
+        <v-btn
+          color="primary"
+          @click="
+            dialog = false;
+            reset();
+          "
+          >Annulla</v-btn
+        >
+        <v-btn color="primary" @click="console.log(duration, match, newBooking)"
+          >Prenota ora</v-btn
+        >
       </v-card-actions>
     </v-card>
   </v-dialog>

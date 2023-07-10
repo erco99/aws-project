@@ -10,3 +10,6 @@ export function stringfy(hours, minutes) {
   }
   return String(hours).concat(":", String(minutes));
 }
+
+export const defaultDuration = "1";
+export const defaultMatch = "single";
