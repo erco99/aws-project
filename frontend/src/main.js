@@ -1,8 +1,8 @@
 import "./assets/main.css";
 
 import { createApp } from "vue";
-import { createStore } from "vuex";
 import App from "./App.vue";
+import store from './store'
 import router from "./router";
 import axios from "./plugins/axios";
 import mitt from 'mitt';
@@ -35,16 +35,6 @@ const vuetify = createVuetify({
       xl: 2560,
     },
   }
-});
-
-// -------VUEX STORE---------
-const store = createStore({
-  state() {
-    return {};
-  },
-  mutations: {},
-  getters: {},
-  actions: {},
 });
 
 const emitter = mitt();
