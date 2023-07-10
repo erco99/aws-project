@@ -5,7 +5,8 @@
         <v-col>
           <v-sheet class="pa-2 ma-2" v-if="this.$vuetify.display.xs">
             <v-app-bar-nav-icon 
-            @click.stop="toggleSidebar"></v-app-bar-nav-icon>
+              @click.stop="toggleSidebar">
+            </v-app-bar-nav-icon>
           </v-sheet>
         </v-col>
         <v-col>

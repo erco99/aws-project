@@ -4,7 +4,7 @@
     :rail="rail"
     :temporary="temporary"
     :permanent="permanent"
-    @click="rail = !rail"
+    @click="railNotMobile"
   >
     <v-list-item
       prepend-avatar="https://randomuser.me/api/portraits/men/85.jpg"
@@ -16,6 +16,7 @@
           variant="text"
           icon="mdi-chevron-left"
           @click.stop="rail = !rail"
+          v-if="this.$vuetify.display.xs != true"
         ></v-btn>
       </template>
     </v-list-item>
@@ -67,10 +68,16 @@ export default {
         this.drawer = false;
         this.temporary = true;
         this.permanent = false;
+        this.rail = false;
       } else {
         this.drawer = true;
         this.temporary = false;
         this.permanent = true;
+      }
+    },
+    railNotMobile() {
+      if(this.$vuetify.display.xs != true) {
+        this.rail = !this.rail
       }
     }
   }
