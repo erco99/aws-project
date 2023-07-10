@@ -1,7 +1,7 @@
 <script setup>
-import East from "./body/est.vue";
-import Middle from "./body/middle.vue";
-import West from "./body/west.vue";
+import East from "./body/Est.vue";
+import Middle from "./body/Middle.vue";
+import West from "./body/West.vue";
 </script>
 <template>
   <v-row>
