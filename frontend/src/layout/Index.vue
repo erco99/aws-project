@@ -11,7 +11,7 @@
         </v-col>
         <v-col>
           <v-sheet class="pa-2 ma-2">
-              NOME
+              {{name}}
           </v-sheet>
         </v-col>
         <v-col >
@@ -34,12 +34,18 @@
 
 <script>
 import { AppMain, Navbar } from "./components/index.js";
+import { mapGetters } from 'vuex'
 
 export default {
   name: "Layout",
   components: {
     AppMain,
     Navbar,
+  },
+  computed: {
+    ...mapGetters([
+      'name'
+    ]),
   },
   data: () => ({
     drawer: true,
