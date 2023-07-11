@@ -1,10 +1,41 @@
+<script>
+export default {
+  emits: ["serviciesUpdate"],
+  props: {
+    inside: Boolean,
+    defaultServicies: Array,
+  },
+  data() {
+    return {
+      servicies: this.defaultServicies,
+    };
+  },
+  methods: {
+    notifyServices(value) {
+      this.$emit("serviciesUpdate", value);
+    },
+  },
+};
+</script>
+
 <template>
   <v-container fluid>
     <v-card-text class="text-center">Quali servizi vuoi attivare?</v-card-text>
     <v-row class="justify-center">
       <v-col style="min-width: 180px" class="flex-grow-0">
-        <v-switch hide-details label="Illuminazione"></v-switch>
-        <v-switch hide-details label="Riscaldamento"></v-switch>
+        <v-switch
+          @update:modelValue="notifyServices"
+          v-model="servicies"
+          value="lighting"
+          hide-details
+          label="Illuminazione"></v-switch>
+        <v-switch
+          :disabled="!inside"
+          @update:modelValue="notifyServices"
+          v-model="servicies"
+          value="heating"
+          hide-details
+          label="Riscaldamento"></v-switch>
       </v-col>
     </v-row>
     <v-card-text class="text-center">Totale costo prenotazione</v-card-text>

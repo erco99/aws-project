@@ -7,10 +7,11 @@ import { stringfy, defaultDuration, defaultMatch } from "./commons";
 <script>
 export default {
   props: {
-    name: String,
-    opening: Number,
-    closing: Number,
-    minutes: Number,
+    inside: Boolean,
+    name: { type: String, required: true },
+    opening: { type: Number, required: true },
+    closing: { type: Number, required: true },
+    minutes: { type: Number, required: true },
   },
   data() {
     return {
@@ -20,6 +21,7 @@ export default {
         hour: {},
         owner: "",
         players: [],
+        servicies: [],
       },
       dialog: false,
     };
@@ -28,12 +30,50 @@ export default {
     reset() {
       this.duration = Number(defaultDuration);
       this.match = defaultMatch;
+      this.newBooking.servicies = [];
       this.newBooking.players = [];
       this.newBooking.hour = {};
     },
     book(hour) {
       this.newBooking.hour = hour;
+      this.newBooking.servicies = this.defaultServices(hour.hours, this.inside);
       this.dialog = true;
+    },
+    defaultServices(time, inside) {
+      const today = new Date();
+      const month = today.getMonth();
+      switch (month) {
+        case 1:
+        case 2:
+        case 10:
+        case 11:
+        case 12:
+          if (inside) {
+            return ["lighting", "heating"];
+          } else if (time >= 17) {
+            return ["lighting"];
+          }
+          return [];
+        case 3:
+        case 4:
+        case 9:
+          if (inside || time >= 18) {
+            return ["lighting"];
+          }
+          return [];
+        case 5:
+        case 8:
+          if (inside || time >= 19) {
+            return ["lighting"];
+          }
+          return [];
+        case 6:
+        case 7:
+          if (inside || time >= 20) {
+            return ["lighting"];
+          }
+          return [];
+      }
     },
   },
 };
@@ -59,8 +99,11 @@ export default {
         :name="name"></Header>
       <Body
         next
+        :inside="inside"
+        :defaultServicies="this.newBooking.servicies"
         @duration-update="(value) => (duration = value)"
-        @match-update="(value) => (match = value)"></Body>
+        @match-update="(value) => (match = value)"
+        @servicies-update="(value) => (newBooking.servicies = value)"></Body>
       <v-card-actions class="justify-center">
         <v-btn
           color="primary"

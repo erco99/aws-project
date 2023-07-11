@@ -18,12 +18,14 @@ export default {
           opening: 8,
           closing: 22,
           minutes: 30,
+          inside: true,
         },
         {
           name: "Campo 3",
           opening: 8,
           closing: 22,
           minutes: 30,
+          inside: true,
         },
         {
           name: "Campo 4",

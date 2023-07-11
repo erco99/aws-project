@@ -6,9 +6,11 @@ import West from "./body/West.vue";
 
 <script>
 export default {
-  emits: ["durationUpdate", "matchUpdate"],
+  emits: ["durationUpdate", "matchUpdate", "serviciesUpdate"],
   props: {
     next: Boolean,
+    inside: Boolean,
+    defaultServicies: Array,
   },
   methods: {
     notifyDuration(value) {
@@ -16,6 +18,9 @@ export default {
     },
     notifyMatch(value) {
       this.$emit("matchUpdate", value);
+    },
+    notifyServices(value) {
+      this.$emit("serviciesUpdate", value);
     },
   },
 };
@@ -30,7 +35,10 @@ export default {
         @match-update="notifyMatch"></East>
     </v-col>
     <v-col cols="12" sm="4">
-      <Middle></Middle>
+      <Middle
+        :inside="inside"
+        :defaultServicies="defaultServicies"
+        @servicies-update="notifyServices"></Middle>
     </v-col>
     <v-col cols="12" sm="4">
       <West></West>
