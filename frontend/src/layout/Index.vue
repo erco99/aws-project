@@ -1,6 +1,6 @@
 <template>
   <v-layout class="rounded rounded-md">
-    <v-app-bar :elevation="1">
+    <v-app-bar :elevation="3">
       <v-row>
         <v-col>
           <v-sheet class="pa-2 ma-2" v-if="this.$vuetify.display.xs">
@@ -23,7 +23,7 @@
 
     </v-app-bar>
     <navbar />   
-    <v-main class="align-center justify-center" style="min-height: 300px">
+    <v-main class="align-center justify-center" style="min-height: 300px; margin:30px">
       <app-main />
     </v-main>
 

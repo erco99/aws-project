@@ -1,10 +1,12 @@
 <template>
   <v-navigation-drawer
+    elevation="3"
     v-model="drawer"
     :rail="rail"
     :temporary="temporary"
     :permanent="permanent"
     @click="railNotMobile"
+    style="margin:15px"
   >
     <v-list-item
       prepend-avatar="https://randomuser.me/api/portraits/men/85.jpg"
