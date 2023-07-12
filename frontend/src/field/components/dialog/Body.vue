@@ -8,7 +8,7 @@ export default {
     Middle,
     West,
   },
-  emits: ["durationUpdate", "matchUpdate", "serviciesUpdate"],
+  emits: ["durationUpdate", "matchUpdate", "serviciesUpdate", "playersUpdate"],
   props: {
     defaultDuration: {
       type: Number,
@@ -46,6 +46,9 @@ export default {
     notifyServices(value) {
       this.$emit("serviciesUpdate", value);
     },
+    notifyPlayers(value) {
+      this.$emit("playersUpdate", value);
+    },
   },
 };
 </script>
@@ -67,7 +70,7 @@ export default {
         @servicies-update="notifyServices"></Middle>
     </v-col>
     <v-col cols="12" sm="4">
-      <West></West>
+      <West @players-update="notifyPlayers"></West>
     </v-col>
   </v-row>
 </template>

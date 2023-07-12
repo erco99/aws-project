@@ -108,7 +108,8 @@ export default {
         :defaultServicies="this.newBooking.servicies"
         @duration-update="(value) => (duration = value)"
         @match-update="(value) => (match = value)"
-        @servicies-update="(value) => (newBooking.servicies = value)"></Body>
+        @servicies-update="(value) => (newBooking.servicies = value)"
+        @players-update="(value) => (newBooking.players = value)"></Body>
       <v-card-actions class="justify-center">
         <v-btn
           color="primary"
