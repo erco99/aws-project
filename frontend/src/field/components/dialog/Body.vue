@@ -36,11 +36,31 @@ export default {
     next: Boolean,
     inside: Boolean,
   },
+  data() {
+    return {
+      duration: this.defaultDuration,
+      match: this.defaultMatch,
+    };
+  },
+  computed: {
+    numberOfPlayers() {
+      switch (this.match) {
+        case "single":
+          return 2;
+        case "double":
+          return 4;
+        default:
+          return 1;
+      }
+    },
+  },
   methods: {
     notifyDuration(value) {
+      this.duration = value;
       this.$emit("durationUpdate", value);
     },
     notifyMatch(value) {
+      this.match = value;
       this.$emit("matchUpdate", value);
     },
     notifyServices(value) {
@@ -67,6 +87,8 @@ export default {
       <Middle
         :inside="inside"
         :defaultServicies="defaultServicies"
+        :duration="duration"
+        :players="numberOfPlayers"
         @servicies-update="notifyServices"></Middle>
     </v-col>
     <v-col cols="12" sm="4">
