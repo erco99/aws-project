@@ -102,8 +102,8 @@ export default {
         :name="name"></Header>
       <Body
         next
-        :defaultDuration="duration"
-        :defaultMatch="match"
+        :defaultDuration="1"
+        defaultMatch="single"
         :inside="inside"
         :defaultServicies="this.newBooking.servicies"
         @duration-update="(value) => (duration = value)"

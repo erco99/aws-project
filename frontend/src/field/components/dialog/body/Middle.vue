@@ -3,7 +3,15 @@ export default {
   emits: ["serviciesUpdate"],
   props: {
     inside: Boolean,
-    defaultServicies: Array,
+    defaultServicies: {
+      type: Array,
+      default: [],
+      validator(value) {
+        return value.every(
+          (element) => element == "lighting" || element == "heating"
+        );
+      },
+    },
   },
   data() {
     return {

@@ -24,9 +24,17 @@ export default {
         return ["single", "double"].includes(value);
       },
     },
+    defaultServicies: {
+      type: Array,
+      default: [],
+      validator(value) {
+        return value.every(
+          (element) => element == "lighting" || element == "heating"
+        );
+      },
+    },
     next: Boolean,
     inside: Boolean,
-    defaultServicies: Array,
   },
   methods: {
     notifyDuration(value) {
