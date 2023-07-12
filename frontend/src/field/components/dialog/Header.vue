@@ -1,9 +1,9 @@
-<script setup>
-import { stringfy } from "../../commons";
-</script>
-
 <script>
+import { stringfy } from "../../commons";
 export default {
+  setup() {
+    return { stringfy };
+  },
   props: {
     name: String,
     hours: Number,

@@ -1,27 +1,37 @@
-<script setup>
-import { defaultDuration, defaultMatch } from "../../../commons";
-</script>
-
 <script>
 export default {
   emits: ["durationUpdate", "matchUpdate"],
   props: {
     next: Boolean,
+    defaultDuration: {
+      type: Number,
+      default: 1,
+      validator(value) {
+        return value == 1 || value == 2;
+      },
+    },
+    defaultMatch: {
+      type: String,
+      default: "single",
+      validator(value) {
+        return ["single", "double"].includes(value);
+      },
+    },
   },
   data() {
     return {
-      duration: defaultDuration,
-      match: defaultMatch,
+      duration: this.defaultDuration,
+      match: this.defaultMatch,
     };
   },
   methods: {
     notifyDuration(value) {
-      this.$emit("durationUpdate", Number(value));
+      this.$emit("durationUpdate", value);
     },
     notifyMatch(value) {
       if (value == "single") {
-        this.duration = "1";
-        this.$emit("durationUpdate", 1);
+        this.duration = 1;
+        this.$emit("durationUpdate", this.duration);
       }
       this.$emit("matchUpdate", value);
     },
@@ -38,11 +48,11 @@ export default {
           @update:modelValue="notifyDuration"
           v-model="duration"
           hide-details>
-          <v-radio label="1 Ora" value="1"></v-radio>
+          <v-radio label="1 Ora" :value="1"></v-radio>
           <v-radio
-            v-if="match == 'double' && next"
+            :disabled="!(next && match == 'double')"
             label="2 Ore"
-            value="2"></v-radio>
+            :value="2"></v-radio>
         </v-radio-group>
       </v-col>
     </v-row>

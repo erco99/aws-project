@@ -1,11 +1,12 @@
-<script setup>
+<script>
 import Header from "./components/dialog/Header.vue";
 import Body from "./components/dialog/Body.vue";
-import { stringfy, defaultDuration, defaultMatch } from "./commons";
-</script>
-
-<script>
+import { stringfy } from "./commons";
 export default {
+  setup() {
+    return { stringfy };
+  },
+  components: { Body, Header },
   props: {
     inside: Boolean,
     name: { type: String, required: true },
@@ -15,8 +16,8 @@ export default {
   },
   data() {
     return {
-      duration: Number(defaultDuration),
-      match: defaultMatch,
+      duration: 0,
+      match: "",
       newBooking: {
         hour: {},
         owner: "",
@@ -28,13 +29,15 @@ export default {
   },
   methods: {
     reset() {
-      this.duration = Number(defaultDuration);
-      this.match = defaultMatch;
+      this.duration = 0;
+      this.match = "";
       this.newBooking.servicies = [];
       this.newBooking.players = [];
       this.newBooking.hour = {};
     },
     book(hour) {
+      this.duration = 1;
+      this.match = "single";
       this.newBooking.hour = hour;
       this.newBooking.servicies = this.defaultServices(hour.hours, this.inside);
       this.dialog = true;
@@ -99,6 +102,8 @@ export default {
         :name="name"></Header>
       <Body
         next
+        :defaultDuration="duration"
+        :defaultMatch="match"
         :inside="inside"
         :defaultServicies="this.newBooking.servicies"
         @duration-update="(value) => (duration = value)"
