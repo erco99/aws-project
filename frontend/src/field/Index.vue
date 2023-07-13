@@ -90,7 +90,8 @@ export default {
       :key="key"
       variant="outlined"
       size="small"
-      >{{ value }}</v-chip
+      :color="value.color"
+      >{{ value.name }}</v-chip
     >
   </div>
   <div class="d-flex">
