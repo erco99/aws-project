@@ -8,7 +8,7 @@ export default {
   },
   components: { Body, Header },
   props: {
-    inside: Boolean,
+    state: { type: Object, default: {} },
     name: { type: String, required: true },
     opening: { type: Number, required: true },
     closing: { type: Number, required: true },
@@ -83,7 +83,17 @@ export default {
 </script>
 
 <template>
-  <h4>{{ name }}</h4>
+  <div class="d-flex align-end mb-2">
+    <v-chip class="mr-2" variant="outlined">{{ name }}</v-chip>
+    <v-chip
+      v-for="(value, key) in state"
+      :key="key"
+      variant="outlined"
+      size="small"
+      :color="value.color"
+      >{{ value.name }}</v-chip
+    >
+  </div>
   <div class="d-flex">
     <div
       role="button"
@@ -104,7 +114,7 @@ export default {
         next
         :defaultDuration="1"
         defaultMatch="single"
-        :inside="inside"
+        :inside="'inside' in this.state"
         :defaultServicies="this.newBooking.servicies"
         @duration-update="(value) => (duration = value)"
         @match-update="(value) => (match = value)"

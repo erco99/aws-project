@@ -18,14 +18,14 @@ export default {
           opening: 8,
           closing: 22,
           minutes: 30,
-          inside: true,
+          state: { inside: { name: "coperto", color: "default" } },
         },
         {
           name: "Campo 3",
           opening: 8,
           closing: 22,
           minutes: 30,
-          inside: true,
+          state: { inside: { name: "coperto", color: "default" } },
         },
         {
           name: "Campo 4",
@@ -44,6 +44,7 @@ export default {
           opening: 8,
           closing: 22,
           minutes: 0,
+          state: { wet: { name: "bagnato", color: "red" } },
         },
       ],
     };
@@ -52,7 +53,7 @@ export default {
 </script>
 
 <template>
-  <div class="container-fluid overflow-x-auto">
+  <div class="overflow-x-auto mr-10">
     <div class="py-2" v-for="field in fields" :key="field.name">
       <Field v-bind="field" />
     </div>
