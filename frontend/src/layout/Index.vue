@@ -1,8 +1,8 @@
 <template>
-  <v-layout class="rounded rounded-md">
+  <v-layout class="rounded rounded-md" style="display: block;">
     <v-app-bar :elevation="3">
       <v-row>
-        <v-col>
+        <v-col cols="1">
           <v-sheet class="pa-2 ma-2" v-if="this.$vuetify.display.xs">
             <v-app-bar-nav-icon 
               @click.stop="toggleSidebar">
@@ -14,7 +14,12 @@
               {{name}}
           </v-sheet>
         </v-col>
-        <v-col >
+        <v-col cols="1">
+          <v-sheet class="pa-2 ma-2" style="float:right">
+            <v-icon icon="mdi-bell"></v-icon>
+          </v-sheet>
+        </v-col>
+        <v-col cols="1">
           <v-sheet class="pa-2 ma-2" style="float:right">
             <v-icon icon="mdi-bell"></v-icon>
           </v-sheet>
@@ -59,3 +64,13 @@ export default {
   }
 };
 </script>
+
+<style>
+.v-col {
+  align-self: center;
+}
+
+.v-col > div {
+  text-align: center;
+}
+</style>
