@@ -74,8 +74,8 @@ export default {
 </script>
 
 <template>
-  <v-row>
-    <v-col cols="12" sm="4">
+  <v-row class="justify-center">
+    <v-col cols="12" md="4" sm="5">
       <Est
         :next="next"
         :defaultMatch="defaultMatch"
@@ -83,7 +83,7 @@ export default {
         @duration-update="notifyDuration"
         @match-update="notifyMatch"></Est>
     </v-col>
-    <v-col cols="12" sm="4">
+    <v-col cols="12" md="4" sm="5">
       <Middle
         :inside="inside"
         :defaultServicies="defaultServicies"
@@ -91,8 +91,10 @@ export default {
         :players="numberOfPlayers"
         @servicies-update="notifyServices"></Middle>
     </v-col>
-    <v-col cols="12" sm="4">
-      <West @players-update="notifyPlayers"></West>
+    <v-col cols="12" md="4" sm="8">
+      <West
+        :players-number="numberOfPlayers - 1"
+        @players-update="notifyPlayers"></West>
     </v-col>
   </v-row>
 </template>
