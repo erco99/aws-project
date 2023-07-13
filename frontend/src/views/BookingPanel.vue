@@ -53,7 +53,7 @@ export default {
 </script>
 
 <template>
-  <div class="overflow-x-auto mr-10">
+  <div class="overflow-x-auto">
     <div class="py-2" v-for="field in fields" :key="field.name">
       <Field v-bind="field" />
     </div>

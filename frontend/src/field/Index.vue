@@ -83,25 +83,27 @@ export default {
 </script>
 
 <template>
-  <div class="d-flex align-end mb-2">
-    <v-chip class="mr-2" variant="outlined">{{ name }}</v-chip>
-    <v-chip
-      v-for="(value, key) in state"
-      :key="key"
-      variant="outlined"
-      size="small"
-      :color="value.color"
-      >{{ value.name }}</v-chip
-    >
-  </div>
-  <div class="d-flex">
-    <div
-      role="button"
-      class="border border-dark p-2 bg-success"
-      v-for="n in closing - opening + 1"
-      :key="n"
-      @click="book({ hours: opening + n - 1, minutes: minutes })">
-      {{ stringfy(opening + n - 1, minutes) }}
+  <div class="fit-content pr-10">
+    <div class="d-flex align-end mb-2 sticky">
+      <v-chip class="mr-2" variant="outlined">{{ name }}</v-chip>
+      <v-chip
+        v-for="(value, key) in state"
+        :key="key"
+        variant="outlined"
+        size="small"
+        :color="value.color"
+        >{{ value.name }}</v-chip
+      >
+    </div>
+    <div class="d-flex">
+      <div
+        role="button"
+        class="border border-dark p-2 bg-success"
+        v-for="n in closing - opening + 1"
+        :key="n"
+        @click="book({ hours: opening + n - 1, minutes: minutes })">
+        {{ stringfy(opening + n - 1, minutes) }}
+      </div>
     </div>
   </div>
   <v-dialog @update:modelValue="reset" v-model="dialog" scrollable width="1024"
@@ -136,3 +138,15 @@ export default {
     </v-card>
   </v-dialog>
 </template>
+
+<style>
+.fit-content {
+  width: fit-content;
+}
+.sticky {
+  width: fit-content;
+  position: sticky;
+  position: -webkit-sticky;
+  left: 0;
+}
+</style>
