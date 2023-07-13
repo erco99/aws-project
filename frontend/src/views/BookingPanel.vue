@@ -12,20 +12,21 @@ export default {
           opening: 8,
           closing: 22,
           minutes: 30,
+          state: { wet: "bagnato" },
         },
         {
           name: "Campo 2",
           opening: 8,
           closing: 22,
           minutes: 30,
-          inside: true,
+          state: { inside: "coperto" },
         },
         {
           name: "Campo 3",
           opening: 8,
           closing: 22,
           minutes: 30,
-          inside: true,
+          state: { inside: "coperto" },
         },
         {
           name: "Campo 4",
