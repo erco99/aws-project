@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import Layout from "../layout/Index.vue";
 import BookingPanel from "../views/BookingPanel.vue";
-import Login from "../views/login/Login.vue";
+import Login from "../views/login/Index.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
