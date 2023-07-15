@@ -14,6 +14,8 @@ mongoose.connect(mongodbConfig.connection.uri)
     .then(() => console.log("Mongodb connected successfully"))
     .catch(console.error);
 
+server.use(express.json());
+
 // Register login route
 server.use("/login", cors(corsOptions), login);
 
