@@ -2,10 +2,28 @@ const User = require('../models/user');
 const jwt = require('jose');
 const bcrypt = require('bcrypt');
 
+async function register(req, res) {
+    const { full_name, email, number, password } = req.body;
+
+    const user = await User.findOne({email});
+    if (user) return res.status(409)
+
+    try {
+        const salt = await bcrypt.genSalt(10);
+        const hash = await bcrypt.hash(password, salt);
+        const [ name, surname ] = full_name.trim().split(/\s+/);
+        await User.create({name, surname, email, number, hash});
+        return res.sendStatus(201)
+    } catch (error) {
+        console.log(error);
+        return res.status(400).json({'message': 'Could not register'})
+    }
+}
+
 async function login(req, res) {
     const { email, password } = req.body;
 
-    const user = await User.findOne({email})
+    const user = await User.findOne({email});
     if (!user) return res.status(401).json({'message': 'Email or password is incorrect'})
 
     const match = await bcrypt.compare(password, user.hash)
@@ -27,8 +45,8 @@ async function login(req, res) {
     user.refresh_token = refreshToken;
     await user.save();
 
-    res.cookie('refresh_token', refreshToken, {httpOnly: true, maxAge: 24*60*60*1000});
-    res.json({'access_token': accessToken});
+    return res.cookie('refresh_token', refreshToken, {httpOnly: true, maxAge: 24*60*60*1000})
+        .json({'access_token': accessToken});
 }
 
-module.exports = { login }
+module.exports = { register, login }
