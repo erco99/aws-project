@@ -3,6 +3,7 @@ const dotenv = require('dotenv')
 dotenv.config({path: join(__dirname, "docker", "config.env")})
 dotenv.config({path: join(__dirname, ".env")})
 
+const cookieParser = require('cookie-parser');
 const express = require('express');
 const mongoose = require('mongoose');
 const mongodbConfig = require('./src/configs/mongodb');
@@ -17,6 +18,8 @@ mongoose.connect(mongodbConfig.connection.uri)
     .catch(console.error);
 
 server.use(express.json());
+
+server.use(cookieParser());
 
 // Register auth routes
 server.use("/auth", cors(corsOptions), auth);

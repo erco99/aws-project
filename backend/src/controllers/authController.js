@@ -45,8 +45,28 @@ async function login(req, res) {
     user.refresh_token = refreshToken;
     await user.save();
 
-    return res.cookie('refresh_token', refreshToken, {httpOnly: true, maxAge: 24*60*60*1000})
+    return res.cookie('refresh_token', refreshToken, {httpOnly: true, maxAge: 24*60*60*1000, sameSite: 'None', secure: true})
         .json({'access_token': accessToken});
 }
 
-module.exports = { register, login }
+async function logout(req, res) {
+    const cookies = req.cookies;
+
+    if (!cookies.refresh_token) return res.sendStatus(204);
+
+    const refreshToken = cookies.refresh_token
+    const user = await User.findOne({refresh_token: refreshToken});
+
+    if(!user) {
+        return res.clearCookie('refresh_token', {httpOnly: true, sameSite: 'None', secure: true})
+            .sendStatus(204);
+    }
+
+    user.refresh_token = null;
+    await user.save();
+
+    return res.clearCookie('refresh_token', {httpOnly: true, sameSite: 'None', secure: true})
+        .sendStatus(204);
+}
+
+module.exports = { register, login, logout }
