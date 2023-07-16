@@ -1,10 +1,12 @@
 const {join} = require('path')
-require('dotenv').config({path: join(__dirname, "docker", "config.env")})
+const dotenv = require('dotenv')
+dotenv.config({path: join(__dirname, "docker", "config.env")})
+dotenv.config({path: join(__dirname, ".env")})
 
 const express = require('express');
 const mongoose = require('mongoose');
 const mongodbConfig = require('./src/configs/mongodb');
-const login = require('./src/routes/login');
+const auth = require('./src/routes/auth');
 const cors = require('cors');
 const corsOptions = require('./src/configs/cors');
 const server = express();
@@ -16,8 +18,8 @@ mongoose.connect(mongodbConfig.connection.uri)
 
 server.use(express.json());
 
-// Register login route
-server.use("/login", cors(corsOptions), login);
+// Register auth routes
+server.use("/auth", cors(corsOptions), auth);
 
 server.listen(port, () => {
     console.log(`Server listening on http://localhost:${port}`);

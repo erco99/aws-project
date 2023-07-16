@@ -57,7 +57,7 @@ export default {
 
     const axios = inject('axios');
     const submit = handleSubmit((values) => {
-      axios.post('/login', values);
+      axios.post('/auth/login', values);
     })
 
     return {email, password, staySignedIn, submit}
