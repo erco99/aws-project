@@ -34,4 +34,8 @@ if ! command -v mongodump &> /dev/null; then
   pkexec apt-get install -y mongodb-database-tools
 fi
 
+if [ -f config.env ]; then
+  export $(cat config.env | sed 's/#.*//g' | xargs)
+fi
+
 mongodump --host=${MONGO_URL} --port=${MONGO_PORT} -d "${DB_NAME}" -o "${OUTDIR}"
