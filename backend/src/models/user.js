@@ -30,13 +30,28 @@ const userSchema = mongoose.Schema(
             required: true
         },
 
-        refresh_token: String
+        refresh_token: {
+            value: {
+                type: String,
+                required: true
+            },
+            iat: {
+                type: Number,
+                required: true
+            }
+        }
     },
     {
         virtuals: {
             full_name: {
                 get() {
                     return this.name + ' ' + this.surname
+                }
+            },
+
+            id: {
+                get(){
+                    return this._id
                 }
             }
         }
