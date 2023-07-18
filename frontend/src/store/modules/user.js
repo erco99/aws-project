@@ -26,7 +26,7 @@ const actions = {
           commit('SET_TOKEN', data.access_token)
           resolve()
         }).catch(error => {
-          reject(error)
+          reject(error.toJSON())
         })
       })
     }

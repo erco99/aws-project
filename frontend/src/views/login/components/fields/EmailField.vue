@@ -1,6 +1,6 @@
 <template>
   <v-text-field
-      class="pt-12"
+      class="pt-4"
       :value="email"
       @input="$emit('update:email', $event.target.value)"
       :error-messages="error"

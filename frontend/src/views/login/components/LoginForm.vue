@@ -2,7 +2,9 @@
   <v-card-text>
     <v-form @submit.prevent="submit">
 
-      <div class="text-center text-medium-emphasis text-subtitle-1 font-weight-bold">ASD Forum Tennis</div>
+      <div class="text-center text-medium-emphasis text-subtitle-1 font-weight-bold pb-10">ASD Forum Tennis</div>
+
+      <v-alert closable text="Incorrect email of password." variant="tonal" color="error" v-model="alert"></v-alert>
 
       <EmailField v-model:email="email.value.value" v-model:error="email.errorMessage.value"></EmailField>
 
@@ -20,8 +22,9 @@
 </template>
 
 <script>
-import { ref, inject } from 'vue';
+import { ref } from 'vue';
 import {useField, useForm} from 'vee-validate';
+import { useStore } from "vuex";
 import EmailField from "@/views/login/components/fields/EmailField.vue";
 import PasswordField from "@/views/login/components/fields/PasswordField.vue";
 import SignUpRef from "@/views/login/components/fields/SignUpRef.vue";
@@ -46,7 +49,7 @@ export default {
           return 'L\'email deve essere valida.'
         },
         password (value) {
-          if (value?.length >= 8) return true
+          if (value?.length >= 4) return true
           return 'La password deve contenere almeno 8 caratteri'
         }
       },
@@ -54,13 +57,25 @@ export default {
     const email = useField('email')
     const password = useField('password')
     const staySignedIn = ref(false);
+    const alert = ref(false);
 
-    const axios = inject('axios');
+   const store = useStore();
     const submit = handleSubmit((values) => {
-      axios.post('/auth/login', values);
+      store.dispatch('user/login', values).then(
+          () => {
+            console.log("Login OK")
+          },
+          (error) => {
+            switch(error.status) {
+              case 401:
+                alert.value = true; break;
+              default:
+                console.log(error.code); break;
+            }
+          })
     })
 
-    return {email, password, staySignedIn, submit}
+    return {email, password, staySignedIn, alert, submit}
   },
 }
 </script>
