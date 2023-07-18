@@ -24,7 +24,6 @@ const actions = {
         login(loginData).then(response => {
           const { data } = response
           commit('SET_TOKEN', data.access_token)
-          setToken(data.token)
           resolve()
         }).catch(error => {
           reject(error)

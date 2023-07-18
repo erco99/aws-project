@@ -6,4 +6,4 @@ export function login(data) {
     method: 'post',
     data
   })
-}sd
+}
