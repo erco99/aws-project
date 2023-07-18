@@ -1,5 +1,4 @@
 const User = require('../models/user');
-const jwt = require('jose');
 const bcrypt = require('bcrypt');
 const { SignJWT, jwtVerify } = require("jose");
 
@@ -7,7 +6,7 @@ async function register(req, res) {
     const { full_name, email, number, password } = req.body;
 
     const user = await User.findOne({email});
-    if (user) return res.status(409)
+    if (user) return res.sendStatus(409)
 
     try {
         const salt = await bcrypt.genSalt(10);
