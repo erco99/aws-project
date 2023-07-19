@@ -1,8 +1,9 @@
 import { login } from '@/api/user'
+import { getToken, setToken, removeToken } from '@/utils/authentication'
 
 const state = {
   name: 'PROVANOME',
-  token: ''
+  token: getToken()
 }
 
 const mutations = {
@@ -24,6 +25,7 @@ const actions = {
         login(loginData).then(response => {
           const { data } = response
           commit('SET_TOKEN', data.access_token)
+          setToken(data.access_token)
           resolve()
         }).catch(error => {
           reject(error.toJSON())
