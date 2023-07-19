@@ -21,7 +21,28 @@
         </v-col>
         <v-col cols="1">
           <v-sheet class="pa-2 ma-2" style="float:right">
-            <v-icon icon="mdi-bell"></v-icon>
+
+          <div class="text-center">
+            <v-menu
+              open-on-hover
+            >
+              <template v-slot:activator="{ props }">
+                <v-icon v-bind="props" icon="mdi-account">
+                  </v-icon>
+              </template>
+
+              <v-list>
+                <v-list-item
+                >
+                <v-btn variant="text">Logout</v-btn>
+                </v-list-item>
+              </v-list>
+            </v-menu>
+
+
+        </div>
+
+
           </v-sheet>
         </v-col>
       </v-row>
@@ -54,7 +75,10 @@ export default {
   },
   data: () => ({
     drawer: true,
-    rail: true
+    rail: true,
+    items: [
+        { title: 'Logout' },
+      ]
   }),
   methods: {
     toggleSidebar() {
