@@ -1,5 +1,5 @@
 <script>
-import { stringfy } from "../../commons";
+import { stringfy } from "../commons";
 export default {
   setup() {
     return { stringfy };
