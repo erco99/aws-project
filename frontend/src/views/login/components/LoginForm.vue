@@ -6,7 +6,7 @@
 
       <v-alert closable text="Incorrect email of password." variant="tonal" color="error" v-model="alert"></v-alert>
 
-      <EmailField v-model:email="email.value.value" v-model:error="email.errorMessage.value"></EmailField>
+      <EmailField v-model:email="email.value.value" v-model:error="email.errorMessage.value">prova</EmailField>
 
       <PasswordField v-model:password="password.value.value" v-model:error="password.errorMessage.value"></PasswordField>
 
@@ -30,6 +30,7 @@ import PasswordField from "@/views/login/components/fields/PasswordField.vue";
 import SignUpRef from "@/views/login/components/fields/SignUpRef.vue";
 import ForgotPassword from "@/views/login/components/fields/ForgotPassword.vue";
 import SubmitButton from "@/views/login/components/fields/SubmitButton.vue";
+import { useRouter } from 'vue-router';
 export default {
   components: {
     EmailField,
@@ -60,10 +61,13 @@ export default {
     const alert = ref(false);
 
    const store = useStore();
+    const router = useRouter();
+
     const submit = handleSubmit((values) => {
       store.dispatch('user/login', values).then(
           () => {
             console.log("Login OK")
+            router.push({ path: '/' })
           },
           (error) => {
             switch(error.status) {
