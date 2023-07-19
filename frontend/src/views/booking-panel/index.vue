@@ -1,54 +1,25 @@
-<script setup>
-import Field from "./components/Field.vue";
-</script>
-
 <script>
+import Field from "./components/Field.vue";
+import { getFields } from "../../api/booking";
 export default {
+  setup() {
+    return { getFields };
+  },
+  mounted() {
+    const fieldsFromDB = getFields();
+    fieldsFromDB.then((result) => {
+      let sorted = result.data;
+      sorted.sort((a, b) => (a.name < b.name ? -1 : a.name == b.name ? 0 : 1));
+      console.log(sorted);
+      this.fields = sorted;
+    });
+  },
   data() {
     return {
-      fields: [
-        {
-          name: "Campo 1",
-          opening: 8,
-          closing: 22,
-          minutes: 30,
-        },
-        {
-          name: "Campo 2",
-          opening: 8,
-          closing: 22,
-          minutes: 30,
-          state: { inside: { name: "coperto", color: "default" } },
-        },
-        {
-          name: "Campo 3",
-          opening: 8,
-          closing: 22,
-          minutes: 30,
-          state: { inside: { name: "coperto", color: "default" } },
-        },
-        {
-          name: "Campo 4",
-          opening: 8,
-          closing: 20,
-          minutes: 0,
-        },
-        {
-          name: "Campo 5",
-          opening: 8,
-          closing: 22,
-          minutes: 0,
-        },
-        {
-          name: "Campo 6",
-          opening: 8,
-          closing: 22,
-          minutes: 0,
-          state: { wet: { name: "bagnato", color: "red" } },
-        },
-      ],
+      fields: [],
     };
   },
+  components: { Field },
 };
 </script>
 

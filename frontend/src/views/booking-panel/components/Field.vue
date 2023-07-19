@@ -8,11 +8,12 @@ export default {
   },
   components: { Body, Header },
   props: {
-    state: { type: Object, default: {} },
+    state: { type: Array, default: [] },
     name: { type: String, required: true },
-    opening: { type: Number, required: true },
-    closing: { type: Number, required: true },
-    minutes: { type: Number, required: true },
+    opening: { type: Object, required: true },
+    closing: { type: Object, required: true },
+    _id: String,
+    surface: String,
   },
   data() {
     return {
@@ -87,22 +88,23 @@ export default {
     <div class="d-flex align-end mb-2 sticky">
       <v-chip class="mr-2" variant="outlined">{{ name }}</v-chip>
       <v-chip
-        v-for="(value, key) in state"
-        :key="key"
+        v-for="(key, index) in state"
+        :key="index"
         variant="outlined"
         size="small"
-        :color="value.color"
-        >{{ value.name }}</v-chip
+        >{{ key }}</v-chip
       >
     </div>
     <div class="d-flex">
       <div
         role="button"
         class="border border-dark p-2 bg-success"
-        v-for="n in closing - opening + 1"
+        v-for="n in closing.hours - opening.hours + 1"
         :key="n"
-        @click="book({ hours: opening + n - 1, minutes: minutes })">
-        {{ stringfy(opening + n - 1, minutes) }}
+        @click="
+          book({ hours: opening.hours + n - 1, minutes: opening.minutes })
+        ">
+        {{ stringfy(opening.hours + n - 1, opening.minutes) }}
       </div>
     </div>
   </div>
