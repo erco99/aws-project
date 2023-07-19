@@ -1,10 +1,49 @@
 const mongoose = require("mongoose");
 
 const fieldSchema = mongoose.Schema({
-  name: String,
+  _id: false,
+  name: { type: String, required: true, unique: true, index: true },
   surface: String,
-  opening: { hours: Number, minutes: Number },
-  closing: { hours: Number, minutes: Number },
+  opening: {
+    type: {
+      _id: false,
+      hours: {
+        type: Number,
+        required: true,
+        validate: {
+          validator: (h) => Number.isInteger(h) && h >= 0 && h <= 23,
+        },
+      },
+      minutes: {
+        type: Number,
+        required: true,
+        validate: {
+          validator: (m) => Number.isInteger(m) && h >= 0 && h <= 59,
+        },
+      },
+    },
+    required: true,
+  },
+  closing: {
+    type: {
+      _id: false,
+      hours: {
+        type: Number,
+        required: true,
+        validate: {
+          validator: (h) => Number.isInteger(h) && h >= 0 && h <= 23,
+        },
+      },
+      minutes: {
+        type: Number,
+        required: true,
+        validate: {
+          validator: (m) => Number.isInteger(m) && h >= 0 && h <= 59,
+        },
+      },
+    },
+    required: true,
+  },
   state: [String],
 });
 

@@ -1,4 +1,5 @@
 const bookings = require("../models/bookings");
+const field = require("../models/field");
 
 async function getWeek(req, res) {
   if (!req.body.hasOwnProperty("day")) {
@@ -46,4 +47,13 @@ async function book(req, res) {
   }
 }
 
-module.exports = { getWeek, book };
+async function getFields(req, res) {
+  try {
+    const fields = await field.find({});
+    res.json(fields);
+  } catch (error) {
+    return res.sendStatus(500);
+  }
+}
+
+module.exports = { getWeek, book, getFields };
