@@ -1,0 +1,21 @@
+{
+  "name": "aws-project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "mongodb": "cd backend/docker && ./start_db.sh",
+    "server": "npm run dev --prefix backend",
+    "backend": "npm-run-all --parallel mongodb server",
+    "frontend": "npm run dev --prefix frontend",
+    "dev": "concurrently \"npm run backend\" \"npm run frontend\""
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "concurrently": "^8.2.0"
+  },
+  "devDependencies": {
+    "npm-run-all": "^4.1.5"
+  }
+}
