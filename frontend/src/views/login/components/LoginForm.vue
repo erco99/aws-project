@@ -57,6 +57,11 @@ export default {
     })
     const email = useField('email')
     const password = useField('password')
+
+    // Default values for debug
+    email.value.value = "enrico.lumini@studio.unibo.it"
+    password.value.value = "123er56"
+
     const staySignedIn = ref(false);
     const alert = ref(false);
 
