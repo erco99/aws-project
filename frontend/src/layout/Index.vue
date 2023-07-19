@@ -34,7 +34,7 @@
               <v-list>
                 <v-list-item
                 >
-                <v-btn variant="text">Logout</v-btn>
+                <v-btn variant="text" @click="handleLogout">Logout</v-btn>
                 </v-list-item>
               </v-list>
             </v-menu>
@@ -82,8 +82,12 @@ export default {
   }),
   methods: {
     toggleSidebar() {
-      this.drawer = !this.drawer,
+      this.drawer = !this.drawer;
       this.emitter.emit("toggle-sidebar", this.drawer);
+    },
+    async handleLogout() {
+      await this.$store.dispatch('user/logout')
+      this.$router.push('/login')
     }
   }
 };

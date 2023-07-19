@@ -1,4 +1,4 @@
-import { login } from '@/api/user'
+import { login, logout } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/authentication'
 
 const state = {
@@ -31,7 +31,19 @@ const actions = {
           reject(error.toJSON())
         })
       })
-    }
+    },
+
+  logout({ commit }) {
+      return new Promise((resolve, reject) => {
+        logout().then(() => {
+          commit('SET_TOKEN', '')
+          removeToken()
+          resolve()
+        }).catch(error => {
+          reject(error)
+        })
+      })
+  }
 }
 
 export default {
