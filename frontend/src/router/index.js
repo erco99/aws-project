@@ -1,15 +1,15 @@
 import { createRouter, createWebHistory } from "vue-router";
 import Layout from "../layout/Index.vue";
-import BookingPanel from "../views/BookingPanel.vue";
+import BookingPanel from "../views/booking-panel/Index.vue";
 import Login from "../views/login/Index.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: '/login',
+      path: "/login",
       component: Login,
-      hidden: true
+      hidden: true,
     },
     {
       path: "/",
@@ -23,8 +23,8 @@ const router = createRouter({
           // this generates a separate chunk (About.[hash].js) for this route
           // which is lazy-loaded when the route is visited.
           component: BookingPanel,
-        }
-      ]
+        },
+      ],
     },
   ],
 });

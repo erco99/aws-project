@@ -1,5 +1,5 @@
 <script setup>
-import Field from "../field/Index.vue";
+import Field from "./components/Field.vue";
 </script>
 
 <script>

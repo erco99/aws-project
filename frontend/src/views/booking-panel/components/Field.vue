@@ -1,6 +1,6 @@
 <script>
-import Header from "./components/dialog/Header.vue";
-import Body from "./components/dialog/Body.vue";
+import Header from "./dialog/Header.vue";
+import Body from "./dialog/Body.vue";
 import { stringfy } from "./commons";
 export default {
   setup() {
