@@ -6,6 +6,8 @@ import store from './store'
 import router from "./router";
 import mitt from 'mitt';
 
+import './permission'
+
 import "vuetify/styles";
 import { createVuetify } from "vuetify";
 import * as components from "vuetify/components";
