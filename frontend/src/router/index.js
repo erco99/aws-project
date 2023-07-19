@@ -7,6 +7,11 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
+      path: '/login',
+      component: Login,
+      hidden: true
+    },
+    {
       path: "/",
       component: Layout,
       redirect: "/booking-panel",
@@ -20,11 +25,6 @@ const router = createRouter({
           component: BookingPanel,
         }
       ]
-    },
-    {
-      path: "/login",
-      name: "login",
-      component: Login,
     },
   ],
 });
