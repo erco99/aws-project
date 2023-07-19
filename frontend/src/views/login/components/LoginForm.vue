@@ -16,7 +16,7 @@
 
       <SubmitButton></SubmitButton>
 
-      <SignUpRef></SignUpRef>
+      <SignUpRef @signup="signup"></SignUpRef>
     </v-form>
   </v-card-text>
 </template>
@@ -65,7 +65,7 @@ export default {
     const staySignedIn = ref(false);
     const alert = ref(false);
 
-   const store = useStore();
+    const store = useStore();
     const router = useRouter();
 
     const submit = handleSubmit((values) => {
@@ -86,6 +86,11 @@ export default {
 
     return {email, password, staySignedIn, alert, submit}
   },
+  methods: {
+    signup: function() {
+      this.$router.push("/signup")
+    }
+  }
 }
 </script>
 

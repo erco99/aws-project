@@ -11,7 +11,9 @@ async function register(req, res) {
     try {
         const salt = await bcrypt.genSalt(10);
         const hash = await bcrypt.hash(password, salt);
-        const [ name, surname ] = full_name.trim().split(/\s+/);
+        const names = full_name.trim().split(/\s+/);
+        const surname = names.pop();
+        const name = names.join(" ");
         await User.create({name, surname, email, number, hash});
         return res.sendStatus(201)
     } catch (error) {

@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import Layout from "../layout/Index.vue";
 import BookingPanel from "../views/booking-panel/Index.vue";
 import Login from "../views/login/Index.vue";
+import SignUp from "@/views/signup/Index.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -10,6 +11,10 @@ const router = createRouter({
       path: "/login",
       component: Login,
       hidden: true,
+    },
+    {
+      path: "/signup",
+      component: SignUp
     },
     {
       path: "/",

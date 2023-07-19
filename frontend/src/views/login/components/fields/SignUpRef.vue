@@ -6,7 +6,17 @@
                     class="text-blue text-decoration-none"
                     href="#"
                     rel="noopener noreferrer"
-                    target="_blank"
+                    @click="signup"
                 >Iscriviti <v-icon icon="mdi-chevron-right"></v-icon></a></span>
   </v-card-text>
 </template>
+
+<script>
+  export default {
+    methods: {
+      signup: function(){
+        this.$emit('signup')
+      }
+    }
+  }
+</script>
