@@ -4,10 +4,14 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "backend-npm-install": "npm install --prefix backend",
+    "backend-npm-run": " npm run dev --prefix backend",
+    "frontend-npm-install": "npm install --prefix frontend",
+    "frontend-npm-run": " npm run dev --prefix frontend",
     "mongodb": "cd backend/docker && ./start_db.sh",
-    "server": "concurrently \"npm install --prefix backend\" \" npm run dev --prefix backend \"",
+    "server": "npm-run-all backend-npm-install backend-npm-run ",
     "backend": "npm-run-all --parallel mongodb server",
-    "frontend": "concurrently \"npm install --prefix frontend\" \"npm run dev --prefix frontend\" ",
+    "frontend": "npm-run-all frontend-npm-install frontend-npm-run ",
     "dev": "concurrently \"npm run backend\" \"npm run frontend\""
   },
   "author": "",
