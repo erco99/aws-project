@@ -8,8 +8,7 @@ pnpm-debug.log*
 lerna-debug.log*
 
 backend/docker/utils/db-tools/
-frontend/node_modules
-backend/node_modules
+node_modules
 .DS_Store
 dist
 dist-ssr
