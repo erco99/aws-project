@@ -14,8 +14,8 @@
     "backend": "npm-run-all --parallel server",  
     "frontend": "npm-run-all frontend-npm-install frontend-npm-run ",
     "dev": "run-script-os",
-    "dev:windows": "concurrently \" mongodb-win \" \"npm run backend\" \"npm run frontend\"",
-    "dev:nix": "concurrently \" mongodb-nix \" \"npm run backend\" \"npm run frontend\" "
+    "dev:windows": "concurrently \"mongodb-win\" \"npm run backend\" \"npm run frontend\"",
+    "dev:nix": "concurrently \"npm run mongodb-nix\" \"npm run backend\" \"npm run frontend\" "
   },
   "author": "",
   "license": "ISC",
