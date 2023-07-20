@@ -10,7 +10,6 @@ export default {
     fieldsFromDB.then((result) => {
       let sorted = result.data;
       sorted.sort((a, b) => (a.name < b.name ? -1 : a.name == b.name ? 0 : 1));
-      console.log(sorted);
       this.fields = sorted;
     });
   },

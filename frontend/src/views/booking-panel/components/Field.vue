@@ -10,8 +10,9 @@ export default {
   props: {
     state: { type: Array, default: [] },
     name: { type: String, required: true },
-    opening: { type: Object, required: true },
-    closing: { type: Object, required: true },
+    opening: { type: Number, required: true },
+    closing: { type: Number, required: true },
+    minutes: { type: Number, required: true },
     _id: String,
     surface: String,
   },
@@ -99,12 +100,10 @@ export default {
       <div
         role="button"
         class="border border-dark p-2 bg-success"
-        v-for="n in closing.hours - opening.hours + 1"
+        v-for="n in closing - opening + 1"
         :key="n"
-        @click="
-          book({ hours: opening.hours + n - 1, minutes: opening.minutes })
-        ">
-        {{ stringfy(opening.hours + n - 1, opening.minutes) }}
+        @click="book({ hours: opening + n - 1, minutes: minutes })">
+        {{ stringfy(opening + n - 1, minutes) }}
       </div>
     </div>
   </div>
