@@ -2,10 +2,10 @@ const bookings = require("../models/bookings");
 const field = require("../models/field");
 
 async function getWeek(req, res) {
-  if (!req.body.hasOwnProperty("day")) {
+  if (!req.query.day) {
     return res.sendStatus(400);
   }
-  const { day } = req.body;
+  const day = req.query.day;
   if (!Date.parse(day)) {
     return res.sendStatus(400);
   }

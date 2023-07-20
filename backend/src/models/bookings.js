@@ -1,12 +1,13 @@
 const mongoose = require("mongoose");
+const field = require("./field");
 
 const booksSchema = mongoose.Schema({
   _id: false,
-  day: { type: Date, required: true, unique: true, index: true },
+  day: { type: Date, required: true },
+  field: { type: String, required: true, ref: field },
   bookings: [
     {
       _id: false,
-      field: { type: String, required: true },
       players: [{ name: String, surname: String, _id: false, id: String }],
       owner: { name: String, surname: String, _id: false, id: String },
       time: {
@@ -29,5 +30,5 @@ const booksSchema = mongoose.Schema({
     },
   ],
 });
-
+booksSchema.index({ day: 1, field: -1 });
 module.exports = mongoose.model("bookings", booksSchema);

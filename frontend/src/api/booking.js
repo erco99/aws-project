@@ -6,3 +6,11 @@ export function getFields() {
     method: "get",
   });
 }
+
+export function getWeek(params) {
+  return request({
+    url: "/booking/week",
+    method: "get",
+    params,
+  });
+}

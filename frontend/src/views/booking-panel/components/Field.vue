@@ -15,6 +15,7 @@ export default {
     minutes: { type: Number, required: true },
     _id: String,
     surface: String,
+    bookings: { type: Array, default: [] },
   },
   data() {
     return {
@@ -30,6 +31,12 @@ export default {
     };
   },
   methods: {
+    booked(hour) {
+      if (this.bookings.some((e) => e.time.hours == hour)) {
+        return "border border-dark p-2 bg-danger";
+      }
+      return "border border-dark p-2 bg-success";
+    },
     reset() {
       this.duration = 0;
       this.match = "";
@@ -99,8 +106,8 @@ export default {
     <div class="d-flex">
       <div
         role="button"
-        class="border border-dark p-2 bg-success"
         v-for="n in closing - opening + 1"
+        :class="booked(opening + n - 1)"
         :key="n"
         @click="book({ hours: opening + n - 1, minutes: minutes })">
         {{ stringfy(opening + n - 1, minutes) }}
