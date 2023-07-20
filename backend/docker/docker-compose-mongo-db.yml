@@ -30,6 +30,8 @@ services:
         condition: service_healthy
     volumes:
       - ./db-data/:/db-data
-    command: /bin/bash -c "mongorestore --host=mongodb -d aws-project-db -c users /db-data/aws-project-db/users.bson"
+    command: /bin/bash -c "mongorestore --host=mongodb -d aws-project-db -c users /db-data/aws-project-db/users.bson &&
+                           mongorestore --host=mongodb -d aws-project-db -c fields /db-data/aws-project-db/fields.bson && 
+                           mongorestore --host=mongodb -d aws-project-db -c bookings /db-data/aws-project-db/bookings.bson"
     env_file:
       - config.env
