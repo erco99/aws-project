@@ -1,12 +1,13 @@
 <script>
 import Header from "./dialog/Header.vue";
 import Body from "./dialog/Body.vue";
+import HourButton from "./HourButton.vue";
 import { stringfy } from "./commons";
 export default {
   setup() {
     return { stringfy };
   },
-  components: { Body, Header },
+  components: { Body, Header, HourButton },
   props: {
     state: { type: Array, default: [] },
     name: { type: String, required: true },
@@ -41,14 +42,16 @@ export default {
     },
   },
   methods: {
-    color(hour) {
-      let style = "border border-dark p-2";
+    hourButtonProps(hour) {
       for (const book of this.currentDayBookings) {
         if (book.time.hours == hour) {
-          return style + " bg-danger";
+          return {
+            text: book.owner.name.concat(" ", book.owner.surname),
+            disabled: true,
+          };
         }
       }
-      return style + " bg-success";
+      return { text: stringfy(hour, this.minutes), disabled: false };
     },
     reset() {
       this.duration = 0;
@@ -117,14 +120,13 @@ export default {
       >
     </div>
     <div class="d-flex">
-      <div
-        role="button"
+      <HourButton
         v-for="n in closing - opening + 1"
-        :class="color(opening + n - 1)"
         :key="n"
-        @click="book({ hours: opening + n - 1, minutes: minutes })">
-        {{ stringfy(opening + n - 1, minutes) }}
-      </div>
+        v-bind="hourButtonProps(opening + n - 1)"
+        @click="
+          book({ hours: opening + n - 1, minutes: minutes })
+        "></HourButton>
     </div>
   </div>
   <v-dialog @update:modelValue="reset" v-model="dialog" scrollable width="1024"
