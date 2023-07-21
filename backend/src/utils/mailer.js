@@ -46,7 +46,8 @@ async function sendEmail(username, userEmail, otp) {
     }
 
     try {
-        await transporter.sendMail(message);
+        const info = await transporter.sendMail(message);
+        console.log("Sent email URL: " + nodemailer.getTestMessageUrl(info))
         transporter.close();
     } catch (error) {
         throw new Error("Error while sending email")
