@@ -30,3 +30,10 @@ export function logout() {
     method: 'post'
   })
 }
+
+export function user() {
+  return request({
+    url: '/auth/user',
+    method: 'get'
+  })
+}

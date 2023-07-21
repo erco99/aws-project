@@ -1,9 +1,10 @@
-import {login, logout, register, verifyOTP} from '@/api/user'
+import {login, logout, register, verifyOTP, user} from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/authentication'
 
 const state = {
   name: 'PROVANOME',
-  token: getToken()
+  token: getToken(),
+  userData: {}
 }
 
 const mutations = {
@@ -12,6 +13,9 @@ const mutations = {
   },
   SET_TOKEN: (state, token) => {
     state.token = token
+  },
+  SET_USER_DATA: (state, userData) => {
+    state.userData = userData
   }
 }
 
@@ -63,6 +67,17 @@ const actions = {
           reject(error)
         })
       })
+  },
+
+  user({ commit }) {
+    return new Promise((resolve, reject) => {
+      user().then((response) => {
+        commit('SET_USER_DATA', response.data.user_data)
+        resolve()
+      }).catch(error => {
+        reject(error)
+      })
+    })
   }
 }
 

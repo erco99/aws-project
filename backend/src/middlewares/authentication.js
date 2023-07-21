@@ -11,8 +11,11 @@ async function authentication(req, res, next) {
         const accessTokenSecret = new TextEncoder().encode(process.env.ACCESS_TOKEN_SECRET);
         try {
             const {payload, protectedHeader} = await jwtVerify(token, accessTokenSecret);
-            User.findOne({_id: payload.id})
-                .then(next())
+            User.findOne({_id: payload.id}, {name: 1, surname: 1, email: 1, number: 1, _id:0})
+                .then(data => {
+                    req.user = data
+                    next()
+                })
                 .catch((err) => {
                     console.log(err)
                     return res.status(401).json({message: "error", code: "unauthenticated-access"})
