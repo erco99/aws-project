@@ -130,4 +130,18 @@ async function refresh(req, res) {
         .json({'access_token': accessToken});
 }
 
-module.exports = { register, verifyOTP, login, logout, refresh }
+async function user(req, res) {
+    const authHeader = req.headers.authorization || req.headers.Authorization
+    const token = authHeader.split(' ')[1]
+    const accessTokenSecret = new TextEncoder().encode(process.env.ACCESS_TOKEN_SECRET);
+    const {payload, protectedHeader} = await jwtVerify(token, accessTokenSecret);
+    User.findOne({_id: payload.id}, {name: 1, surname: 1, email: 1, number: 1, _id:0})
+        .then(user => {
+            return res.status(200).json({user_data: user})
+        }).catch(error => {
+            console.log(error)
+            return res.sendStatus(500)
+        })
+}
+
+module.exports = { register, verifyOTP, login, logout, refresh, user }
