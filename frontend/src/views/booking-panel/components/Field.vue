@@ -30,16 +30,22 @@ export default {
       dialog: false,
     };
   },
+  computed: {
+    currentDayBookings() {
+      for (const bookingDay of this.bookings) {
+        if (bookingDay.day == this.day) {
+          return bookingDay.bookings;
+        }
+      }
+      return [];
+    },
+  },
   methods: {
     color(hour) {
       let style = "border border-dark p-2";
-      for (const bookingDay of this.bookings) {
-        if (bookingDay.day == this.day) {
-          for (const book of bookingDay.bookings) {
-            if (book.time.hours == hour) {
-              return style + " bg-danger";
-            }
-          }
+      for (const book of this.currentDayBookings) {
+        if (book.time.hours == hour) {
+          return style + " bg-danger";
         }
       }
       return style + " bg-success";
