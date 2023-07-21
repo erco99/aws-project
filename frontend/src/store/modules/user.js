@@ -1,4 +1,4 @@
-import { login, logout } from '@/api/user'
+import {login, logout, register, verifyOTP} from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/authentication'
 
 const state = {
@@ -16,22 +16,42 @@ const mutations = {
 }
 
 const actions = {
-    getName( {commit} ) {
-        commit('SET_NAME', 'prova')
-    },
+  getName( {commit} ) {
+      commit('SET_NAME', 'prova')
+  },
 
-    login({ commit }, loginData) {
-      return new Promise((resolve, reject) => {
-        login(loginData).then(response => {
-          const { data } = response
-          commit('SET_TOKEN', data.access_token)
-          setToken(data.access_token)
-          resolve()
-        }).catch(error => {
-          reject(error.toJSON())
-        })
+  register({ commit }, registerData) {
+    return new Promise((resolve, reject) => {
+      register(registerData).then(response => {
+        resolve(response.data)
+      }).catch(error => {
+        reject(error.toJSON())
       })
-    },
+    })
+  },
+
+  verifyOTP({ commit }, otpData) {
+    return new Promise((resolve, reject) => {
+      verifyOTP(otpData).then(() => {
+        resolve()
+      }).catch(error => {
+        reject(error.toJSON())
+      })
+    })
+  },
+
+  login({ commit }, loginData) {
+    return new Promise((resolve, reject) => {
+      login(loginData).then(response => {
+        const { data } = response
+        commit('SET_TOKEN', data.access_token)
+        setToken(data.access_token)
+        resolve()
+      }).catch(error => {
+        reject(error.toJSON())
+      })
+    })
+  },
 
   logout({ commit }) {
       return new Promise((resolve, reject) => {

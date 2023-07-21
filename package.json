@@ -11,7 +11,7 @@
     "mongodb-nix": "cd backend/docker && ./start_db.sh",
     "mongodb-win": "cd backend\\docker && start_db.bat",
     "server": "npm-run-all backend-npm-install backend-npm-run ",
-    "backend": "npm-run-all --parallel server",  
+    "backend": "npm-run-all --parallel server",
     "frontend": "npm-run-all frontend-npm-install frontend-npm-run ",
     "dev": "run-script-os",
     "dev:windows": "concurrently \"npm run mongodb-win\" \"npm run backend\" \"npm run frontend\"",
@@ -23,7 +23,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "concurrently": "^8.2.0"
+    "concurrently": "^8.2.0",
+    "otp-generator": "^4.0.1"
   },
   "devDependencies": {
     "npm-run-all": "^4.1.5",

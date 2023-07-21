@@ -1,6 +1,8 @@
 const User = require('../models/user');
 const bcrypt = require('bcrypt');
 const { SignJWT, jwtVerify } = require("jose");
+const optUtils = require('../utils/otp-utils');
+const { sendEmail } = require('../utils/mailer');
 
 async function register(req, res) {
     const { full_name, email, number, password } = req.body;
@@ -14,12 +16,29 @@ async function register(req, res) {
         const names = full_name.trim().split(/\s+/);
         const surname = names.pop();
         const name = names.join(" ");
+
+        // Save user in db
         await User.create({name, surname, email, number, hash});
-        return res.sendStatus(201)
+
+        // Test otp generation
+        const { otp, otpHash } = await optUtils.generateOTP(email);
+
+        // Send email with OTP
+        await sendEmail(name, email, otp);
+        // Display otp for debug
+        console.log("Generated OTP: " + otp)
+
+        // Send response with optHash as body
+        return res.status(200).json({'otp_hash': otpHash});
     } catch (error) {
         console.log(error);
-        return res.status(400).json({'message': 'Could not register'})
+        return res.status(400).json({'message': 'Could not register'});
     }
+}
+
+async function verifyOTP(req, res) {
+    const isValid = await optUtils.verifyOTP(req.body)
+    return res.sendStatus(isValid ? 200 : 401)
 }
 
 async function login(req, res) {
@@ -111,4 +130,4 @@ async function refresh(req, res) {
         .json({'access_token': accessToken});
 }
 
-module.exports = { register, login, logout, refresh }
+module.exports = { register, verifyOTP, login, logout, refresh }

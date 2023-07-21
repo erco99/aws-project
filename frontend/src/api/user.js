@@ -1,5 +1,21 @@
 import request from '@/utils/request'
 
+export function register(data) {
+  return request({
+    url: '/auth/register',
+    method: 'post',
+    data
+  })
+}
+
+export function verifyOTP(data) {
+  return request({
+    url: '/auth/verifyOTP',
+    method: 'post',
+    data
+  })
+}
+
 export function login(data) {
   return request({
     url: '/auth/login',

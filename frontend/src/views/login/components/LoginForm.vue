@@ -46,7 +46,7 @@ export default {
     const {handleSubmit, handleReset} = useForm({
       validationSchema: {
         email (value) {
-          if (/^[a-z.-]+@[a-z.-]+\.[a-z]+$/i.test(value)) return true
+          if (/^[a-z0-9.-]+@[a-z.-]+\.[a-z]+$/i.test(value)) return true
           return 'L\'email deve essere valida.'
         },
         password (value) {

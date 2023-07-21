@@ -5,6 +5,9 @@ const authController = require('../controllers/authController');
 // Register route
 router.post('/register', authController.register);
 
+// Verify OPT route
+router.post('/verifyOTP', authController.verifyOTP);
+
 // Login route
 router.post('/login', authController.login);
 
