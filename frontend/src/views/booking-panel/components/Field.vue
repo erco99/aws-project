@@ -13,9 +13,9 @@ export default {
     opening: { type: Number, required: true },
     closing: { type: Number, required: true },
     minutes: { type: Number, required: true },
-    _id: String,
     surface: String,
     bookings: { type: Array, default: [] },
+    day: { type: String, default: new Date().toISOString() },
   },
   data() {
     return {
@@ -31,11 +31,18 @@ export default {
     };
   },
   methods: {
-    booked(hour) {
-      if (this.bookings.some((e) => e.time.hours == hour)) {
-        return "border border-dark p-2 bg-danger";
+    color(hour) {
+      let style = "border border-dark p-2";
+      for (const bookingDay of this.bookings) {
+        if (bookingDay.day == this.day) {
+          for (const book of bookingDay.bookings) {
+            if (book.time.hours == hour) {
+              return style + " bg-danger";
+            }
+          }
+        }
       }
-      return "border border-dark p-2 bg-success";
+      return style + " bg-success";
     },
     reset() {
       this.duration = 0;
@@ -107,7 +114,7 @@ export default {
       <div
         role="button"
         v-for="n in closing - opening + 1"
-        :class="booked(opening + n - 1)"
+        :class="color(opening + n - 1)"
         :key="n"
         @click="book({ hours: opening + n - 1, minutes: minutes })">
         {{ stringfy(opening + n - 1, minutes) }}

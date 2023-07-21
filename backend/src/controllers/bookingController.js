@@ -49,7 +49,7 @@ async function book(req, res) {
 
 async function getFields(req, res) {
   try {
-    const fields = await field.find({});
+    const fields = await field.find({}).sort({ name: 1 });
     res.json(fields);
   } catch (error) {
     return res.sendStatus(500);
