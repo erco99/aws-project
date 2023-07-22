@@ -14,7 +14,7 @@
 
       <ForgotPassword></ForgotPassword>
 
-      <SubmitButton></SubmitButton>
+      <SubmitButton :loading="signinButtonLoading"></SubmitButton>
 
       <SignUpRef @signup="signup"></SignUpRef>
     </v-form>
@@ -64,17 +64,20 @@ export default {
 
     const staySignedIn = ref(false);
     const alert = ref(false);
+    const signinButtonLoading = ref(false);
 
     const store = useStore();
     const router = useRouter();
 
     const submit = handleSubmit((values) => {
+      signinButtonLoading.value = true;
       store.dispatch('user/login', values).then(
           () => {
             console.log("Login OK")
             router.push({ path: '/' })
           },
           (error) => {
+            signinButtonLoading.value = false;
             switch(error.status) {
               case 401:
                 alert.value = true; break;
@@ -84,7 +87,7 @@ export default {
           })
     })
 
-    return {email, password, staySignedIn, alert, submit}
+    return {email, password, staySignedIn, alert, submit, signinButtonLoading}
   },
   methods: {
     signup: function() {

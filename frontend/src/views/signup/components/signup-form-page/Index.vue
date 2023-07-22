@@ -5,7 +5,7 @@
 
       <div class="text-center text-medium-emphasis text-subtitle-1 font-weight-bold pb-8 pt-5">ASD Forum Tennis</div>
 
-      <v-alert closable text="L'account esiste già" variant="tonal" color="error" v-model="alert"></v-alert>
+      <v-alert density="compact" closable text="L'account esiste già" variant="tonal" color="error" v-model="alert"></v-alert>
 
       <FullNameField v-model:full_name="full_name.value.value" v-model:error="full_name.errorMessage.value"></FullNameField>
 
@@ -110,6 +110,7 @@
           context.emit('onSubmit', {email: email.value.value, otpHash: responseData.otp_hash});
           console.log("Register OK")
         }).catch(error => {
+          signupButtonLoading.value = false;
           switch (error.status) {
             case 409:
               alert.value = true; break;

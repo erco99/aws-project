@@ -7,7 +7,7 @@
             elevation="3"
             rounded="lg"
             width="400px"
-            :height="step === 1 ? '750px' : step === 2 ? '500px' : '350px'"
+            :min-height="step === 1 ? '750px' : step === 2 ? '500px' : '350px'"
             min-width="400px"
             max-width="400px"
         >

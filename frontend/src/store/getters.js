@@ -4,7 +4,7 @@ const getters = {
   userData: state => state.user.userData,
   userName: state => state.user.userData.name,
   userSurname: state => state.user.userData.surname,
-  userFullname: state => this.userName + " " + this.userSurname,
+  userFullname: state => state.user.userData.name + " " + state.user.userData.surname,
   userEmail: state => state.user.userData.email,
   userNumber: state => state.user.userData.number,
 }

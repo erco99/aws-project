@@ -1,5 +1,5 @@
 <template>
-  <v-layout class="rounded rounded-md" style="display: block;">
+  <v-layout class="rounded rounded-md" style="display: block;" v-if="dataReady" v-model="dataReady">
     <v-app-bar :elevation="3">
       <v-row>
         <v-col cols="1">
@@ -78,7 +78,8 @@ export default {
     rail: true,
     items: [
         { title: 'Logout' },
-      ]
+      ],
+    dataReady: false
   }),
   methods: {
     toggleSidebar() {
@@ -89,6 +90,10 @@ export default {
       await this.$store.dispatch('user/logout')
       this.$router.push('/login')
     }
+  },
+  async beforeMount() {
+    await this.$store.dispatch('user/user')
+    this.dataReady = true;
   }
 };
 </script>

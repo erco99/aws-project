@@ -10,7 +10,7 @@
   >
     <v-list-item
       prepend-avatar="https://randomuser.me/api/portraits/men/85.jpg"
-      title="John Leider"
+      :title="this.$store.getters.userFullname"
       nav
     >
       <template v-slot:append>

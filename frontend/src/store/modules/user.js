@@ -72,6 +72,7 @@ const actions = {
   user({ commit }) {
     return new Promise((resolve, reject) => {
       user().then((response) => {
+        console.log(response.data)
         commit('SET_USER_DATA', response.data.user_data)
         resolve()
       }).catch(error => {
