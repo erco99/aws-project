@@ -1,5 +1,6 @@
-import {login, logout, register, verifyOTP, user} from '@/api/user'
+import {login, logout, register, newOTP, verifyOTP, user, refresh} from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/authentication'
+import store from "@/store";
 
 const state = {
   name: 'PROVANOME',
@@ -34,6 +35,16 @@ const actions = {
     })
   },
 
+  newOTP({ commit }) {
+    return new Promise((resolve, reject) => {
+      newOTP().then(response => {
+        resolve(response.data)
+      }).catch(error => {
+        reject(error.toJSON())
+      })
+    })
+  },
+
   verifyOTP({ commit }, otpData) {
     return new Promise((resolve, reject) => {
       verifyOTP(otpData).then(() => {
@@ -57,6 +68,19 @@ const actions = {
     })
   },
 
+  refresh({ commit }) {
+    return new Promise((resolve, reject) => {
+      refresh().then(response => {
+        const { access_token } = response.data
+        commit('SET_TOKEN', access_token)
+        setToken(access_token)
+        resolve()
+      }).catch(error => {
+        reject(error.toJSON())
+      })
+    })
+  },
+
   logout({ commit }) {
       return new Promise((resolve, reject) => {
         logout().then(() => {
@@ -64,7 +88,7 @@ const actions = {
           removeToken()
           resolve()
         }).catch(error => {
-          reject(error)
+          reject(error.toJSON())
         })
       })
   },
@@ -72,11 +96,10 @@ const actions = {
   user({ commit }) {
     return new Promise((resolve, reject) => {
       user().then((response) => {
-        console.log(response.data)
         commit('SET_USER_DATA', response.data.user_data)
         resolve()
       }).catch(error => {
-        reject(error)
+        reject(error.toJSON())
       })
     })
   }

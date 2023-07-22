@@ -21,8 +21,7 @@ async function authentication(req, res, next) {
                     return res.status(401).json({message: "error", code: "unauthenticated-access"})
                 })
         } catch (error) {
-            console.log(error)
-            return res.status(400).json({message: "error", code: "token-expired"})
+            return res.status(401).json({message: "error", code: "token-expired"})
         }
 
     } else {

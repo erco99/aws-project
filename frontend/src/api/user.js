@@ -8,6 +8,13 @@ export function register(data) {
   })
 }
 
+export function newOTP() {
+  return request({
+    url: 'auth/newOTP',
+    method: 'get'
+  })
+}
+
 export function verifyOTP(data) {
   return request({
     url: '/auth/verifyOTP',
@@ -21,6 +28,13 @@ export function login(data) {
     url: '/auth/login',
     method: 'post',
     data
+  })
+}
+
+export function refresh() {
+  return request({
+    url: '/auth/refresh',
+    method: 'post',
   })
 }
 
