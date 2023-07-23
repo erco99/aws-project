@@ -17,6 +17,13 @@
 
       <OtpField v-model:otp="otp.value.value" v-model:error="otp.errorMessage.value"></OtpField>
 
+      <a
+          class="text-caption text-decoration-none text-blue pl-3"
+          href="#"
+          rel="noopener noreferrer"
+          target="_blank">Reinvia OTP
+      </a>
+
       <VerifyButton></VerifyButton>
     </v-form>
   </v-card-text>
