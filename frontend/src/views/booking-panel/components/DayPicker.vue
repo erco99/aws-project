@@ -1,32 +1,17 @@
 <script>
+import { dayToString, monthToString } from "./commons";
 export default {
+  emits: ["dayUpdate"],
+  setup() {
+    return { dayToString, monthToString };
+  },
   data() {
     return {
       selected: 0,
-      dayToString: [
-        "Domenica",
-        "Lunedì",
-        "Martedì",
-        "Mercoledì",
-        "Giovedì",
-        "Venerdì",
-        "Sabato",
-      ],
-      monthToString: [
-        "Gennaio",
-        "Febbraio",
-        "Marzo",
-        "Aprile",
-        "Maggio",
-        "Giugno",
-        "Luglio",
-        "Agosto",
-        "Settembre",
-        "Ottobre",
-        "Novembre",
-        "Dicembre",
-      ],
     };
+  },
+  mounted() {
+    this.notifyDayUpdate(this.selected);
   },
   computed: {
     weekDays() {
@@ -40,11 +25,16 @@ export default {
       return days;
     },
   },
+  methods: {
+    notifyDayUpdate(value) {
+      this.$emit("dayUpdate", this.weekDays[value]);
+    },
+  },
 };
 </script>
 
 <template>
-  <v-sheet class="mx-auto" elevation="4" max-width="800">
+  <v-sheet class="mx-auto d-flex justify-center" elevation="4">
     <v-slide-group
       @update:modelValue="(value) => console.log(value)"
       class="pa-4"

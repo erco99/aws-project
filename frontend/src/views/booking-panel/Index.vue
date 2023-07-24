@@ -4,7 +4,7 @@ import DayPicker from "./components/DayPicker.vue";
 import { getFields, getWeek } from "../../api/booking";
 export default {
   mounted() {
-    const weekPromise = getWeek({ day: "2023-07-18" });
+    const weekPromise = getWeek({ day: this.day });
     weekPromise.then((weekResponse) => {
       const fieldsPromis = getFields();
       fieldsPromis.then((fieldsResponse) => {
@@ -30,6 +30,7 @@ export default {
   data() {
     return {
       fields: [],
+      day: null,
     };
   },
   components: { Field, DayPicker },
@@ -38,7 +39,7 @@ export default {
 
 <template>
   <div class="mx-auto">
-    <DayPicker></DayPicker>
+    <DayPicker @day-update="(newDay) => (day = newDay)"></DayPicker>
     <v-sheet class="mx-auto mt-4" elevation="4">
       <div class="overflow-x-auto">
         <div class="p-2" v-for="field in fields" :key="field.name">
@@ -50,7 +51,7 @@ export default {
             :minutes="field.minutes"
             :state="field.state"
             :surface="field.surface"
-            :day="new Date('2023-07-18').toISOString()" />
+            :day="day.toISOString()" />
         </div>
       </div>
     </v-sheet>
