@@ -1,5 +1,6 @@
 <script>
 import Field from "./components/Field.vue";
+import DayPicker from "./components/DayPicker.vue";
 import { getFields, getWeek } from "../../api/booking";
 export default {
   mounted() {
@@ -31,22 +32,28 @@ export default {
       fields: [],
     };
   },
-  components: { Field },
+  components: { Field, DayPicker },
 };
 </script>
 
 <template>
-  <div class="overflow-x-auto">
-    <div class="py-2" v-for="field in fields" :key="field.name">
-      <Field
-        :name="field.name"
-        :bookings="field.bookings"
-        :closing="field.closing"
-        :opening="field.opening"
-        :minutes="field.minutes"
-        :state="field.state"
-        :surface="field.surface"
-        :day="new Date('2023-07-18').toISOString()" />
-    </div>
+  <div class="mx-auto">
+    <DayPicker></DayPicker>
+    <v-sheet class="mx-auto mt-4" elevation="4">
+      <div class="overflow-x-auto">
+        <div class="p-2" v-for="field in fields" :key="field.name">
+          <Field
+            :name="field.name"
+            :bookings="field.bookings"
+            :closing="field.closing"
+            :opening="field.opening"
+            :minutes="field.minutes"
+            :state="field.state"
+            :surface="field.surface"
+            :day="new Date('2023-07-18').toISOString()" />
+        </div>
+      </div>
+    </v-sheet>
   </div>
+  <div style="height: 50px"></div>
 </template>
