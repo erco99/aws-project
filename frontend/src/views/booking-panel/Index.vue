@@ -2,6 +2,7 @@
 import Field from "./components/Field.vue";
 import DayPicker from "./components/DayPicker.vue";
 import { getFields, getWeek } from "../../api/booking";
+import io from "socket.io-client";
 export default {
   mounted() {
     const weekPromise = getWeek({ day: this.day });
@@ -24,13 +25,24 @@ export default {
           }
         }
         this.fields = fields;
+        this.socket.on("new-booking", (book) => {
+          for (let i = 0; i < this.fields.length; i++) {
+            if ((this.fields[i].name = book.field)) {
+              this.fields[i].bookings.push(book);
+            }
+          }
+        });
       });
     });
+  },
+  unmounted() {
+    this.socket.disconnect();
   },
   data() {
     return {
       fields: [],
       day: null,
+      socket: io("http://localhost:10000"),
     };
   },
   components: { Field, DayPicker },
