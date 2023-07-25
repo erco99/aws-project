@@ -12,11 +12,15 @@ async function generateOTP(email) {
         email,
         otp
     }
-    const otpHash = await bcrypt.hash(JSON.stringify(data), process.env.OTP_SALT)
-    return { otp, otpHash };
+    const otp_hash = await bcrypt.hash(JSON.stringify(data), process.env.OTP_SALT)
+    const iat = Math.floor(Date.now() / 1000)
+    return { otp, otp_hash, iat };
 }
 
-async function verifyOTP({ email, otp, hash }) {
+async function verifyOTP({ email, otp }, { hash, iat, attempts } ) {
+    console.log("Attempts already done: " + attempts)
+    if (isExpired(iat)) throw new Error("otp-expired")
+    if (attempts >= process.env.OTP_MAX_ATTEMPTS) throw new Error("otp-max-attempts")
     const data = {
         email,
         otp
@@ -25,4 +29,8 @@ async function verifyOTP({ email, otp, hash }) {
     return newHash === hash
 }
 
-module.exports = { generateOTP, verifyOTP }
+function isExpired(iat) {
+    return (Math.floor(Date.now() / 1000) - iat > process.env.OTP_EXPIRATION_TIME)
+}
+
+module.exports = { generateOTP, verifyOTP, isExpired }

@@ -33,7 +33,7 @@ async function sendEmail(username, userEmail, otp) {
                         color: white; -webkit-border-radius: 3px; display: flex; justify-content: center; 
                         align-items: center;'>
                     ${otp}
-                    </div>`,"Ti serve aiuto. Rispondi a questa email, anche se noi non ti risponderemo!"]
+                    </div>`, "Il codice scadrà tra 5 minuti.", "Ti serve aiuto? Rispondi a questa email, anche se noi non ti risponderemo!"]
         }
     }
     const emailBody = mailGenerator.generate(email);

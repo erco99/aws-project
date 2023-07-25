@@ -11,13 +11,16 @@
       prepend-inner-icon="mdi-timer"
       variant="solo"
       rounded="xl"
+      :disabled="disabled"
+      append-inner-icon="mdi-chevron-right"
+      @click:append-inner="this.$emit('onVerify')"
   ></v-text-field>
 </template>
 
 <script>
 export default {
-  props: ['otp', 'error'],
-  emit: ['update:otp'],
+  props: ['otp', 'error', 'disabled'],
+  emit: ['update:otp', 'onVerify'],
   data: () => ({
     otpUppercase: ""
   }),
