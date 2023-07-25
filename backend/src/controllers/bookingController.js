@@ -1,15 +1,7 @@
 const bookings = require("../models/bookings");
 const field = require("../models/field");
 
-async function getWeek(req, res) {
-  if (!req.query.day) {
-    return res.sendStatus(400);
-  }
-  const day = req.query.day;
-  if (!Date.parse(day)) {
-    return res.sendStatus(400);
-  }
-
+async function getWeek(socket, day) {
   const from = new Date(day);
   const to = new Date();
 
@@ -18,12 +10,28 @@ async function getWeek(req, res) {
 
   // Set time to 23:59
   to.setUTCHours(23, 59, 59, 0);
+
+  // Make querys
   try {
     const week = await bookings.find({ day: { $gte: from, $lte: to } });
-    res.json(week);
-  } catch (error) {
-    console.log(error);
-    return res.sendStatus(500);
+    const fields = await field.find({}).sort({ name: 1 });
+    // Assemble response and emit
+    for (const field of fields) {
+      field.bookings = [];
+    }
+    for (const field of fields) {
+      for (const fieldDay of week) {
+        if (field.name == fieldDay.field) {
+          field.bookings.push({
+            day: fieldDay.day,
+            bookings: fieldDay.bookings,
+          });
+        }
+      }
+    }
+    socket.emit("week", fields);
+  } catch (e) {
+    socket.emit("error", e);
   }
 }
 
@@ -47,13 +55,4 @@ async function book(req, res) {
   }
 }
 
-async function getFields(req, res) {
-  try {
-    const fields = await field.find({}).sort({ name: 1 });
-    res.json(fields);
-  } catch (error) {
-    return res.sendStatus(500);
-  }
-}
-
-module.exports = { getWeek, book, getFields };
+module.exports = { getWeek };

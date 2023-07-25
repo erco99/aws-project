@@ -7,7 +7,6 @@ const cookieParser = require("cookie-parser");
 const mongoose = require("mongoose");
 const mongodbConfig = require("./src/configs/mongodb");
 const auth = require("./src/routes/auth");
-const booking = require("./src/routes/booking");
 const cors = require("cors");
 const corsOptions = require("./src/configs/cors");
 const express = require("express");
@@ -28,15 +27,15 @@ app.use(cookieParser());
 // Register auth routes
 app.use("/auth", cors(corsOptions), auth);
 
-// Register booking routes
-app.use("/booking", cors(corsOptions), booking);
-
 server.listen(port, () => {
   console.log(`Server listening on http://localhost:${port}`);
 });
 
+// Socket
+const controller = require("./src/controllers/bookingController");
 const io = socketio(server, { cors: corsOptions });
 io.on("connection", (socket) => {
-  console.log("connected");
+  console.log("conected");
+  socket.on("get-week", (day) => controller.getWeek(socket, day));
   socket.on("disconnect", () => console.log("disconnected"));
 });

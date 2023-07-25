@@ -1,39 +1,12 @@
 <script>
 import Field from "./components/Field.vue";
 import DayPicker from "./components/DayPicker.vue";
-import { getFields, getWeek } from "../../api/booking";
 import io from "socket.io-client";
 export default {
   mounted() {
-    const weekPromise = getWeek({ day: this.day });
-    weekPromise.then((weekResponse) => {
-      const fieldsPromis = getFields();
-      fieldsPromis.then((fieldsResponse) => {
-        let fields = fieldsResponse.data;
-        let week = weekResponse.data;
-        for (let j = 0; j < fields.length; j++) {
-          fields[j].bookings = [];
-        }
-        for (let i = 0; i < week.length; i++) {
-          for (let j = 0; j < fields.length; j++) {
-            if (week[i].field == fields[j].name) {
-              fields[j].bookings.push({
-                day: week[i].day,
-                bookings: week[i].bookings,
-              });
-            }
-          }
-        }
-        this.fields = fields;
-        this.socket.on("new-booking", (book) => {
-          for (let i = 0; i < this.fields.length; i++) {
-            if ((this.fields[i].name = book.field)) {
-              this.fields[i].bookings.push(book);
-            }
-          }
-        });
-      });
-    });
+    this.socket.on("week", (fields) => (this.fields = fields));
+    this.socket.on("error", (msg) => console.log(msg));
+    this.socket.emit("get-week", this.day);
   },
   unmounted() {
     this.socket.disconnect();
