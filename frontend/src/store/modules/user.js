@@ -1,4 +1,4 @@
-import {login, logout, register, newOTP, verifyOTP, user, refresh} from '@/api/user'
+import {login, logout, register, newOTP, verifyOTP, user, refresh, cancelRegistration} from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/authentication'
 import store from "@/store";
 
@@ -30,17 +30,17 @@ const actions = {
       register(registerData).then(response => {
         resolve(response.data)
       }).catch(error => {
-        reject(error.toJSON())
+        reject(error)
       })
     })
   },
 
-  newOTP({ commit }) {
+  newOTP({ commit }, data) {
     return new Promise((resolve, reject) => {
-      newOTP().then(response => {
-        resolve(response.data)
+      newOTP(data).then(() => {
+        resolve()
       }).catch(error => {
-        reject(error.toJSON())
+        reject(error)
       })
     })
   },
@@ -50,7 +50,18 @@ const actions = {
       verifyOTP(otpData).then(() => {
         resolve()
       }).catch(error => {
-        reject(error.toJSON())
+        console.log(error)
+        reject(error)
+      })
+    })
+  },
+
+  cancelRegistration({ commit }, data) {
+    return new Promise((resolve, reject) => {
+      cancelRegistration(data).then(() => {
+        resolve()
+      }).catch(error => {
+        reject(error)
       })
     })
   },
@@ -63,7 +74,7 @@ const actions = {
         setToken(data.access_token)
         resolve()
       }).catch(error => {
-        reject(error.toJSON())
+        reject(error)
       })
     })
   },
@@ -76,7 +87,7 @@ const actions = {
         setToken(access_token)
         resolve()
       }).catch(error => {
-        reject(error.toJSON())
+        reject(error)
       })
     })
   },
@@ -88,7 +99,7 @@ const actions = {
           removeToken()
           resolve()
         }).catch(error => {
-          reject(error.toJSON())
+          reject(error)
         })
       })
   },
@@ -99,7 +110,7 @@ const actions = {
         commit('SET_USER_DATA', response.data.user_data)
         resolve()
       }).catch(error => {
-        reject(error.toJSON())
+        reject(error)
       })
     })
   }

@@ -7,10 +7,13 @@ const authentication = require('../middlewares/authentication');
 router.post('/register', authController.register);
 
 // Get new OTP
-router.get('/newOTP', authentication, authController.newOTP);
+router.post('/newOTP', authController.newOTP);
 
 // Verify OPT route
 router.post('/verifyOTP', authController.verifyOTP);
+
+// Cancel registration
+router.post('/cancel', authController.cancel);
 
 // Login route
 router.post('/login', authController.login);

@@ -16,7 +16,7 @@
           <SignupForm @onSubmit="onSubmit" v-if="step === 1" v-model="step">
           </SignupForm>
 
-          <EmailVerifyForm @onVerify="this.step++" v-if="step === 2" v-model="step" :otpData="otpData"></EmailVerifyForm>
+          <EmailVerifyForm @onCancel="reset" @onVerify="this.step++" v-if="step === 2" v-model="step" :userEmail="userEmail"></EmailVerifyForm>
 
           <ConfirmPage v-if="step === 3"></ConfirmPage>
 
@@ -40,12 +40,15 @@ export default {
   },
   data: () => ({
     step: 1,
-    otpData: {},
+    userEmail: "",
   }),
   methods: {
-    onSubmit(otpData) {
-      this.otpData = otpData;
+    onSubmit(userEmail) {
+      this.userEmail = userEmail;
       this.step++;
+    },
+    reset() {
+      this.step = 1
     }
   }
 }

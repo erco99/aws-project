@@ -8,16 +8,25 @@ export function register(data) {
   })
 }
 
-export function newOTP() {
+export function newOTP(data) {
   return request({
     url: 'auth/newOTP',
-    method: 'get'
+    method: 'post',
+    data
   })
 }
 
 export function verifyOTP(data) {
   return request({
     url: '/auth/verifyOTP',
+    method: 'post',
+    data
+  })
+}
+
+export function cancelRegistration(data) {
+  return request({
+    url: 'auth/cancel',
     method: 'post',
     data
   })

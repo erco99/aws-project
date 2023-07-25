@@ -29,6 +29,8 @@
 
       <SignupButton :loading="signupButtonLoading"></SignupButton>
 
+      <AlreadyRegisteredRef></AlreadyRegisteredRef>
+
     </v-form>
   </v-card-text>
 </template>
@@ -40,6 +42,7 @@
   import PasswordField from "@/views/signup/components/signup-form-page/fields/PasswordField.vue";
   import SignupButton from "@/views/signup/components/signup-form-page/fields/SignupButton.vue";
   import CertAcceptField from "@/views/signup/components/signup-form-page/fields/CertAcceptField.vue";
+  import AlreadyRegisteredRef from "@/views/signup/components/email-verify-page/fields/AlreadyRegisteredRef.vue";
   import {useField, useForm} from "vee-validate";
   import {useStore} from "vuex";
   import {ref} from "vue";
@@ -51,7 +54,8 @@
       NumberField,
       PasswordField,
       SignupButton,
-      CertAcceptField
+      CertAcceptField,
+      AlreadyRegisteredRef
     },
     setup(props, context) {
       const {handleSubmit, handleReset} = useForm({
@@ -96,7 +100,7 @@
 
       // Default val for debug
       full_name.value.value = "Utente Test"
-      email.value.value = "mihoj84569@lybyz.com"
+      email.value.value = "miho@lybyz.com"
       number.value.value = "2668945637"
       password.value.value = "123er56#"
       retypePassword.value.value = "123er56#"
@@ -107,11 +111,11 @@
       const signup = handleSubmit((values) => {
         signupButtonLoading.value = true;
         store.dispatch('user/register', values).then(responseData => {
-          context.emit('onSubmit', {email: email.value.value, otpHash: responseData.otp_hash});
+          context.emit('onSubmit', email.value.value);
           console.log("Register OK")
         }).catch(error => {
           signupButtonLoading.value = false;
-          switch (error.status) {
+          switch (error.response.status) {
             case 409:
               alert.value = true; break;
             default:

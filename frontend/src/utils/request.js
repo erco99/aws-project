@@ -28,7 +28,7 @@ service.interceptors.request.use(
 service.interceptors.response.use(
     response => response,
     async (error) => {
-        if (error.response.data.code === 'token-expired') {
+        if (error.response?.data?.code === 'token-expired') {
             // try to get new token with refresh token
             try {
                 await store.dispatch('user/refresh')

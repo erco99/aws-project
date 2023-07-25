@@ -30,6 +30,8 @@ const userSchema = mongoose.Schema(
             required: true
         },
 
+        status: String,
+
         refresh_token: {
             value: {
                 type: String,
