@@ -36,7 +36,8 @@ export default {
 <template>
   <v-sheet class="mx-auto d-flex justify-center" elevation="4">
     <v-slide-group
-      @update:modelValue="(value) => console.log(value)"
+      mandatory
+      @update:modelValue="notifyDayUpdate"
       class="pa-4"
       v-model="selected"
       show-arrows>

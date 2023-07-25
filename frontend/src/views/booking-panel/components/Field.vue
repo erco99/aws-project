@@ -8,6 +8,7 @@ export default {
     return { stringfy };
   },
   components: { Body, Header, HourButton },
+  emits: ["newBooking"],
   props: {
     state: { type: Array, default: [] },
     name: { type: String, required: true },
@@ -40,8 +41,22 @@ export default {
       }
       return [];
     },
+    isNextFree() {
+      return !this.currentDayBookings.some(
+        (e) => e.time.hours == this.newBooking.hour.hours + 1
+      );
+    },
   },
   methods: {
+    notifyNewBooking() {
+      const newBooking = [];
+      for (let i = 0; i < this.duration; i++) {
+        const pushMe = this.newBooking;
+        pushMe.hour.hours += i;
+        newBooking.push(pushMe);
+      }
+      this.$emit("newBooking", newBooking);
+    },
     hourButtonProps(hour) {
       for (const book of this.currentDayBookings) {
         if (book.time.hours == hour) {
@@ -52,13 +67,6 @@ export default {
         }
       }
       return { text: stringfy(hour, this.minutes), disabled: false };
-    },
-    reset() {
-      this.duration = 0;
-      this.match = "";
-      this.newBooking.servicies = [];
-      this.newBooking.players = [];
-      this.newBooking.hour = {};
     },
     book(hour) {
       this.duration = 1;
@@ -129,14 +137,15 @@ export default {
         "></HourButton>
     </div>
   </div>
-  <v-dialog @update:modelValue="reset" v-model="dialog" scrollable width="1024"
+  <v-dialog v-model="dialog" scrollable width="1024"
     ><v-card>
       <Header
         :hours="newBooking.hour.hours"
         :minutes="newBooking.hour.minutes"
-        :name="name"></Header>
+        :name="name"
+        :day="day"></Header>
       <Body
-        next
+        :next="isNextFree"
         :defaultDuration="1"
         defaultMatch="single"
         :inside="'inside' in this.state"
@@ -146,17 +155,8 @@ export default {
         @servicies-update="(value) => (newBooking.servicies = value)"
         @players-update="(value) => (newBooking.players = value)"></Body>
       <v-card-actions class="justify-center">
-        <v-btn
-          color="primary"
-          @click="
-            dialog = false;
-            reset();
-          "
-          >Annulla</v-btn
-        >
-        <v-btn color="primary" @click="console.log(duration, match, newBooking)"
-          >Prenota ora</v-btn
-        >
+        <v-btn color="primary" @click="dialog = false">Annulla</v-btn>
+        <v-btn color="primary" @click="notifyNewBooking()">Prenota ora</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>

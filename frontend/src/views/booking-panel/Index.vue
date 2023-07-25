@@ -5,6 +5,9 @@ import io from "socket.io-client";
 export default {
   mounted() {
     this.socket.on("week", (fields) => (this.fields = fields));
+    this.socket.on("new-booking", (newBooking) => {
+      console.log(newBooking);
+    });
     this.socket.on("error", (msg) => console.log(msg));
     this.socket.emit("get-week", this.day);
   },
@@ -19,6 +22,11 @@ export default {
     };
   },
   components: { Field, DayPicker },
+  methods: {
+    book(newBooking) {
+      this.socket.emit("new-booking", newBooking);
+    },
+  },
 };
 </script>
 
@@ -36,7 +44,8 @@ export default {
             :minutes="field.minutes"
             :state="field.state"
             :surface="field.surface"
-            :day="day.toISOString()" />
+            :day="day.toISOString()"
+            @new-booking="book" />
         </div>
       </div>
     </v-sheet>

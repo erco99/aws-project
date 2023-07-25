@@ -1,5 +1,5 @@
 <script>
-import { stringfy } from "../commons";
+import { stringfy, dayToString, monthToString } from "../commons";
 export default {
   setup() {
     return { stringfy };
@@ -8,6 +8,22 @@ export default {
     name: String,
     hours: Number,
     minutes: Number,
+    day: {
+      type: String,
+      required: true,
+      validator: (value) => Date.parse(value),
+    },
+  },
+  computed: {
+    date() {
+      return new Date(this.day);
+    },
+    monthDay() {
+      return this.date.getDate() + " " + monthToString[this.date.getMonth()];
+    },
+    weekDay() {
+      return dayToString[this.date.getDay()];
+    },
   },
 };
 </script>
@@ -26,8 +42,8 @@ export default {
       </v-card-subtitle>
     </v-col>
     <v-col cols="12" sm="4">
-      <v-card-title class="text-center"> 14 Giugno </v-card-title>
-      <v-card-subtitle class="text-center"> Mercoledì </v-card-subtitle>
+      <v-card-title class="text-center"> {{ monthDay }} </v-card-title>
+      <v-card-subtitle class="text-center"> {{ weekDay }} </v-card-subtitle>
     </v-col>
     <v-col cols="12" sm="4">
       <v-card-title class="text-center text-sm-right"> 23&deg;C </v-card-title>
