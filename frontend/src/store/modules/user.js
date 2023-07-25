@@ -50,7 +50,6 @@ const actions = {
       verifyOTP(otpData).then(() => {
         resolve()
       }).catch(error => {
-        console.log(error)
         reject(error)
       })
     })

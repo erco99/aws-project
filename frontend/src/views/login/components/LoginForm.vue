@@ -4,7 +4,9 @@
 
       <div class="text-center text-medium-emphasis text-subtitle-1 font-weight-bold pb-10">ASD Forum Tennis</div>
 
+      <v-fade-transition>
       <v-alert closable text="Incorrect email of password." variant="tonal" color="error" v-model="alert"></v-alert>
+      </v-fade-transition>
 
       <EmailField v-model:email="email.value.value" v-model:error="email.errorMessage.value">prova</EmailField>
 
@@ -70,6 +72,7 @@ export default {
     const router = useRouter();
 
     const submit = handleSubmit((values) => {
+      alert.value = false
       signinButtonLoading.value = true;
       store.dispatch('user/login', values).then(
           () => {
@@ -78,11 +81,11 @@ export default {
           },
           (error) => {
             signinButtonLoading.value = false;
-            switch(error.status) {
+            switch(error.response.status) {
               case 401:
                 alert.value = true; break;
               default:
-                console.log(error.code); break;
+                console.log(error); break;
             }
           })
     })

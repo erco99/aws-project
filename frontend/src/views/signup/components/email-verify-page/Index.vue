@@ -13,7 +13,15 @@
         Inserisci il codice che ti abbiamo inviato a {{ userEmail }}
       </div>
 
-      <v-alert closable density="compact" :text="alertText" variant="tonal" :color="alertType" v-model="alertVisible"></v-alert>
+      <v-fade-transition>
+      <v-alert
+          closable
+          density="compact"
+          :text="alertText"
+          variant="tonal"
+          :color="alertType"
+          v-model="alertVisible"></v-alert>
+      </v-fade-transition>
 
       <OtpField
           v-model:otp="otp.value.value"
@@ -68,10 +76,12 @@
 
       const store = useStore()
       const verify = handleSubmit((values) => {
+        // Hide alert in case it is visible
+        alertVisible.value = false
+
         store.dispatch('user/verifyOTP', {
           'email': props.userEmail,
           'otp': values.otp}).then(() => {
-          console.log("OTP verified correctly")
           context.emit('onVerify')
         }).catch(error => {
           switch (error.response.status) {
