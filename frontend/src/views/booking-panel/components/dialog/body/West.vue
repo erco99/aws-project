@@ -13,7 +13,16 @@ export default {
   data() {
     return {
       players: [],
-      users: ["Giacomo Romagnoli", "Francesco Ercolani"],
+      users: [
+        {
+          title: "Giacomo Romagnoli",
+          value: {
+            name: "Giacomo",
+            surname: "Romagnoli",
+            email: "giek99@live.it",
+          },
+        },
+      ],
     };
   },
   computed: {
@@ -52,7 +61,8 @@ export default {
     <v-card-text class="text-center">Con chi giochi?</v-card-text>
     <v-row class="justify-center">
       <v-col cols="10">
-        <v-combobox
+        <v-select
+          :return-object="false"
           :messages="message"
           label="Invita i partecipanti"
           density="compact"
@@ -61,7 +71,21 @@ export default {
           @update:modelValue="notifyPlayers"
           v-model="players"
           :items="users"
-          variant="outlined"></v-combobox>
+          variant="outlined">
+          <!--<template v-slot:item="{ props }">
+            <v-list-item @click="props.onClick">
+              <v-list-item-title>
+                {{ props.title }}
+              </v-list-item-title>
+              <v-list-item-subtitle>
+                {{ props.value.email }}
+              </v-list-item-subtitle>
+              <template v-slot:append>
+                <v-checkbox hide-details></v-checkbox>
+              </template>
+            </v-list-item>
+          </template>-->
+        </v-select>
       </v-col>
     </v-row>
   </v-container>
