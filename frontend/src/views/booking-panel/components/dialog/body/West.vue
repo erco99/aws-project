@@ -16,6 +16,7 @@ export default {
       users: [
         {
           title: "Giacomo Romagnoli",
+          props: { subtitle: "giek99@live.it" },
           value: {
             name: "Giacomo",
             surname: "Romagnoli",
@@ -72,19 +73,10 @@ export default {
           v-model="players"
           :items="users"
           variant="outlined">
-          <!--<template v-slot:item="{ props }">
-            <v-list-item @click="props.onClick">
-              <v-list-item-title>
-                {{ props.title }}
-              </v-list-item-title>
-              <v-list-item-subtitle>
-                {{ props.value.email }}
-              </v-list-item-subtitle>
-              <template v-slot:append>
-                <v-checkbox hide-details></v-checkbox>
-              </template>
+          <template v-slot:item="{ props }">
+            <v-list-item v-bind="props">
             </v-list-item>
-          </template>-->
+          </template>
         </v-select>
       </v-col>
     </v-row>
