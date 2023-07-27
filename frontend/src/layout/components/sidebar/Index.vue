@@ -28,7 +28,8 @@
       <v-list-item 
         v-for="route in routes"
         :key="route.path"
-        :title="route.path"
+        :title="route.name"
+        :to="route.path"
       ></v-list-item>
     </v-list>
   </v-navigation-drawer>
@@ -37,7 +38,6 @@
 <script>
 import Item from "./Item.vue";
 import { mapGetters } from 'vuex'
-import { computed } from 'vue';
 
 export default {
   components: { Item },
