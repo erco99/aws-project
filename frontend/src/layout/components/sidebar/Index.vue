@@ -25,17 +25,27 @@
 
     <v-divider></v-divider>
     <v-list density="compact" nav>
-      <v-list-item prepend-icon="mdi-home-city" title="Home" value="home"></v-list-item>
-      <v-list-item prepend-icon="mdi-account" title="My Account" value="account"></v-list-item>
-      <v-list-item prepend-icon="mdi-account-group-outline" title="Users" value="users"></v-list-item>
+      <v-list-item 
+        v-for="route in routes"
+        :key="route.path"
+        :title="route.path"
+      ></v-list-item>
     </v-list>
   </v-navigation-drawer>
 </template>
 
 <script>
 import Item from "./Item.vue";
+import { mapGetters } from 'vuex'
+import { computed } from 'vue';
 
 export default {
+  components: { Item },
+  computed: {
+    ...mapGetters([
+      'routes'
+    ]),
+  },
   data: () => ({
     items: [
       { text: "Real-Time", icon: "mdi-clock" },
