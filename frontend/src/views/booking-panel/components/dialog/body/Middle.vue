@@ -53,7 +53,7 @@ export default {
   <v-container fluid>
     <v-card-text class="text-center">Quali servizi vuoi attivare?</v-card-text>
     <v-row class="justify-center">
-      <v-col style="min-width: 180px" class="flex-grow-0">
+      <v-col style="min-width: 190px" class="flex-grow-0">
         <v-switch
           @update:modelValue="notifyServices"
           :disabled="inside"
