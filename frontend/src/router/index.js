@@ -4,9 +4,7 @@ import BookingPanel from "../views/booking-panel/Index.vue";
 import Login from "../views/login/Index.vue";
 import SignUp from "@/views/signup/Index.vue";
 
-const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
-  routes: [
+export const main_routes = [
     {
       path: "/login",
       component: Login,
@@ -30,8 +28,13 @@ const router = createRouter({
           component: BookingPanel,
         },
       ],
-    },
-  ],
-});
+    }
+  ]
+
+
+const router = createRouter({
+  history: createWebHistory(import.meta.env.BASE_URL),
+  routes: main_routes
+})
 
 export default router;
