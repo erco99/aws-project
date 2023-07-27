@@ -14,6 +14,7 @@ router.beforeEach(async(to, from, next) => {
             next({ path: '/' })
             NProgress.done()
           } else {
+                await store.dispatch('routes/generateRoutes')
                 console.log(token)
                 next()
           }
