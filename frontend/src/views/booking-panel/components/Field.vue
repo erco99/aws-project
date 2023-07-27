@@ -25,7 +25,11 @@ export default {
       match: "",
       newBooking: {
         hour: {},
-        owner: "",
+        owner: {
+          name: this.$store.getters.userName,
+          surname: this.$store.getters.userSurname,
+          emai: this.$store.getters.userEmail,
+        },
         players: [],
         servicies: [],
       },
