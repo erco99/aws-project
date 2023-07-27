@@ -1,6 +1,7 @@
 <script>
 import Field from "./components/Field.vue";
 import DayPicker from "./components/DayPicker.vue";
+import Weather from "@/views/booking-panel/components/weather/Weather.vue";
 import io from "socket.io-client";
 export default {
   mounted() {
@@ -21,7 +22,7 @@ export default {
       socket: io("http://localhost:10000"),
     };
   },
-  components: { Field, DayPicker },
+  components: { Field, DayPicker, Weather },
   methods: {
     book(newBooking) {
       this.socket.emit("new-booking", newBooking);
@@ -33,7 +34,7 @@ export default {
 <template>
   <div class="mx-auto">
     <DayPicker @day-update="(newDay) => (day = newDay)"></DayPicker>
-    <v-sheet class="mx-auto mt-4" elevation="4">
+    <v-sheet class="mx-auto mt-4 mb-4" elevation="4">
       <div class="overflow-x-auto">
         <div class="p-2" v-for="field in fields" :key="field.name">
           <Field
@@ -50,5 +51,6 @@ export default {
       </div>
     </v-sheet>
   </div>
-  <div style="height: 50px"></div>
+<!--  <div style="height: 50px"></div>-->
+  <Weather></Weather>
 </template>

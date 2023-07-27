@@ -1,10 +1,13 @@
 const https = require("node:https");
 const pathUtils = require("../utils/pathUtils");
+const { dateToString } = require("../utils/dateUtils");
 
 const hostname = "api.open-meteo.com";
 const apiVersion = "v1";
 
-function getWeatherHourly(latitude, longitude, type, callback) {
+function getWeatherHourly(latitude, longitude, from, callback) {
+    const to = new Date();
+    to.setUTCDate(from.getDate() + (7 - from.getDay()));
     return https.request({
         hostname: hostname,
         path: pathUtils.composeWithQueryParams([apiVersion, "forecast"], {
@@ -12,13 +15,16 @@ function getWeatherHourly(latitude, longitude, type, callback) {
             "longitude": longitude,
             "hourly": "weathercode",
             "temperature_2m": null,
-            "forecast_days": type === "day" ? 1 : 7
+            "start_date": dateToString(from),
+            "end_date": dateToString(to)
         }),
         method: 'GET',
     }, callback);
 }
 
-function getWeatherDaily(latitude, longitude, type, callback) {
+function getWeatherDaily(latitude, longitude, from, callback) {
+    const to = new Date();
+    to.setUTCDate(from.getDate() + (7 - from.getDay()));
     return https.request({
         hostname: hostname,
         path: pathUtils.composeWithQueryParams([apiVersion, "forecast"], {
@@ -28,7 +34,8 @@ function getWeatherDaily(latitude, longitude, type, callback) {
             "temperature_2m_max": null,
             "temperature_2m_min": null,
             "timezone":"Europe%2FBerlin",
-            "forecast_days": type === "day" ? 1 : 7
+            "start_date": dateToString(from),
+            "end_date": dateToString(to)
         }),
         method: 'GET',
     }, callback);
