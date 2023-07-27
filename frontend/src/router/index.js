@@ -2,7 +2,8 @@ import { createRouter, createWebHistory } from "vue-router";
 import Layout from "../layout/Index.vue";
 import BookingPanel from "../views/booking-panel/Index.vue";
 import Login from "../views/login/Index.vue";
-import SignUp from "@/views/signup/Index.vue";
+import SignUp from "@/views/signup/Index.vue"
+import CreditsManagement from "@/views/credits-management/Index.vue"
 
 export const main_routes = [
     {
@@ -21,13 +22,21 @@ export const main_routes = [
       children: [
         {
           path: "/booking-panel",
-          name: "booking-panel",
-          // route level code-splitting
-          // this generates a separate chunk (About.[hash].js) for this route
-          // which is lazy-loaded when the route is visited.
+          name: "Prenotazioni",
           component: BookingPanel,
         },
       ],
+    }, 
+    {
+      path: "/credits-management",
+      component: Layout,
+      children: [
+        {
+          path: "/credits-management",
+          name: "Crediti",
+          component: CreditsManagement
+        }
+      ]
     }
   ]
 
