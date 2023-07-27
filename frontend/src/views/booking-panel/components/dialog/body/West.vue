@@ -12,7 +12,9 @@ export default {
   },
   data() {
     return {
+      searchTerm: "",
       players: [],
+      usersCopy: [],
       users: [
         {
           title: "Giacomo Romagnoli",
@@ -23,8 +25,20 @@ export default {
             email: "giek99@live.it",
           },
         },
+        {
+          title: "Francesco Ercolani",
+          props: { subtitle: "francesco.ercolani@live.it" },
+          value: {
+            name: "Francesco",
+            surname: "Ercolani",
+            email: "francesco.ercolani@live.it",
+          },
+        },
       ],
     };
+  },
+  mounted() {
+    this.usersCopy = [...this.users];
   },
   computed: {
     message() {
@@ -53,6 +67,16 @@ export default {
     notifyPlayers(value) {
       this.$emit("playersUpdate", value);
     },
+    searchUser(_) {
+      if (!this.searchTerm) {
+        this.users = this.usersCopy;
+      }
+      this.users = this.usersCopy.filter((user) => {
+        return (
+          user.title.toLowerCase().indexOf(this.searchTerm.toLowerCase()) > -1
+        );
+      });
+    },
   },
 };
 </script>
@@ -73,9 +97,23 @@ export default {
           v-model="players"
           :items="users"
           variant="outlined">
-          <template v-slot:item="{ props }">
-            <v-list-item v-bind="props">
+          <template v-slot:prepend-item>
+            <v-list-item>
+              <v-list-item-content>
+                <v-text-field
+                  focused
+                  density="compact"
+                  variant="solo-inverted"
+                  placeholder="Cerca"
+                  single-line
+                  hide-details
+                  v-model="searchTerm"
+                  @input="searchUser"></v-text-field>
+              </v-list-item-content>
             </v-list-item>
+          </template>
+          <template v-slot:item="{ props }">
+            <v-list-item v-bind="props"> </v-list-item>
           </template>
         </v-select>
       </v-col>
