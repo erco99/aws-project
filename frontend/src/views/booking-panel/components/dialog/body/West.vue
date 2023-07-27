@@ -1,4 +1,5 @@
 <script>
+import { getUsers } from "../../../../../api/user";
 export default {
   emits: ["playersUpdate"],
   props: {
@@ -15,30 +16,21 @@ export default {
       searchTerm: "",
       players: [],
       usersCopy: [],
-      users: [
-        {
-          title: "Giacomo Romagnoli",
-          props: { subtitle: "giek99@live.it" },
-          value: {
-            name: "Giacomo",
-            surname: "Romagnoli",
-            email: "giek99@live.it",
-          },
-        },
-        {
-          title: "Francesco Ercolani",
-          props: { subtitle: "francesco.ercolani@live.it" },
-          value: {
-            name: "Francesco",
-            surname: "Ercolani",
-            email: "francesco.ercolani@live.it",
-          },
-        },
-      ],
+      users: [],
     };
   },
   mounted() {
-    this.usersCopy = [...this.users];
+    getUsers().then((res) => {
+      console.log(res);
+      for (const user of res.data) {
+        this.users.push({
+          title: user.name.concat(" ", user.surname),
+          props: { subtitle: user.email },
+          value: user,
+        });
+      }
+      this.usersCopy = [...this.users];
+    });
   },
   computed: {
     message() {
