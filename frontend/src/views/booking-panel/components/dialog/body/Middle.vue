@@ -56,6 +56,7 @@ export default {
       <v-col style="min-width: 180px" class="flex-grow-0">
         <v-switch
           @update:modelValue="notifyServices"
+          :disabled="inside"
           v-model="servicies"
           value="lighting"
           hide-details

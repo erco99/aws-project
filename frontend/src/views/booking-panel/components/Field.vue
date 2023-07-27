@@ -46,6 +46,9 @@ export default {
         (e) => e.time.hours == this.newBooking.hour.hours + 1
       );
     },
+    inside() {
+      return this.state.includes("coperto");
+    },
   },
   methods: {
     notifyNewBooking() {
@@ -76,7 +79,7 @@ export default {
       this.dialog = true;
     },
     defaultServices(time, inside) {
-      const today = new Date();
+      const today = new Date(this.day);
       const month = today.getMonth();
       switch (month) {
         case 1:
@@ -148,8 +151,8 @@ export default {
         :next="isNextFree"
         :defaultDuration="1"
         defaultMatch="single"
-        :inside="'inside' in this.state"
-        :defaultServicies="this.newBooking.servicies"
+        :inside="inside"
+        :defaultServicies="newBooking.servicies"
         @duration-update="(value) => (duration = value)"
         @match-update="(value) => (match = value)"
         @servicies-update="(value) => (newBooking.servicies = value)"
