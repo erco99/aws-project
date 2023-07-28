@@ -11,7 +11,7 @@ export function numberToHour(number) {
 }
 
 export function tempToString(temp) {
-    return `${temp}°C`;
+    return `${temp}°`;
 }
 
 export function wmoToString(wmo) {
@@ -60,4 +60,13 @@ export function wmoToIcon(wmo) {
         case 80: case 81: case 82: return "mdi-weather-pouring"
         case 95: case 96: case 99: return "mdi-weather-lightning-rainy"
     }
+}
+
+export function wmoToCustomIcon(wmo) {
+    const iconsPath = "/weather-icons"
+    let icon = ""
+    switch (wmo) {
+        case 0: icon = "sun.png"; break;
+    }
+    return [iconsPath, icon].join("/");
 }
