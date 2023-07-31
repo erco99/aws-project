@@ -9,10 +9,10 @@
       </template>
       <v-list>
         <v-list-item>
-          <v-btn variant="text" @click="handleLogout">Logout</v-btn>
+          <v-btn variant="text" to="/profile">Profile</v-btn>
         </v-list-item>
-                <v-list-item>
-          <v-btn variant="text" @click="handleLogout">prova</v-btn>
+        <v-list-item>
+          <v-btn variant="text" @click="handleLogout">Logout</v-btn>
         </v-list-item>
       </v-list>
     </v-menu>

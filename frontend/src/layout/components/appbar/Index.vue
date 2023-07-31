@@ -39,6 +39,11 @@ export default {
     Logo,
     Notifications,
     Profile
+  },
+  methods: {
+    toggleSidebar() {
+      this.emitter.emit("toggle-sidebar");
+    }
   }
 }
 
