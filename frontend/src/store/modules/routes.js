@@ -15,12 +15,16 @@ const actions = {
     return new Promise(resolve => {
       let filtered_routes = []
       main_routes.forEach(route => {
-        if(route.component.name == "Layout" && route.children) {
+        if(route.sidebar == "yes") {
           route.children.forEach(child => {
             const component_path = child.path
             const component_name = child.name
-  
-            filtered_routes.push({path: component_path, name: component_name})
+            const component_icon = child.icon
+
+            filtered_routes.push({
+              path: component_path, 
+              name: component_name,
+              icon: component_icon})
           })
         }
       });

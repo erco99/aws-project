@@ -4,41 +4,58 @@ import BookingPanel from "../views/booking-panel/Index.vue";
 import Login from "../views/login/Index.vue";
 import SignUp from "@/views/signup/Index.vue"
 import CreditsManagement from "@/views/credits-management/Index.vue"
+import Profile from "@/views/profile/Index.vue"
 
 export const main_routes = [
-    {
-      path: "/login",
-      component: Login,
-      hidden: true,
-    },
-    {
-      path: "/signup",
-      component: SignUp
-    },
-    {
-      path: "/",
-      component: Layout,
-      redirect: "/booking-panel",
-      children: [
-        {
-          path: "/booking-panel",
-          name: "Prenotazioni",
-          component: BookingPanel,
-        },
-      ],
-    }, 
-    {
-      path: "/credits-management",
-      component: Layout,
-      children: [
-        {
-          path: "/credits-management",
-          name: "Crediti",
-          component: CreditsManagement
-        }
-      ]
-    }
-  ]
+  {
+    path: "/login",
+    component: Login,
+    hidden: true,
+  },
+  {
+    path: "/signup",
+    component: SignUp
+  },
+  {
+    sidebar: "yes",
+    path: "/",
+    component: Layout,
+    redirect: "/booking-panel",
+    children: [
+      {
+        path: "/booking-panel",
+        name: "Prenotazioni",
+        component: BookingPanel,
+        icon: "mdi-calendar-range"
+      },
+    ],
+  }, 
+  {
+    sidebar: "yes",
+    path: "/credits-management",
+    component: Layout,
+    children: [
+      {
+        path: "/credits-management",
+        name: "Crediti",
+        component: CreditsManagement,
+        icon: "mdi-currency-eur"
+      }
+    ]
+  },
+  {
+    sidebar: "no",
+    path: "/profile",
+    component: Layout,
+    children: [
+      {
+        path: "/profile",
+        name: "Profilo",
+        component: Profile
+      }
+    ]
+  },
+]
 
 
 const router = createRouter({

@@ -5,13 +5,13 @@
     :rail="rail"
     :temporary="temporary"
     :permanent="permanent"
-    @click="railNotMobile"
     style="margin:15px"
   >
     <v-list-item
       prepend-avatar="https://randomuser.me/api/portraits/men/85.jpg"
       :title="this.$store.getters.userFullname"
       nav
+      @click="railNotMobile"
     >
       <template v-slot:append>
         <v-btn
@@ -30,6 +30,8 @@
         :key="route.path"
         :title="route.name"
         :to="route.path"
+        color="green-darken-3"
+        :prepend-icon="route.icon"
       ></v-list-item>
     </v-list>
   </v-navigation-drawer>
@@ -47,11 +49,6 @@ export default {
     ]),
   },
   data: () => ({
-    items: [
-      { text: "Real-Time", icon: "mdi-clock" },
-      { text: "Audience", icon: "mdi-account" },
-      { text: "Conversions", icon: "mdi-flag" },
-    ],
     drawer: true,
     permanent: false,
     temporary: false,
@@ -59,7 +56,7 @@ export default {
   }),
   mounted() { 
     this.emitter.on("toggle-sidebar", drawer => {
-      this.drawer = drawer;
+      this.drawer = !this.drawer;
     });
     this.$nextTick(() => {
       window.addEventListener('resize', this.onResize);
