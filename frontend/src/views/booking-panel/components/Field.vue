@@ -56,13 +56,21 @@ export default {
   },
   methods: {
     notifyNewBooking() {
-      const newBooking = [];
-      for (let i = 0; i < this.duration; i++) {
-        const pushMe = this.newBooking;
-        pushMe.hour.hours += i;
-        newBooking.push(pushMe);
+      if (
+        (this.match == "single" && this.newBooking.players.length != 1) ||
+        (this.match == "double" && this.newBooking.players.length != 3)
+      ) {
+        alert("Il numero di partecipanti non è valido");
+      } else {
+        const newBooking = [];
+        for (let i = 0; i < this.duration; i++) {
+          const pushMe = this.newBooking;
+          pushMe.hour.hours += i;
+          newBooking.push(pushMe);
+        }
+        this.$emit("newBooking", newBooking);
+        this.dialog = false;
       }
-      this.$emit("newBooking", newBooking);
     },
     hourButtonProps(hour) {
       for (const book of this.currentDayBookings) {
