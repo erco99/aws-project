@@ -1,7 +1,7 @@
 <template>
   <v-card class="mx-auto" elevation="4">
     <v-card-title class="text-center">Meteo</v-card-title>
-    <div class="loading-circular" v-if="dataReady === false">
+    <div class="loading-circular" v-if="(dataReady === false || this.positionAcquired.acquired === false) && !error">
       <v-progress-circular
           :size="50"
           color="amber"
@@ -9,15 +9,19 @@
           indeterminate>
       </v-progress-circular>
     </div>
-    <v-card-text class="d-flex justify-center" v-if="dataReady">
+    <div class="text-center pb-5" v-if="error">
+      <v-icon icon="mdi-alert-circle-outline" size="25px" color="red"></v-icon>
+      {{ error }}
+    </div>
+    <v-card-text class="d-flex justify-center" v-if="dataReady && this.positionAcquired.acquired && !error">
       <v-slide-group show-arrows>
         <v-slide-group-item
             v-for="hour in range(hours.start, hours.end, hours.step)" :key="hour">
           <HourCard
               :hour="numberToHour(hour)"
-              :wmo="this.dayHourlyWeatherData.wmo[hour]"
-              :temp="Math.round(this.dayHourlyWeatherData.temp[hour])"
-              :dayInfo="{sunrise: this.dayDailyWeatherData.sunrise, sunset: this.dayDailyWeatherData.sunset}"></HourCard>
+              :wmo="this.weatherData.dayHourly.wmo[hour]"
+              :temp="Math.round(this.weatherData.dayHourly.temp[hour])"
+              :dayInfo="{sunrise: this.weatherData.dayHourly.sunrise, sunset: this.weatherData.dayHourly.sunset}"></HourCard>
         </v-slide-group-item>
       </v-slide-group>
     </v-card-text>
@@ -30,7 +34,7 @@
   import { getHourlyWeather, getDailyWeather } from "@/api/weather";
   export default {
     components: { HourCard },
-    props: ['day', 'latitude', 'longitude'],
+    props: ['day', 'latitude', 'longitude', 'positionAcquired'],
     setup() { return { range, numberToHour }},
     data: () => ({
       hours: {
@@ -39,23 +43,23 @@
         step: 1
       },
       dataReady: false,
-      fullHourlyWeatherData: null,
-      fullDailyWeatherData: null,
-      dayHourlyWeatherData: null,
-      dayDailyWeatherData: null,
+      weatherData: {
+        fullHourly: null,
+        fullDaily: null,
+        dayHourly: null,
+        dayDaily: null,
+      },
+      error: null
     }),
-    mounted() {
-      this.fetchWeatherData(this.latitude, this.longitude, getTodayDate());
-    },
     methods: {
       fetchWeatherData(latitude, longitude, from) {
         getHourlyWeather({latitude, longitude, from}).then((res) => {
-          this.fullHourlyWeatherData = res.data.weather_data;
-          this.dayHourlyWeatherData = getDayHourlyWeather(this.fullHourlyWeatherData, from);
+          this.weatherData.fullHourly = res.data.weather_data;
+          this.weatherData.dayHourly = getDayHourlyWeather(this.weatherData.fullHourly, from);
         }).then(() => {
           getDailyWeather({latitude, longitude, from}).then((res) => {
-            this.fullDailyWeatherData = res.data.weather_data;
-            this.dayDailyWeatherData = getDayDailyWeather(this.fullDailyWeatherData, from);
+            this.weatherData.fullDaily = res.data.weather_data;
+            this.weatherData.dayDaily = getDayDailyWeather(this.weatherData.fullDaily, from);
             this.dataReady = true;
           })
         })
@@ -63,9 +67,22 @@
     },
     watch: {
       day(dayToDisplay) {
-        if (dayToDisplay && this.fullHourlyWeatherData) {
-          this.dayHourlyWeatherData = getDayHourlyWeather(this.fullHourlyWeatherData, dayToDisplay.toISOString());
-          this.dayDailyWeatherData = getDayDailyWeather(this.fullDailyWeatherData, dayToDisplay.toISOString());
+        if (dayToDisplay && this.weatherData.fullHourly && this.weatherData.fullDaily) {
+          this.weatherData.dayHourly = getDayHourlyWeather(this.weatherData.fullHourly, dayToDisplay.toISOString());
+          this.weatherData.dayDaily = getDayDailyWeather(this.weatherData.fullDaily, dayToDisplay.toISOString());
+        }
+      },
+      positionAcquired(newObj) {
+        if (newObj.acquired) {
+          this.fetchWeatherData(this.latitude, this.longitude, getTodayDate());
+        } else {
+          if (newObj.code === 1) {
+            // User has not accepted the geolocation
+            this.error = "Impossibile mostrare il meteo, fornire il permesso alla geolocalizzaione"
+          } else {
+           // Another error
+            this.error = "Impossibile mostrare il meteo"
+          }
         }
       }
     }

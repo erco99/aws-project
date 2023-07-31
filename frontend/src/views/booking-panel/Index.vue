@@ -12,6 +12,19 @@ export default {
     });
     this.socket.on("error", (msg) => console.log(msg));
     this.socket.emit("get-week", this.day);
+
+    // ask for position
+    navigator.geolocation.getCurrentPosition(
+        position => {
+          this.latitude = position.coords.latitude;
+          this.longitude = position.coords.longitude;
+          this.positionAcquired = {acquired: true, code: null};
+        },
+        error => {
+          console.log(error)
+          this.positionAcquired = {acquired: false, code: error.code};
+        }
+    )
   },
   unmounted() {
     this.socket.disconnect();
@@ -22,6 +35,12 @@ export default {
       fields: [],
       day: null,
       socket: io("http://localhost:10000"),
+      latitude: null,
+      longitude: null,
+      positionAcquired: {
+        acquired: false,
+        code: null
+      }
     };
   },
   components: { Field, DayPicker, Weather },
@@ -55,5 +74,9 @@ export default {
     </v-card>
   </div>
   <!--  <div style="height: 50px"></div>-->
-  <Weather :day="day" :latitude="44.4462" :longitude="11.8282"></Weather>
+  <Weather
+      :day="day"
+      :latitude="latitude"
+      :longitude="longitude"
+      :positionAcquired="positionAcquired"></Weather>
 </template>
