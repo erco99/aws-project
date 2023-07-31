@@ -94,17 +94,16 @@ export default {
           variant="outlined">
           <template v-slot:prepend-item>
             <v-list-item>
-              <v-list-item-content>
-                <v-text-field
-                  focused
-                  density="compact"
-                  variant="solo-inverted"
-                  placeholder="Cerca"
-                  single-line
-                  hide-details
-                  v-model="searchTerm"
-                  @input="searchUser"></v-text-field>
-              </v-list-item-content>
+              <v-text-field
+                focused
+                density="compact"
+                variant="solo-inverted"
+                placeholder="Cerca"
+                single-line
+                hide-details
+                v-model="searchTerm"
+                @input="searchUser"></v-text-field>
+              <v-divider class="mt-2"></v-divider>
             </v-list-item>
           </template>
           <template v-slot:item="{ props }">
