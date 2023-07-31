@@ -13,7 +13,11 @@
       <v-slide-group show-arrows>
         <v-slide-group-item
             v-for="hour in range(hours.start, hours.end, hours.step)" :key="hour">
-          <HourCard :hour="numberToHour(hour)" :wmo="0" :temp="27"></HourCard>
+          <HourCard
+              :hour="numberToHour(hour)"
+              :wmo="this.dayHourlyWeatherData.wmo[hour]"
+              :temp="Math.round(this.dayHourlyWeatherData.temp[hour])"
+              :dayInfo="{sunrise: this.dayDailyWeatherData.sunrise, sunset: this.dayDailyWeatherData.sunset}"></HourCard>
         </v-slide-group-item>
       </v-slide-group>
     </v-card-text>
@@ -22,10 +26,11 @@
 
 <script>
   import HourCard from "@/views/booking-panel/components/weather/HourCard.vue";
-  import { range, numberToHour } from "@/views/booking-panel/components/weather/utils";
-  import { getHourlyWeather } from "@/api/weather";
+  import { range, numberToHour, getDayHourlyWeather, getDayDailyWeather } from "@/views/booking-panel/components/weather/utils";
+  import { getHourlyWeather, getDailyWeather } from "@/api/weather";
   export default {
     components: { HourCard },
+    props: ['day'],
     setup() { return { range, numberToHour }},
     data: () => ({
       hours: {
@@ -33,19 +38,35 @@
         end: 22,
         step: 1
       },
-      dataReady: false
+      dataReady: false,
+      fullHourlyWeatherData: null,
+      fullDailyWeatherData: null,
+      dayHourlyWeatherData: null,
+      dayDailyWeatherData: null,
     }),
     mounted() {
-      getHourlyWeather({latitude: 52.52, longitude: 13.41, from: "2023-07-28"}).then((res) => {
-        console.log(res.data);
-      })
-      setTimeout(function(){this.handleData()}, 2000)
-      //this.dataReady = true
+      this.fetchWeatherData(44.4452269, 11.8267438, "2023-07-29");
     },
     methods: {
-      handleData() {
-        this.dataReady = true
-        console.log(this.dataReady)
+      fetchWeatherData(latitude, longitude, from) {
+        getHourlyWeather({latitude, longitude, from}).then((res) => {
+          this.fullHourlyWeatherData = res.data.weather_data;
+          this.dayHourlyWeatherData = getDayHourlyWeather(this.fullHourlyWeatherData, from);
+        }).then(() => {
+          getDailyWeather({latitude, longitude, from}).then((res) => {
+            this.fullDailyWeatherData = res.data.weather_data;
+            this.dayDailyWeatherData = getDayDailyWeather(this.fullDailyWeatherData, from);
+            this.dataReady = true;
+          })
+        })
+      }
+    },
+    watch: {
+      day(dayToDisplay) {
+        if (dayToDisplay && this.fullHourlyWeatherData) {
+          this.dayHourlyWeatherData = getDayHourlyWeather(this.fullHourlyWeatherData, dayToDisplay.toISOString());
+          this.dayDailyWeatherData = getDayDailyWeather(this.fullDailyWeatherData, dayToDisplay.toISOString());
+        }
       }
     }
   }

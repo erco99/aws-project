@@ -15,6 +15,7 @@ function getWeatherHourly(latitude, longitude, from, callback) {
             "longitude": longitude,
             "hourly": "weathercode",
             "temperature_2m": null,
+            "is_day": null,
             "start_date": dateToString(from),
             "end_date": dateToString(to)
         }),
@@ -33,6 +34,8 @@ function getWeatherDaily(latitude, longitude, from, callback) {
             "daily": "weathercode",
             "temperature_2m_max": null,
             "temperature_2m_min": null,
+            "sunrise": null,
+            "sunset": null,
             "timezone":"Europe%2FBerlin",
             "start_date": dateToString(from),
             "end_date": dateToString(to)

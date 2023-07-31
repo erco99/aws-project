@@ -7,3 +7,11 @@ export function getHourlyWeather(params) {
         params: params
     })
 }
+
+export function getDailyWeather(params) {
+    return request({
+        url: "weather/daily",
+        method: "get",
+        params: params
+    })
+}

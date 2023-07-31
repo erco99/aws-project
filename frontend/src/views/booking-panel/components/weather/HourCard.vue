@@ -6,9 +6,9 @@
       style="text-align: center; border-radius: 30px"
   >
     <v-card-item class="ma-0 pr-0 pl-0">
-      <v-card-text>
-        <div class="temp-string">{{ tempToString(temp) }}</div>
-        <v-img class="mx-auto" :src="wmoToCustomIcon(wmo)" width="40px" height="40px"></v-img>
+      <v-card-text class="ma-0 pa-0">
+        <div class="temp-string pb-0">{{ tempToString(temp) }}</div>
+        <v-icon class="mx-auto mb-1 mt-1 text-blue-grey-darken-2" :icon="wmoToIcon(wmo, hour, dayInfo)" size="40px"></v-icon>
         <div class="hour-string">{{ hour }}</div>
       </v-card-text>
     </v-card-item>
@@ -16,11 +16,11 @@
 </template>
 
 <script>
-  import { wmoToIcon, tempToString, wmoToCustomIcon } from "@/views/booking-panel/components/weather/utils";
+import {wmoToIcon, tempToString} from "@/views/booking-panel/components/weather/utils";
   export default {
-    props: ['hour', 'wmo', 'temp'],
+    props: ['hour', 'wmo', 'temp', 'dayInfo'],
     setup() {
-      return { wmoToIcon, tempToString, wmoToCustomIcon }
+      return { wmoToIcon, tempToString }
     }
   }
 </script>

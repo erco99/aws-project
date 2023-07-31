@@ -33,7 +33,10 @@ export default {
     });
   },
   computed: {
-    message() {
+    rules() {
+      return [this.playersNumber == this.players.length || this.errorMessage];
+    },
+    errorMessage() {
       if (this.players.length < this.playersNumber) {
         if (this.playersNumber == 1) {
           return "Aggiungi 1 giocatore";
@@ -52,7 +55,7 @@ export default {
           " giocatori"
         );
       }
-      return "Buon divertimento!";
+      return true;
     },
   },
   methods: {
@@ -79,8 +82,8 @@ export default {
     <v-row class="justify-center">
       <v-col cols="10">
         <v-select
+          :rules="rules"
           :return-object="false"
-          :messages="message"
           label="Invita i partecipanti"
           density="compact"
           multiple
@@ -91,17 +94,16 @@ export default {
           variant="outlined">
           <template v-slot:prepend-item>
             <v-list-item>
-              <v-list-item-content>
-                <v-text-field
-                  focused
-                  density="compact"
-                  variant="solo-inverted"
-                  placeholder="Cerca"
-                  single-line
-                  hide-details
-                  v-model="searchTerm"
-                  @input="searchUser"></v-text-field>
-              </v-list-item-content>
+              <v-text-field
+                focused
+                density="compact"
+                variant="solo-inverted"
+                placeholder="Cerca"
+                single-line
+                hide-details
+                v-model="searchTerm"
+                @input="searchUser"></v-text-field>
+              <v-divider class="mt-2"></v-divider>
             </v-list-item>
           </template>
           <template v-slot:item="{ props }">
