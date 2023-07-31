@@ -10,8 +10,20 @@ export function numberToHour(number) {
     return `${number}:00`;
 }
 
+export function hourToNumber(hour) {
+    return hour.split(":")[0];
+}
+
 export function tempToString(temp) {
     return `${temp}°`;
+}
+
+export function getTodayDate() {
+    const date = new Date(Date.now())
+    const month = date.getMonth() + 1
+    return [date.getFullYear(),
+        month >= 10 ? month : '0' + month,
+        date.getDate()].join("-");
 }
 
 export function wmoToString(wmo) {
@@ -47,10 +59,12 @@ export function wmoToString(wmo) {
    }
 }
 
-export function wmoToIcon(wmo) {
+export function wmoToIcon(wmo, hour, dayInfo) {
+    const _hour = hourToNumber(hour)
+    const isDay = _hour > dayInfo.sunrise && _hour < dayInfo.sunset;
     switch (wmo) {
-        case 0: case 1: return "mdi-weather-sunny"
-        case 2: return "mdi-weather-partlycloudy"
+        case 0: case 1: return isDay ? "mdi-weather-sunny" : "mdi-weather-night"
+        case 2: return isDay ? "mdi-weather-partly-cloudy" : "mdi-weather-night"
         case 3: return "mdi-weather-cloudy"
         case 45: return "mdi-weather-fog"
         case 51: case 53: case 55: case 56: case 57:
@@ -62,11 +76,39 @@ export function wmoToIcon(wmo) {
     }
 }
 
-export function wmoToCustomIcon(wmo) {
-    const iconsPath = "/weather-icons"
-    let icon = ""
-    switch (wmo) {
-        case 0: icon = "sun.png"; break;
+export function getDayHourlyWeather(fullWeatherData, day) {
+    const [ dayToSearch, _ ] = day.split("T");
+    let firstIndex = 0;
+    for (let time in fullWeatherData.hourly.time) {
+        if (fullWeatherData.hourly.time[time].includes(dayToSearch)) {
+            firstIndex = time;
+            break;
+        }
     }
-    return [iconsPath, icon].join("/");
+    return {temp: fullWeatherData.hourly.temperature_2m.slice(firstIndex, firstIndex + 24),
+            wmo: fullWeatherData.hourly.weathercode.slice(firstIndex, firstIndex + 24),
+            is_day: fullWeatherData.hourly.is_day.slice(firstIndex, firstIndex + 24)}
+}
+
+export function getDayDailyWeather(fullWeatherData, day) {
+    let index = 0;
+    for (let time in fullWeatherData.daily.time) {
+        if (fullWeatherData.daily.time[time].includes(day)) {
+            index = time;
+            break;
+        }
+    }
+
+    let [ sunriseHour, sunriseMinute ] = fullWeatherData.daily.sunrise[index].split("T")[1].split(":");
+    sunriseHour = parseInt(sunriseHour); sunriseMinute = parseInt(sunriseMinute);
+    const sunrise = sunriseMinute > 30 ? sunriseHour + 1 : sunriseHour;
+    let [ sunsetHour, sunsetMinute ] = fullWeatherData.daily.sunset[index].split("T")[1].split(":");
+    sunsetHour = parseInt(sunsetHour); sunsetMinute = parseInt(sunsetMinute);
+    const sunset = sunsetMinute > 30 ? sunsetHour + 1 : sunsetHour;
+
+    return {temp_max: fullWeatherData.daily.temperature_2m_max[index],
+            temp_min: fullWeatherData.daily.temperature_2m_min[index],
+            sunrise: sunrise,
+            sunset: sunset,
+            wmo: fullWeatherData.daily.weathercode[index]}
 }

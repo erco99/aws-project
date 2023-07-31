@@ -52,5 +52,5 @@ export default {
     </v-sheet>
   </div>
 <!--  <div style="height: 50px"></div>-->
-  <Weather></Weather>
+  <Weather :day="day"></Weather>
 </template>
