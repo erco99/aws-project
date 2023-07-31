@@ -1,6 +1,6 @@
 <template>
   <v-navigation-drawer
-    elevation="3"
+    elevation="4"
     v-model="drawer"
     :rail="rail"
     :temporary="temporary"

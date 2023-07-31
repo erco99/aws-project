@@ -9,7 +9,7 @@
   <sidebar />
   <v-main
     class="align-center justify-center"
-    style="min-height: 300px; margin: 30px"
+    style="min-height: 300px; margin: 15px 15px 20px 25px"
   >
     <app-main />
   </v-main>
