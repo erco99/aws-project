@@ -55,5 +55,5 @@ export default {
     </v-card>
   </div>
   <!--  <div style="height: 50px"></div>-->
-  <Weather :day="day"></Weather>
+  <Weather :day="day" :latitude="44.4462" :longitude="11.8282"></Weather>
 </template>

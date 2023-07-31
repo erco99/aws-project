@@ -15,7 +15,6 @@ function getWeatherHourly(latitude, longitude, from, callback) {
             "longitude": longitude,
             "hourly": "weathercode",
             "temperature_2m": null,
-            "is_day": null,
             "start_date": dateToString(from),
             "end_date": dateToString(to)
         }),

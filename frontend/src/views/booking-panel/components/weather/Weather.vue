@@ -26,11 +26,11 @@
 
 <script>
   import HourCard from "@/views/booking-panel/components/weather/HourCard.vue";
-  import { range, numberToHour, getDayHourlyWeather, getDayDailyWeather } from "@/views/booking-panel/components/weather/utils";
+  import { range, numberToHour, getDayHourlyWeather, getDayDailyWeather, getTodayDate } from "@/views/booking-panel/components/weather/utils";
   import { getHourlyWeather, getDailyWeather } from "@/api/weather";
   export default {
     components: { HourCard },
-    props: ['day'],
+    props: ['day', 'latitude', 'longitude'],
     setup() { return { range, numberToHour }},
     data: () => ({
       hours: {
@@ -45,7 +45,7 @@
       dayDailyWeatherData: null,
     }),
     mounted() {
-      this.fetchWeatherData(44.4452269, 11.8267438, "2023-07-29");
+      this.fetchWeatherData(this.latitude, this.longitude, getTodayDate());
     },
     methods: {
       fetchWeatherData(latitude, longitude, from) {

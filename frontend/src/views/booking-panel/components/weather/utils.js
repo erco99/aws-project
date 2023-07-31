@@ -21,9 +21,10 @@ export function tempToString(temp) {
 export function getTodayDate() {
     const date = new Date(Date.now())
     const month = date.getMonth() + 1
+    const day = date.getDate();
     return [date.getFullYear(),
         month >= 10 ? month : '0' + month,
-        date.getDate()].join("-");
+        day >= 10 ? day : '0' + day].join("-");
 }
 
 export function wmoToString(wmo) {
@@ -86,8 +87,7 @@ export function getDayHourlyWeather(fullWeatherData, day) {
         }
     }
     return {temp: fullWeatherData.hourly.temperature_2m.slice(firstIndex, firstIndex + 24),
-            wmo: fullWeatherData.hourly.weathercode.slice(firstIndex, firstIndex + 24),
-            is_day: fullWeatherData.hourly.is_day.slice(firstIndex, firstIndex + 24)}
+            wmo: fullWeatherData.hourly.weathercode.slice(firstIndex, firstIndex + 24)}
 }
 
 export function getDayDailyWeather(fullWeatherData, day) {
