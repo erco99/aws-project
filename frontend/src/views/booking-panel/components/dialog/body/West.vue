@@ -21,7 +21,6 @@ export default {
   },
   mounted() {
     getUsers().then((res) => {
-      console.log(res);
       for (const user of res.data) {
         this.users.push({
           title: user.name.concat(" ", user.surname),

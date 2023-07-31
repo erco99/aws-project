@@ -8,6 +8,7 @@ export default {
     this.socket.on("week", (fields) => (this.fields = fields));
     this.socket.on("new-booking", (newBooking) => {
       console.log(newBooking);
+      this.loading = false;
     });
     this.socket.on("error", (msg) => console.log(msg));
     this.socket.emit("get-week", this.day);
@@ -17,6 +18,7 @@ export default {
   },
   data() {
     return {
+      loading: false,
       fields: [],
       day: null,
       socket: io("http://localhost:10000"),
@@ -25,6 +27,7 @@ export default {
   components: { Field, DayPicker, Weather },
   methods: {
     book(newBooking) {
+      this.loading = true;
       this.socket.emit("new-booking", newBooking);
     },
   },
@@ -34,7 +37,7 @@ export default {
 <template>
   <div class="mx-auto">
     <DayPicker @day-update="(newDay) => (day = newDay)"></DayPicker>
-    <v-sheet class="mx-auto mt-4 mb-4" elevation="4">
+    <v-card :loading="loading" class="mx-auto mt-4 mb-4" elevation="4">
       <div class="overflow-x-auto">
         <div class="p-2" v-for="field in fields" :key="field.name">
           <Field
@@ -49,8 +52,8 @@ export default {
             @new-booking="book" />
         </div>
       </div>
-    </v-sheet>
+    </v-card>
   </div>
-<!--  <div style="height: 50px"></div>-->
+  <!--  <div style="height: 50px"></div>-->
   <Weather :day="day"></Weather>
 </template>
