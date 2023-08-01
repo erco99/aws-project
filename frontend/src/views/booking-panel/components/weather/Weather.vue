@@ -31,7 +31,6 @@
 <script>
   import HourCard from "@/views/booking-panel/components/weather/HourCard.vue";
   import { range, numberToHour, getDayHourlyWeather, getDayDailyWeather, getTodayDate } from "@/views/booking-panel/components/weather/utils";
-  import { getHourlyWeather, getDailyWeather } from "@/api/weather";
   export default {
     components: { HourCard },
     props: ['day', 'latitude', 'longitude', 'positionAcquired'],
@@ -53,17 +52,17 @@
     }),
     methods: {
       fetchWeatherData(latitude, longitude, from) {
-        getHourlyWeather({latitude, longitude, from}).then((res) => {
-          this.weatherData.fullHourly = res.data.weather_data;
+        this.$store.dispatch('weather/fetchWeather', { latitude, longitude, from }).then(() => {
+          this.weatherData.fullHourly = this.$store.getters.hourlyWeather;
           this.weatherData.dayHourly = getDayHourlyWeather(this.weatherData.fullHourly, from);
-        }).then(() => {
-          getDailyWeather({latitude, longitude, from}).then((res) => {
-            this.weatherData.fullDaily = res.data.weather_data;
-            this.weatherData.dayDaily = getDayDailyWeather(this.weatherData.fullDaily, from);
-            this.dataReady = true;
-          })
+          this.weatherData.fullDaily = this.$store.getters.dailyWeather;
+          this.weatherData.dayDaily = getDayDailyWeather(this.weatherData.fullDaily, from);
+          this.dataReady = true;
+        }).catch(err => {
+          console.log(err)
+          this.error = "Impossibile mostrare il meteo"
         })
-      }
+      },
     },
     watch: {
       day(dayToDisplay) {
