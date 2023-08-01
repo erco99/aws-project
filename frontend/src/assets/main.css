@@ -1,5 +1,7 @@
 #app {
     height: 100vh;
-    background-color: #F3F2F8;
 }
 
+html {
+    background-color: #F3F2F8;
+}
