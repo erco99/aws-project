@@ -21,7 +21,7 @@
               :hour="numberToHour(hour)"
               :wmo="this.weatherData.dayHourly.wmo[hour]"
               :temp="Math.round(this.weatherData.dayHourly.temp[hour])"
-              :dayInfo="{sunrise: this.weatherData.dayHourly.sunrise, sunset: this.weatherData.dayHourly.sunset}"></HourCard>
+              :dayInfo="{sunrise: this.weatherData.dayDaily.sunrise, sunset: this.weatherData.dayDaily.sunset}"></HourCard>
         </v-slide-group-item>
       </v-slide-group>
     </v-card-text>
