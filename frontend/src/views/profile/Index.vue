@@ -1,21 +1,26 @@
 <template>
-  <v-card class="mx-auto rounded-0" elevation="4">
-    <v-card-item>
-      <div>
-        <div class="text-overline mb-1">
-          PROFILO UTENTE
-        </div>
-        <div class="text-h6 mb-1">
-          Headline
-        </div>
-        <div class="text-caption">Greyhound divisely hello coldly fonwderfully</div>
-      </div>
-    </v-card-item>
+  <v-row>
+    <v-col sm="12" md="4">
+      <user />
+    </v-col>
 
-    <v-card-actions>
-      <v-btn variant="outlined">
-        Button
-      </v-btn>
-    </v-card-actions>
-  </v-card>
+    <v-col sm="12" md="8">
+      <activity />
+    </v-col>
+
+  </v-row>
 </template>
+
+<script>
+import User from "./components/User.vue"
+import Activity from "./components/Activity.vue"
+
+export default {
+  name: "Profile",
+  components: {
+    User,
+    Activity
+  }
+  
+}
+</script>
