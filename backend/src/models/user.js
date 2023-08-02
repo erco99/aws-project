@@ -25,6 +25,11 @@ const userSchema = mongoose.Schema(
             required: true
         },
 
+        balance: {
+            type: Number,
+            required: true
+        },
+
         hash: {
             type: String,
             required: true

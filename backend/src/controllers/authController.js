@@ -5,7 +5,7 @@ const otpUtils = require('../utils/otp-utils');
 const { sendEmail } = require('../utils/mailer');
 
 async function register(req, res) {
-    const { full_name, email, number, password } = req.body;
+    const { full_name, email, number, password} = req.body;
 
     const user = await User.findOne({email}).exec();
     let name = "";
@@ -24,7 +24,7 @@ async function register(req, res) {
         const status = "pending";
         // Save user in db
         try {
-            await User.create({name, surname, email, number, hash, status});
+            await User.create({name, surname, email, number, hash, status, balance: 0});
         } catch (error) {
             console.log(error);
             return res.status(500).json({'message': 'Could not register'});
