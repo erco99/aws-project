@@ -1,15 +1,11 @@
 <template>
     <v-card class="mx-auto rounded-0" elevation="4">
       <v-card-item>
-        <div>
           <div class="text-overline mb-1">
-            FSDFD
+            Metodo di pagamento
           </div>
-          <div class="text-h6 mb-1">
-            Headline
-          </div>
-          <div class="text-caption">Greyhound divisely hello coldly fonwderfully</div>
-        </div>
+            <vue-paycard :value-fields="valueFields"
+            :has-random-backgrounds="false" />
       </v-card-item>
   
       <v-card-actions>
@@ -19,3 +15,24 @@
       </v-card-actions>
     </v-card>
 </template>
+
+<script>
+import VuePaycard from "vue-paycard/vue-paycard"
+
+export default {
+  components: {
+    VuePaycard
+  },
+      data: () => ({
+      valueFields: {
+        cardName: "",
+        cardNumber: "",
+        cardMonth: "",
+        cardYear: "",
+        cardCvv: "",
+      },
+    }),
+
+  
+}
+</script>
