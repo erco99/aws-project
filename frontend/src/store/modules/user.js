@@ -3,21 +3,18 @@ import { getToken, setToken, removeToken } from '@/utils/authentication'
 import store from "@/store";
 
 const state = {
-  name: 'PROVANOME',
   token: getToken(),
-  userData: {}
+  userData: {},
 }
 
 const mutations = {
-  SET_NAME: (state, name) => {
-    state.name = name
-  },
+
   SET_TOKEN: (state, token) => {
     state.token = token
   },
   SET_USER_DATA: (state, userData) => {
     state.userData = userData
-  }
+  },
 }
 
 const actions = {
