@@ -4,7 +4,8 @@ const state = {
     weatherData: {
         fullHourly: null,
         fullDaily: null,
-    }
+    },
+    dataReady: false
 }
 
 const mutations = {
@@ -13,6 +14,9 @@ const mutations = {
     },
     SET_FULL_DAILY: (state, data) => {
         state.weatherData.fullDaily = data
+    },
+    SET_DATA_READY: (state, data) => {
+        state.dataReady = data
     }
 }
 
@@ -24,6 +28,7 @@ const actions = {
             }).then(() => {
                 getDailyWeather({latitude, longitude, from}).then(res => {
                     commit('SET_FULL_DAILY', res.data.weather_data)
+                    commit('SET_DATA_READY', true)
                     resolve()
                 }).catch(error => {
                     reject(error)

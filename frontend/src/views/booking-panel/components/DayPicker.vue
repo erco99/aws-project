@@ -1,9 +1,10 @@
 <script>
 import { dayToString, monthToString } from "./commons";
+import { wmoToIcon, getDayWmo } from "@/views/booking-panel/components/weather/utils";
 export default {
   emits: ["dayUpdate"],
   setup() {
-    return { dayToString, monthToString };
+    return { dayToString, monthToString, wmoToIcon, getDayWmo };
   },
   data() {
     return {
@@ -49,11 +50,15 @@ export default {
           :color="isSelected ? 'blue-lighten-3' : 'white'"
           border
           :class="['ma-4', selectedClass]"
-          height="100"
-          width="100"
+          height="105"
+          width="105"
           @click="toggle">
+          <div><v-icon
+              v-if="this.$store.getters.weatherDataReady"
+              class="text-blue-grey-darken-2"
+              :icon="wmoToIcon(getDayWmo(day.toISOString()))"></v-icon></div>
           <div
-            class="d-flex fill-height text-center align-center justify-center">
+            class="d-flex text-center align-center justify-center">
             <div>
               <div>{{ dayToString[day.getDay()] }}</div>
               <div>{{ day.getDate() }}</div>

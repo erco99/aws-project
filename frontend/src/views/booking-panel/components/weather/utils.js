@@ -29,6 +29,37 @@ export function getTodayDate() {
         day >= 10 ? day : '0' + day].join("-");
 }
 
+export function getDayWmo(day, alg = "most_freq") {
+    const dayHourlyWeather = getDayHourlyWeather(day);
+    let wmo;
+    if (alg === "most_freq") {
+        const hashmap = dayHourlyWeather.wmo.reduce( (acc, val) => {
+            acc[val] = (acc[val] || 0) + 1
+            return acc
+        },{})
+        const maxValues = Object.keys(hashmap).filter(x => {
+            return hashmap[x] === Math.max.apply(null, Object.values(hashmap))
+        }).map(Number.parseInt)
+        wmo = Math.max(maxValues);
+    } else if (alg === "average") {
+        let wmoSum = 0;
+        for (let i in dayHourlyWeather.wmo) {
+            wmoSum += dayHourlyWeather.wmo[i];
+        }
+        const averageWmo = wmoSum / 24;
+        const legitValues = [0, 1, 2, 3, 45, 48, 51, 53, 55, 56, 57, 61, 63, 65, 66, 67, 71, 73, 75, 77, 80, 81, 82, 85, 86, 95, 96, 99];
+        let lastDelta;
+        legitValues.some(value => {
+            let delta = Math.abs(averageWmo - value);
+            if (delta >= lastDelta) return true;
+            wmo = value;
+            lastDelta = delta;
+        });
+        console.log("Average wmo: " + averageWmo + ", result: " + wmo)
+    }
+    return wmo;
+}
+
 function wmoToString(wmo, day, hour) {
     const dailyWeatherData = getDayDailyWeather(day);
     const isDay = hour > dailyWeatherData.sunrise && hour < dailyWeatherData.sunset;
@@ -65,8 +96,11 @@ function wmoToString(wmo, day, hour) {
 }
 
 export function wmoToIcon(wmo, hour, dayInfo) {
-    const _hour = hourToNumber(hour)
-    const isDay = _hour > dayInfo.sunrise && _hour < dayInfo.sunset;
+    let isDay = true;
+    if (hour && dayInfo) {
+        const _hour = hourToNumber(hour)
+        isDay = _hour > dayInfo.sunrise && _hour < dayInfo.sunset;
+    }
     switch (wmo) {
         case 0: case 1: return isDay ? "mdi-weather-sunny" : "mdi-weather-night"
         case 2: return isDay ? "mdi-weather-partly-cloudy" : "mdi-weather-night"
@@ -87,20 +121,22 @@ export function getDayHourlyWeather(day) {
     let firstIndex = 0;
     for (let time in fullWeatherData.hourly.time) {
         if (fullWeatherData.hourly.time[time].includes(dayToSearch)) {
-            firstIndex = time;
+            firstIndex = Number.parseInt(time);
             break;
         }
     }
+
     return {temp: fullWeatherData.hourly.temperature_2m.slice(firstIndex, firstIndex + 24).map(Math.round),
             wmo: fullWeatherData.hourly.weathercode.slice(firstIndex, firstIndex + 24)}
 }
 
 export function getDayDailyWeather(day) {
     const fullWeatherData = store.getters.dailyWeather;
+    const [ dayToSearch, _ ] = day.split("T");
     let index = 0;
     for (let time in fullWeatherData.daily.time) {
-        if (fullWeatherData.daily.time[time].includes(day)) {
-            index = time;
+        if (fullWeatherData.daily.time[time].includes(dayToSearch)) {
+            index = Number.parseInt(time);
             break;
         }
     }
