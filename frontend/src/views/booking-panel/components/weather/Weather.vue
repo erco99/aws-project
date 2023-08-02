@@ -1,7 +1,8 @@
 <template>
   <v-card class="mx-auto" elevation="4">
     <v-card-title class="text-center">{{ getWeatherHeaderString }}</v-card-title>
-    <div class="loading-circular" v-if="(dataReady === false || this.positionAcquired.acquired === false) && !error">
+    <v-divider class="mx-auto" :thickness="2" style="width: 95%"></v-divider>
+    <div class="loading-circular" v-if="(!this.dataReady || this.positionAcquired.acquired === false) && !error">
       <v-progress-circular
           :size="50"
           color="amber"
@@ -13,7 +14,7 @@
       <v-icon icon="mdi-alert-circle-outline" size="25px" color="red"></v-icon>
       {{ error }}
     </div>
-    <v-card-text class="d-flex justify-center" v-if="dataReady && this.positionAcquired.acquired && !error">
+    <v-card-text class="d-flex justify-center" v-if="this.dataReady && this.positionAcquired.acquired && !error">
       <v-slide-group show-arrows>
         <v-slide-group-item
             v-for="hour in range(hours.start, hours.end, hours.step)" :key="hour">
@@ -100,7 +101,7 @@
             getTemp(this.day.toISOString()), " ",
             getWeatherCodeString(this.day.toISOString()), " ",
             tempToString(this.weatherData.dayDaily.temp_max), "/", tempToString(this.weatherData.dayDaily.temp_min))
-      }
+      },
     }
   }
 </script>
