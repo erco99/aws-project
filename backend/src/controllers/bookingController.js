@@ -1,3 +1,4 @@
+const { default: mongoose } = require("mongoose");
 const bookings = require("../models/bookings");
 const field = require("../models/field");
 
@@ -35,24 +36,49 @@ async function getWeek(socket, day) {
   }
 }
 
-async function book(req, res) {
-  const body = req.body;
-  if (!body.hasOwnProperty("day") || !body.hasOwnProperty("bookings")) {
-    return res.sendStatus(400);
+let imChecking = false;
+async function book(newBooking) {
+  const document = await bookings.findOne({
+    day: newBooking.day,
+    field: newBooking.field,
+  });
+  if (!document) {
+    if (imChecking) {
+      return Promise.reject("Concurrency conflict");
+    } else {
+      imChecking = true;
+      const newDocument = {
+        day: newBooking.day,
+        field: newBooking.field,
+        bookings: [
+          {
+            services: newBooking.services,
+            players: newBooking.players,
+            owner: newBooking.owner,
+            time: newBooking.time,
+          },
+        ],
+      };
+      await bookings.create(newDocument);
+      imChecking = false;
+    }
+  } else {
+    // TODO: some -> newBooking.time >= instance.time && newBooking.time <= instance.time + 1
+    if (
+      document.bookings.some((instance) => instance.time == newBooking.time)
+    ) {
+      return Promise.reject("Already exist");
+    }
+    const newSubDocument = {
+      services: newBooking.services,
+      players: newBooking.players,
+      owner: newBooking.owner,
+      time: newBooking.time,
+    };
+    document.bookings.push(newSubDocument);
+    await document.save();
   }
-  if (!Date.parse(body.day) || typeof body.bookings != "object") {
-    return res.sendStatus(400);
-  }
-  try {
-    await bookings.findOneAndUpdate(
-      { day: new Date(body.day) },
-      { $push: { bookings: body.bookings } },
-      { upsert: true }
-    );
-    return res.sendStatus(200);
-  } catch (error) {
-    return res.sendStatus(500);
-  }
+  return newBooking;
 }
 
-module.exports = { getWeek };
+module.exports = { getWeek, book };

@@ -45,6 +45,10 @@ const io = socketio(server, { cors: corsOptions });
 io.on("connection", (socket) => {
   console.log("conected");
   socket.on("get-week", (day) => controller.getWeek(socket, day));
-  socket.on("new-booking", (newBooking) => io.emit("new-booking", newBooking));
+  socket.on("new-booking", async (newBooking) => {
+    for (const instance of newBooking) {
+      io.emit("new-booking", await controller.book(instance));
+    }
+  });
   socket.on("disconnect", () => console.log("disconnected"));
 });

@@ -2,14 +2,13 @@ const mongoose = require("mongoose");
 const field = require("./field");
 
 const booksSchema = mongoose.Schema({
-  _id: false,
   day: { type: Date, required: true },
   field: { type: String, required: true, ref: field },
   bookings: [
     {
       _id: false,
-      players: [{ name: String, surname: String, _id: false, id: String }],
-      owner: { name: String, surname: String, _id: false, id: String },
+      players: [{ name: String, surname: String, _id: false, email: String }],
+      owner: { name: String, surname: String, _id: false, email: String },
       time: {
         _id: false,
         hours: {

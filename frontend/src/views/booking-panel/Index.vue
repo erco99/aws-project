@@ -15,16 +15,16 @@ export default {
 
     // ask for position
     navigator.geolocation.getCurrentPosition(
-        position => {
-          this.latitude = position.coords.latitude;
-          this.longitude = position.coords.longitude;
-          this.positionAcquired = {acquired: true, code: null};
-        },
-        error => {
-          console.log(error)
-          this.positionAcquired = {acquired: false, code: error.code};
-        }
-    )
+      (position) => {
+        this.latitude = position.coords.latitude;
+        this.longitude = position.coords.longitude;
+        this.positionAcquired = { acquired: true, code: null };
+      },
+      (error) => {
+        console.log(error);
+        this.positionAcquired = { acquired: false, code: error.code };
+      }
+    );
   },
   unmounted() {
     this.socket.disconnect();
@@ -39,9 +39,14 @@ export default {
       longitude: null,
       positionAcquired: {
         acquired: false,
-        code: null
-      }
+        code: null,
+      },
     };
+  },
+  computed: {
+    dayToString() {
+      return this.day.toISOString().split("T")[0];
+    },
   },
   components: { Field, DayPicker, Weather },
   methods: {
@@ -67,7 +72,7 @@ export default {
             :minutes="field.minutes"
             :state="field.state"
             :surface="field.surface"
-            :day="day.toISOString()"
+            :day="dayToString"
             @new-booking="book" />
         </div>
       </div>
@@ -75,8 +80,8 @@ export default {
   </div>
   <!--  <div style="height: 50px"></div>-->
   <Weather
-      :day="day"
-      :latitude="latitude"
-      :longitude="longitude"
-      :positionAcquired="positionAcquired"></Weather>
+    :day="day"
+    :latitude="latitude"
+    :longitude="longitude"
+    :positionAcquired="positionAcquired"></Weather>
 </template>

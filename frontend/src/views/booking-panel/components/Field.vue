@@ -17,14 +17,14 @@ export default {
     minutes: { type: Number, required: true },
     surface: String,
     bookings: { type: Array, default: [] },
-    day: { type: String, default: new Date().toISOString() },
+    day: { type: String, default: new Date().toISOString().split("T")[0] },
   },
   data() {
     return {
       duration: 0,
       match: "",
       newBooking: {
-        hour: {},
+        time: {},
         owner: {
           name: this.$store.getters.userName,
           surname: this.$store.getters.userSurname,
@@ -39,7 +39,7 @@ export default {
   computed: {
     currentDayBookings() {
       for (const bookingDay of this.bookings) {
-        if (bookingDay.day == this.day) {
+        if (bookingDay.day === this.day) {
           return bookingDay.bookings;
         }
       }
@@ -47,7 +47,7 @@ export default {
     },
     isNextFree() {
       return !this.currentDayBookings.some(
-        (e) => e.time.hours == this.newBooking.hour.hours + 1
+        (e) => e.time.hours == this.newBooking.time.hours + 1
       );
     },
     inside() {
@@ -65,7 +65,9 @@ export default {
         const newBooking = [];
         for (let i = 0; i < this.duration; i++) {
           const pushMe = this.newBooking;
-          pushMe.hour.hours += i;
+          pushMe.time.hours += i;
+          pushMe.day = this.day;
+          pushMe.field = this.name;
           newBooking.push(pushMe);
         }
         this.$emit("newBooking", newBooking);
@@ -83,11 +85,11 @@ export default {
       }
       return { text: stringfy(hour, this.minutes), disabled: false };
     },
-    book(hour) {
+    book(time) {
       this.duration = 1;
       this.match = "single";
-      this.newBooking.hour = hour;
-      this.newBooking.servicies = this.defaultServices(hour.hours, this.inside);
+      this.newBooking.time = time;
+      this.newBooking.servicies = this.defaultServices(time.hours, this.inside);
       this.dialog = true;
     },
     defaultServices(time, inside) {
@@ -155,8 +157,8 @@ export default {
   <v-dialog v-model="dialog" scrollable width="1024"
     ><v-card>
       <Header
-        :hours="newBooking.hour.hours"
-        :minutes="newBooking.hour.minutes"
+        :hours="newBooking.time.hours"
+        :minutes="newBooking.time.minutes"
         :name="name"
         :day="day"></Header>
       <Body
