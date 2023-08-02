@@ -20,7 +20,7 @@
           <HourCard
               :hour="numberToHour(hour)"
               :wmo="this.weatherData.dayHourly.wmo[hour]"
-              :temp="Math.round(this.weatherData.dayHourly.temp[hour])"
+              :temp="this.weatherData.dayHourly.temp[hour]"
               :dayInfo="{sunrise: this.weatherData.dayDaily.sunrise, sunset: this.weatherData.dayDaily.sunset}"></HourCard>
         </v-slide-group-item>
       </v-slide-group>
@@ -54,9 +54,9 @@
       fetchWeatherData(latitude, longitude, from) {
         this.$store.dispatch('weather/fetchWeather', { latitude, longitude, from }).then(() => {
           this.weatherData.fullHourly = this.$store.getters.hourlyWeather;
-          this.weatherData.dayHourly = getDayHourlyWeather(this.weatherData.fullHourly, from);
+          this.weatherData.dayHourly = getDayHourlyWeather(from);
           this.weatherData.fullDaily = this.$store.getters.dailyWeather;
-          this.weatherData.dayDaily = getDayDailyWeather(this.weatherData.fullDaily, from);
+          this.weatherData.dayDaily = getDayDailyWeather(from);
           this.dataReady = true;
         }).catch(err => {
           console.log(err)

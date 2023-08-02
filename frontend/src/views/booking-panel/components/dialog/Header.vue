@@ -1,8 +1,9 @@
 <script>
 import { stringfy, dayToString, monthToString } from "../commons";
+import { getTemp, getWeatherCodeString } from "@/views/booking-panel/components/weather/utils";
 export default {
   setup() {
-    return { stringfy };
+    return { stringfy, getTemp, getWeatherCodeString };
   },
   props: {
     name: String,
@@ -46,9 +47,9 @@ export default {
       <v-card-subtitle class="text-center"> {{ weekDay }} </v-card-subtitle>
     </v-col>
     <v-col cols="12" sm="4">
-      <v-card-title class="text-center text-sm-right"> 23&deg;C </v-card-title>
+      <v-card-title class="text-center text-sm-right"> {{ getTemp(day, hours) }} </v-card-title>
       <v-card-subtitle class="text-center text-sm-right">
-        Soleggiato
+        {{ getWeatherCodeString(day, hours) }}
       </v-card-subtitle>
     </v-col>
   </v-row>

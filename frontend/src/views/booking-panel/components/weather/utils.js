@@ -1,3 +1,5 @@
+import store from "@/store";
+
 export function range(from, to, step) {
     const numbers = [];
     for (let num = from; num <= to; num += step) {
@@ -14,8 +16,8 @@ export function hourToNumber(hour) {
     return hour.split(":")[0];
 }
 
-export function tempToString(temp) {
-    return `${temp}°`;
+export function tempToString(temp, suffix = "°") {
+    return `${temp}${suffix}`;
 }
 
 export function getTodayDate() {
@@ -27,12 +29,14 @@ export function getTodayDate() {
         day >= 10 ? day : '0' + day].join("-");
 }
 
-export function wmoToString(wmo) {
-   switch (wmo) {
-       case 0: return "Cielo sereno"
-       case 1: return "Principalmente sereno"
+function wmoToString(wmo, day, hour) {
+    const dailyWeatherData = getDayDailyWeather(day);
+    const isDay = hour > dailyWeatherData.sunrise && hour < dailyWeatherData.sunset;
+    switch (wmo) {
+       case 0: return isDay ? "Soleggiato" : "Sereno"
+       case 1: return isDay ? "Principalmente soleggiato" : "Parzialmente sereno"
        case 2: return "Parzialmente nuvoloso"
-       case 3: return "Coperto"
+       case 3: return "Nuvoloso"
        case 45: return "Nebbia"
        case 48: return "Brina"
        case 51: return "Pioviggine leggera"
@@ -77,7 +81,8 @@ export function wmoToIcon(wmo, hour, dayInfo) {
     }
 }
 
-export function getDayHourlyWeather(fullWeatherData, day) {
+export function getDayHourlyWeather(day) {
+    const fullWeatherData = store.getters.hourlyWeather;
     const [ dayToSearch, _ ] = day.split("T");
     let firstIndex = 0;
     for (let time in fullWeatherData.hourly.time) {
@@ -86,11 +91,12 @@ export function getDayHourlyWeather(fullWeatherData, day) {
             break;
         }
     }
-    return {temp: fullWeatherData.hourly.temperature_2m.slice(firstIndex, firstIndex + 24),
+    return {temp: fullWeatherData.hourly.temperature_2m.slice(firstIndex, firstIndex + 24).map(Math.round),
             wmo: fullWeatherData.hourly.weathercode.slice(firstIndex, firstIndex + 24)}
 }
 
-export function getDayDailyWeather(fullWeatherData, day) {
+export function getDayDailyWeather(day) {
+    const fullWeatherData = store.getters.dailyWeather;
     let index = 0;
     for (let time in fullWeatherData.daily.time) {
         if (fullWeatherData.daily.time[time].includes(day)) {
@@ -106,9 +112,19 @@ export function getDayDailyWeather(fullWeatherData, day) {
     sunsetHour = parseInt(sunsetHour); sunsetMinute = parseInt(sunsetMinute);
     const sunset = sunsetMinute > 30 ? sunsetHour + 1 : sunsetHour;
 
-    return {temp_max: fullWeatherData.daily.temperature_2m_max[index],
-            temp_min: fullWeatherData.daily.temperature_2m_min[index],
+    return {temp_max: Math.round(fullWeatherData.daily.temperature_2m_max[index]),
+            temp_min: Math.round(fullWeatherData.daily.temperature_2m_min[index]),
             sunrise: sunrise,
             sunset: sunset,
             wmo: fullWeatherData.daily.weathercode[index]}
+}
+
+export function getTemp(day, hour) {
+    const dayHourlyWeather = getDayHourlyWeather(day);
+    return tempToString(Math.round(dayHourlyWeather.temp[hour]), "°C");
+}
+
+export function getWeatherCodeString(day, hour) {
+    const dayHourlyWeather = getDayHourlyWeather(day);
+    return wmoToString(dayHourlyWeather.wmo[hour], day, hour);
 }
