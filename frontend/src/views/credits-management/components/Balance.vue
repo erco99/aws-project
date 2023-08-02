@@ -6,7 +6,7 @@
             Saldo
           </div>
           <div class="text-h6 mb-1">
-            <div class="text-h3 font-weight-medium">€ 32.424</div>
+            <div class="text-h3 font-weight-medium">€ {{ userBalance }}</div>
           </div>
         </div>
       </v-card-item>
@@ -15,7 +15,14 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+
 export default {
+  computed: {
+    ...mapGetters([
+      'userBalance'
+    ]),
+  },
   
 }
 </script>
