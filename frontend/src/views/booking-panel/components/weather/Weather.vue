@@ -1,6 +1,6 @@
 <template>
   <v-card class="mx-auto" elevation="4">
-    <v-card-title class="text-center">Meteo</v-card-title>
+    <v-card-title class="text-center">{{ getWeatherHeaderString }}</v-card-title>
     <div class="loading-circular" v-if="(dataReady === false || this.positionAcquired.acquired === false) && !error">
       <v-progress-circular
           :size="50"
@@ -30,11 +30,20 @@
 
 <script>
   import HourCard from "@/views/booking-panel/components/weather/HourCard.vue";
-  import { range, numberToHour, getDayHourlyWeather, getDayDailyWeather, getTodayDate } from "@/views/booking-panel/components/weather/utils";
+  import {
+    range,
+    numberToHour,
+    getDayHourlyWeather,
+    getDayDailyWeather,
+    getTodayDate,
+    getTemp,
+    getWeatherCodeString,
+    tempToString
+  } from "@/views/booking-panel/components/weather/utils";
   export default {
     components: { HourCard },
     props: ['day', 'latitude', 'longitude', 'positionAcquired'],
-    setup() { return { range, numberToHour }},
+    setup() { return { range, numberToHour, getWeatherCodeString }},
     data: () => ({
       hours: {
         start: 8,
@@ -67,8 +76,8 @@
     watch: {
       day(dayToDisplay) {
         if (dayToDisplay && this.weatherData.fullHourly && this.weatherData.fullDaily) {
-          this.weatherData.dayHourly = getDayHourlyWeather(this.weatherData.fullHourly, dayToDisplay.toISOString());
-          this.weatherData.dayDaily = getDayDailyWeather(this.weatherData.fullDaily, dayToDisplay.toISOString());
+          this.weatherData.dayHourly = getDayHourlyWeather(dayToDisplay.toISOString());
+          this.weatherData.dayDaily = getDayDailyWeather(dayToDisplay.toISOString());
         }
       },
       positionAcquired(newObj) {
@@ -79,10 +88,18 @@
             // User has not accepted the geolocation
             this.error = "Impossibile mostrare il meteo, fornire il permesso alla geolocalizzaione"
           } else {
-           // Another error
+            // Another error
             this.error = "Impossibile mostrare il meteo"
           }
         }
+      }
+    },
+    computed: {
+      getWeatherHeaderString() {
+        return !this.dataReady ? "Meteo" : "Meteo - ".concat(
+            getTemp(this.day.toISOString()), " ",
+            getWeatherCodeString(this.day.toISOString()), " ",
+            tempToString(this.weatherData.dayDaily.temp_max), "/", tempToString(this.weatherData.dayDaily.temp_min))
       }
     }
   }

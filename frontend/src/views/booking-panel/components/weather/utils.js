@@ -120,11 +120,19 @@ export function getDayDailyWeather(day) {
 }
 
 export function getTemp(day, hour) {
+    if (!hour) {
+        const date = new Date(Date.now());
+        hour = date.getHours();
+    }
     const dayHourlyWeather = getDayHourlyWeather(day);
     return tempToString(Math.round(dayHourlyWeather.temp[hour]), "°C");
 }
 
 export function getWeatherCodeString(day, hour) {
+    if (!hour) {
+        const date = new Date(Date.now());
+        hour = date.getHours();
+    }
     const dayHourlyWeather = getDayHourlyWeather(day);
     return wmoToString(dayHourlyWeather.wmo[hour], day, hour);
 }
