@@ -43,11 +43,6 @@ export default {
       },
     };
   },
-  computed: {
-    dayToString() {
-      return this.day.toISOString().split("T")[0];
-    },
-  },
   components: { Field, DayPicker, Weather },
   methods: {
     book(newBooking) {
@@ -72,7 +67,7 @@ export default {
             :minutes="field.minutes"
             :state="field.state"
             :surface="field.surface"
-            :day="dayToString"
+            :day="day"
             @new-booking="book" />
         </div>
       </div>

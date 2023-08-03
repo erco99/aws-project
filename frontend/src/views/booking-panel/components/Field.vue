@@ -2,7 +2,7 @@
 import Header from "./dialog/Header.vue";
 import Body from "./dialog/Body.vue";
 import HourButton from "./HourButton.vue";
-import { stringfy } from "./commons";
+import { stringfy, domainDate } from "./commons";
 export default {
   setup() {
     return { stringfy };
@@ -17,7 +17,7 @@ export default {
     minutes: { type: Number, required: true },
     surface: String,
     bookings: { type: Array, default: [] },
-    day: { type: String, default: new Date().toISOString().split("T")[0] },
+    day: { type: String, default: domainDate(new Date()) },
   },
   data() {
     return {
@@ -38,6 +38,7 @@ export default {
   },
   computed: {
     currentDayBookings() {
+      console.log(this.bookings);
       for (const bookingDay of this.bookings) {
         if (bookingDay.day === this.day) {
           return bookingDay.bookings;

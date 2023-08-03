@@ -24,7 +24,7 @@ async function getWeek(socket, day) {
       for (const fieldDay of week) {
         if (field.name == fieldDay.field) {
           field.bookings.push({
-            day: fieldDay.day,
+            day: fieldDay.day.split("T")[0],
             bookings: fieldDay.bookings,
           });
         }

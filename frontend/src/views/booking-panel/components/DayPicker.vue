@@ -1,10 +1,13 @@
 <script>
-import { dayToString, monthToString } from "./commons";
-import { wmoToIcon, getDayWmo } from "@/views/booking-panel/components/weather/utils";
+import { domainDate, getStringDay, getStringMonth, getDate } from "./commons";
+import {
+  wmoToIcon,
+  getDayWmo,
+} from "@/views/booking-panel/components/weather/utils";
 export default {
   emits: ["dayUpdate"],
   setup() {
-    return { dayToString, monthToString, wmoToIcon, getDayWmo };
+    return { wmoToIcon, getDayWmo, getStringDay, getStringMonth, getDate };
   },
   data() {
     return {
@@ -19,10 +22,10 @@ export default {
       let current = new Date();
       const days = [];
       do {
-        days.push(new Date(current));
+        days.push(domainDate(current));
         current.setUTCDate(current.getDate() + 1);
       } while (current.getDay() != 0);
-      days.push(current);
+      days.push(domainDate(current));
       return days;
     },
   },
@@ -53,16 +56,17 @@ export default {
           height="105"
           width="105"
           @click="toggle">
-          <div><v-icon
+          <div>
+            <v-icon
               v-if="this.$store.getters.weatherDataReady"
               class="text-blue-grey-darken-2"
-              :icon="wmoToIcon(getDayWmo(day.toISOString()))"></v-icon></div>
-          <div
-            class="d-flex text-center align-center justify-center">
+              :icon="wmoToIcon(getDayWmo(day))"></v-icon>
+          </div>
+          <div class="d-flex text-center align-center justify-center">
             <div>
-              <div>{{ dayToString[day.getDay()] }}</div>
-              <div>{{ day.getDate() }}</div>
-              <div>{{ monthToString[day.getMonth()] }}</div>
+              <div>{{ getStringDay(day) }}</div>
+              <div>{{ getDate(day) }}</div>
+              <div>{{ getStringMonth(day) }}</div>
             </div>
           </div>
         </v-card>

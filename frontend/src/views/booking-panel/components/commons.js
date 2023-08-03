@@ -11,7 +11,7 @@ export function stringfy(hours, minutes) {
   return String(hours).concat(":", String(minutes));
 }
 
-export const dayToString = [
+const dayToString = [
   "Domenica",
   "Lunedì",
   "Martedì",
@@ -21,7 +21,7 @@ export const dayToString = [
   "Sabato",
 ];
 
-export const monthToString = [
+const monthToString = [
   "Gennaio",
   "Febbraio",
   "Marzo",
@@ -35,3 +35,19 @@ export const monthToString = [
   "Novembre",
   "Dicembre",
 ];
+
+export function domainDate(date) {
+  return date.toISOString().split("T")[0];
+}
+
+export function getStringMonth(domainDate) {
+  return monthToString[new Date(domainDate).getMonth()];
+}
+
+export function getDate(domainDate) {
+  return new Date(domainDate).getDate();
+}
+
+export function getStringDay(domainDate) {
+  return dayToString[new Date(domainDate).getDay()];
+}
