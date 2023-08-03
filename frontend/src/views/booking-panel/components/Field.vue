@@ -38,7 +38,6 @@ export default {
   },
   computed: {
     currentDayBookings() {
-      console.log(this.bookings);
       for (const bookingDay of this.bookings) {
         if (bookingDay.day === this.day) {
           return bookingDay.bookings;

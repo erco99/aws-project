@@ -38,11 +38,10 @@ async function getWeek(socket, day) {
       }
       response.push(json);
     }
-    console.log(response);
     socket.emit("week", response);
-  } catch (e) {
-    console.log(e);
-    socket.emit("error", e);
+  } catch (error) {
+    console.log(error);
+    socket.emit("error", error.message);
   }
 }
 
