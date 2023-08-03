@@ -17,21 +17,31 @@ async function getWeek(socket, day) {
     const week = await bookings.find({ day: { $gte: from, $lte: to } });
     const fields = await field.find({}).sort({ name: 1 });
     // Assemble response and emit
+    const response = [];
     for (const field of fields) {
-      field.bookings = [];
-    }
-    for (const field of fields) {
+      const json = {
+        name: field.name,
+        closing: field.closing,
+        opening: field.opening,
+        minutes: field.minutes,
+        surface: field.surface,
+        state: field.state,
+        bookingsPerDay: [],
+      };
       for (const fieldDay of week) {
-        if (field.name == fieldDay.field) {
-          field.bookings.push({
-            day: fieldDay.day.split("T")[0],
+        if (field.name === fieldDay.field) {
+          json.bookingsPerDay.push({
+            day: fieldDay.day.toISOString().split("T")[0],
             bookings: fieldDay.bookings,
           });
         }
       }
+      response.push(json);
     }
-    socket.emit("week", fields);
+    console.log(response);
+    socket.emit("week", response);
   } catch (e) {
+    console.log(e);
     socket.emit("error", e);
   }
 }

@@ -61,7 +61,7 @@ export default {
         <div class="p-2" v-for="field in fields" :key="field.name">
           <Field
             :name="field.name"
-            :bookings="field.bookings"
+            :bookings="field.bookingsPerDay"
             :closing="field.closing"
             :opening="field.opening"
             :minutes="field.minutes"
