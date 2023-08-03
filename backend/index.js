@@ -4,6 +4,7 @@ dotenv.config({ path: join(__dirname, "docker", "config.env") });
 dotenv.config({ path: join(__dirname, ".env") });
 
 const cookieParser = require("cookie-parser");
+const useragent = require('express-useragent');
 const mongoose = require("mongoose");
 const mongodbConfig = require("./src/configs/mongodb");
 const auth = require("./src/routes/auth");
@@ -25,6 +26,8 @@ mongoose
 app.use(express.json());
 
 app.use(cookieParser());
+
+app.use(useragent.express());
 
 // Register auth routes
 app.use("/auth", cors(corsOptions), auth);

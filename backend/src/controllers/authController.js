@@ -39,8 +39,13 @@ async function register(req, res) {
         await sendEmail(name, email, otp);
 
         // Set cookie with otp info
-        const otpInfo = {hash: otp_hash, iat, attempts: 0}
-        res.cookie('otp_info', JSON.stringify(otpInfo), {httpOnly: true, maxAge: 24*60*60*1000, sameSite: 'None', secure: true, overwrite: true})
+        const otpInfo = {hash: otp_hash, iat, attempts: 0};
+        const cookieAttributes = { httpOnly: true, maxAge: 24*60*60*1000, overwrite: true};
+        if (!req.useragent.isSafari) {
+            Object.defineProperty(cookieAttributes, "sameSite", {value: 'None'});
+            Object.defineProperty(cookieAttributes, "secure", {value: true});
+        }
+        res.cookie('otp_info', JSON.stringify(otpInfo), cookieAttributes);
         return res.sendStatus(200);
     } catch (error) {
         console.log(error);
@@ -68,7 +73,12 @@ async function newOTP(req, res) {
     await sendEmail(user.name, user.email, otp);
 
     const otpInfo = {hash: otp_hash, iat, attempts: 0};
-    res.cookie('otp_info', JSON.stringify(otpInfo), {httpOnly: true, maxAge: 24*60*60*1000, sameSite: 'None', secure: true, overwrite: true});
+    const cookieAttributes = { httpOnly: true, maxAge: 24*60*60*1000, overwrite: true};
+    if (!req.useragent.isSafari) {
+        Object.defineProperty(cookieAttributes, "sameSite", {value: 'None'});
+        Object.defineProperty(cookieAttributes, "secure", {value: true});
+    }
+    res.cookie('otp_info', JSON.stringify(otpInfo), cookieAttributes);
     return res.sendStatus(200);
 }
 
@@ -90,13 +100,23 @@ async function verifyOTP(req, res) {
             // User verified -> remove status field from document
             await user.updateOne({ $unset: {status: "" } }).exec();
             // Clear cookie after user is verified
-            res.clearCookie('otp_info', {httpOnly: true, sameSite: 'None', secure: true});
+            const cookieAttributes = { httpOnly: true }
+            if (!req.useragent.isSafari) {
+                Object.defineProperty(cookieAttributes, "sameSite", {value: 'None'});
+                Object.defineProperty(cookieAttributes, "secure", {value: true});
+            }
+            res.clearCookie('otp_info', cookieAttributes);
             return res.sendStatus(202);
         } else {
             // Increment the number of attempts and update cookie
             const oldOtpInfo = JSON.parse(cookies.otp_info);
             const otpInfo = {hash: oldOtpInfo.hash, iat: oldOtpInfo.iat, attempts: oldOtpInfo.attempts + 1};
-            res.cookie('otp_info', JSON.stringify(otpInfo), {httpOnly: true, maxAge: 24*60*60*1000, sameSite: 'None', secure: true, overwrite: true});
+            const cookieAttributes = { httpOnly: true, maxAge: 24*60*60*1000, overwrite: true};
+            if (!req.useragent.isSafari) {
+                Object.defineProperty(cookieAttributes, "sameSite", {value: 'None'});
+                Object.defineProperty(cookieAttributes, "secure", {value: true});
+            }
+            res.cookie('otp_info', JSON.stringify(otpInfo), cookieAttributes);
             return res.sendStatus(401);
         }
     } catch (error) {
@@ -105,7 +125,12 @@ async function verifyOTP(req, res) {
             // Remove user from db
             user.deleteOne({});
             // Clear otp_info cookie
-            res.clearCookie('otp_info', {httpOnly: true, sameSite: 'None', secure: true});
+            const cookieAttributes = { httpOnly: true }
+            if (!req.useragent.isSafari) {
+                Object.defineProperty(cookieAttributes, "sameSite", {value: 'None'});
+                Object.defineProperty(cookieAttributes, "secure", {value: true});
+            }
+            res.clearCookie('otp_info', cookieAttributes);
             return res.status(410).json({message: "error", code: "otp-expired"});
         } else if (error.message === "otp-max-attempts") {
             return res.status(410).json({message: "error", code: "otp-max-attempts"});
@@ -114,7 +139,12 @@ async function verifyOTP(req, res) {
             // Remove user from db
             user.deleteOne({});
             // Clear otp_info cookie
-            res.clearCookie('otp_info', {httpOnly: true, sameSite: 'None', secure: true});
+            const cookieAttributes = { httpOnly: true }
+            if (!req.useragent.isSafari) {
+                Object.defineProperty(cookieAttributes, "sameSite", {value: 'None'});
+                Object.defineProperty(cookieAttributes, "secure", {value: true});
+            }
+            res.clearCookie('otp_info', cookieAttributes);
             return res.status(500).json({ error: error.toString() });
         }
     }
@@ -124,7 +154,14 @@ async function cancel(req, res) {
     const cookies = req.cookies;
 
     // If otp expires cookie are cleared in verifyOTP
-    if (cookies.otp_info) res.clearCookie('otp_info', {httpOnly: true, sameSite: 'None', secure: true});
+    if (cookies.otp_info) {
+        const cookieAttributes = { httpOnly: true }
+        if (!req.useragent.isSafari) {
+            Object.defineProperty(cookieAttributes, "sameSite", {value: 'None'});
+            Object.defineProperty(cookieAttributes, "secure", {value: true});
+        }
+        res.clearCookie('otp_info', cookieAttributes);
+    }
 
     const user = await User.findOne({ email: req.body.email }).exec();
     // If otp expires user is deleted in verifyOTP
@@ -161,7 +198,12 @@ async function login(req, res) {
     user.refresh_token = {value: refreshToken, iat: iat};
     await user.save();
 
-    res.cookie('refresh_token', refreshToken, {httpOnly: true, maxAge: 24*60*60*1000, sameSite: 'None', secure: true});
+    const cookieAttributes = { httpOnly: true, maxAge: 24*60*60*1000 }
+    if (!req.useragent.isSafari) {
+        Object.defineProperty(cookieAttributes, "sameSite", {value: 'None'});
+        Object.defineProperty(cookieAttributes, "secure", {value: true});
+    }
+    res.cookie('refresh_token', refreshToken, cookieAttributes);
     return res.json({'access_token': accessToken});
 }
 
@@ -174,14 +216,24 @@ async function logout(req, res) {
     const user = await User.findOne({'refresh_token.value': refreshToken}).exec();
 
     if(!user) {
-        res.clearCookie('refresh_token', {httpOnly: true, sameSite: 'None', secure: true});
+        const cookieAttributes = { httpOnly: true }
+        if (!req.useragent.isSafari) {
+            Object.defineProperty(cookieAttributes, "sameSite", {value: 'None'});
+            Object.defineProperty(cookieAttributes, "secure", {value: true});
+        }
+        res.clearCookie('refresh_token', cookieAttributes);
         return res.sendStatus(204);
     }
 
     user.refresh_token = null;
     await user.save();
 
-    res.clearCookie('refresh_token', {httpOnly: true, sameSite: 'None', secure: true});
+    const cookieAttributes = { httpOnly: true }
+    if (!req.useragent.isSafari) {
+        Object.defineProperty(cookieAttributes, "sameSite", {value: 'None'});
+        Object.defineProperty(cookieAttributes, "secure", {value: true});
+    }
+    res.clearCookie('refresh_token', cookieAttributes);
     return res.sendStatus(204);
 }
 
@@ -218,12 +270,18 @@ async function refresh(req, res) {
         user.refresh_token.value = newRefreshToken;
         await user.save();
 
-        res.clearCookie('refresh_token', {httpOnly: true, sameSite: 'None', secure: true});
-        res.cookie('refresh_token', newRefreshToken, {
-                httpOnly: true,
-                maxAge: 24 * 60 * 60 * 1000,
-                sameSite: 'None',
-                secure: true})
+        let cookieAttributes = { httpOnly: true }
+        if (!req.useragent.isSafari) {
+            Object.defineProperty(cookieAttributes, "sameSite", {value: 'None'});
+            Object.defineProperty(cookieAttributes, "secure", {value: true});
+        }
+        res.clearCookie('refresh_token', cookieAttributes);
+        cookieAttributes = { httpOnly: true, maxAge: 24*60*60*1000, overwrite: true};
+        if (!req.useragent.isSafari) {
+            Object.defineProperty(cookieAttributes, "sameSite", {value: 'None'});
+            Object.defineProperty(cookieAttributes, "secure", {value: true});
+        }
+        res.cookie('refresh_token', newRefreshToken, cookieAttributes)
         return res.json({'access_token': accessToken});
     } catch (error) {
         console.log(error);
