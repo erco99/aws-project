@@ -77,7 +77,7 @@ async function book(newBooking) {
       document.bookings.some(
         (instance) =>
           before(instance.time, newBooking.time) >= 0 &&
-          before(newBooking.time, nextHour(instance.time)) >= 0
+          before(newBooking.time, nextHour(instance.time)) > 0
       )
     ) {
       return "Already exist";
@@ -91,7 +91,16 @@ async function book(newBooking) {
     document.bookings.push(newSubDocument);
     await document.save();
   }
-  return newBooking;
+  return {
+    day: newBooking.day,
+    field: newBooking.field,
+    newBooking: {
+      services: newBooking.services,
+      players: newBooking.players,
+      owner: newBooking.owner,
+      time: newBooking.time,
+    },
+  };
 }
 
 // Return > 0 if time1 < time2

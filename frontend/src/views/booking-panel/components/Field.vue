@@ -36,6 +36,19 @@ export default {
       dialog: false,
     };
   },
+  watch: {
+    bookings: {
+      handler: function (_newValue) {
+        console.log("il lupo perde il pelo...");
+        if (this.dialog) {
+          console.log("... ma non il vizio");
+          this.dialog = false;
+          alert("L'ora che stavi cercando di prenotare non è più disponibile");
+        }
+      },
+      deep: true,
+    },
+  },
   computed: {
     currentDayBookings() {
       for (const bookingDay of this.bookings) {
