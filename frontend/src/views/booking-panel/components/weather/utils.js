@@ -117,10 +117,9 @@ export function wmoToIcon(wmo, hour, dayInfo) {
 
 export function getDayHourlyWeather(day) {
     const fullWeatherData = store.getters.hourlyWeather;
-    const [ dayToSearch, _ ] = day.split("T");
     let firstIndex = 0;
     for (let time in fullWeatherData.hourly.time) {
-        if (fullWeatherData.hourly.time[time].includes(dayToSearch)) {
+        if (fullWeatherData.hourly.time[time].includes(day)) {
             firstIndex = Number.parseInt(time);
             break;
         }
@@ -132,10 +131,9 @@ export function getDayHourlyWeather(day) {
 
 export function getDayDailyWeather(day) {
     const fullWeatherData = store.getters.dailyWeather;
-    const [ dayToSearch, _ ] = day.split("T");
     let index = 0;
     for (let time in fullWeatherData.daily.time) {
-        if (fullWeatherData.daily.time[time].includes(dayToSearch)) {
+        if (fullWeatherData.daily.time[time].includes(day)) {
             index = Number.parseInt(time);
             break;
         }

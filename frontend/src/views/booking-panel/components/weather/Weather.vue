@@ -77,8 +77,8 @@
     watch: {
       day(dayToDisplay) {
         if (dayToDisplay && this.weatherData.fullHourly && this.weatherData.fullDaily) {
-          this.weatherData.dayHourly = getDayHourlyWeather(dayToDisplay.toISOString());
-          this.weatherData.dayDaily = getDayDailyWeather(dayToDisplay.toISOString());
+          this.weatherData.dayHourly = getDayHourlyWeather(dayToDisplay);
+          this.weatherData.dayDaily = getDayDailyWeather(dayToDisplay);
         }
       },
       positionAcquired(newObj) {
@@ -98,8 +98,8 @@
     computed: {
       getWeatherHeaderString() {
         return !this.dataReady ? "Meteo" : "Meteo - ".concat(
-            getTemp(this.day.toISOString()), " ",
-            getWeatherCodeString(this.day.toISOString()), " ",
+            getTemp(this.day), " ",
+            getWeatherCodeString(this.day), " ",
             tempToString(this.weatherData.dayDaily.temp_max), "/", tempToString(this.weatherData.dayDaily.temp_min))
       },
     }
