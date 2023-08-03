@@ -53,7 +53,7 @@ async function book(newBooking) {
   });
   if (!document) {
     if (imChecking) {
-      return Promise.reject("Concurrency conflict");
+      return "Concurrency conflict";
     } else {
       imChecking = true;
       const newDocument = {
@@ -74,9 +74,13 @@ async function book(newBooking) {
   } else {
     // TODO: some -> newBooking.time >= instance.time && newBooking.time <= instance.time + 1
     if (
-      document.bookings.some((instance) => instance.time == newBooking.time)
+      document.bookings.some(
+        (instance) =>
+          before(instance.time, newBooking.time) >= 0 &&
+          before(newBooking.time, nextHour(instance.time)) >= 0
+      )
     ) {
-      return Promise.reject("Already exist");
+      return "Already exist";
     }
     const newSubDocument = {
       services: newBooking.services,
@@ -88,6 +92,22 @@ async function book(newBooking) {
     await document.save();
   }
   return newBooking;
+}
+
+// Return > 0 if time1 < time2
+// Return = 0 if time1 = time2
+// Return < 0 if time1 > time2
+function before(time1, time2) {
+  const diff = time2.hours - time1.hours;
+  if (diff === 0) {
+    return time2.minutes - time1.minutes;
+  }
+  return diff;
+}
+
+function nextHour(time) {
+  time.hours = time.hours + 1;
+  return time;
 }
 
 module.exports = { getWeek, book };
