@@ -1,4 +1,4 @@
-import {login, logout, register, newOTP, verifyOTP, user, refresh, cancelRegistration} from '@/api/user'
+import {login, logout, register, newOTP, verifyOTP, user, refresh, cancelRegistration, paymentMethodInsert} from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/authentication'
 import store from "@/store";
 
@@ -32,7 +32,7 @@ const actions = {
     })
   },
 
-  newOTP({ commit }, data) {
+  newOTP({ commit }, data) {paymentMethodInsert
     return new Promise((resolve, reject) => {
       newOTP(data).then(() => {
         resolve()
@@ -89,15 +89,15 @@ const actions = {
   },
 
   logout({ commit }) {
-      return new Promise((resolve, reject) => {
-        logout().then(() => {
-          commit('SET_TOKEN', '')
-          removeToken()
-          resolve()
-        }).catch(error => {
-          reject(error)
-        })
+    return new Promise((resolve, reject) => {
+      logout().then(() => {
+        commit('SET_TOKEN', '')
+        removeToken()
+        resolve()
+      }).catch(error => {
+        reject(error)
       })
+    })
   },
 
   user({ commit }) {
@@ -106,6 +106,18 @@ const actions = {
         commit('SET_USER_DATA', response.data.user_data)
         resolve()
       }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+
+  paymentMethodInsert({ commit }, cardData) {
+    return new Promise((resolve, reject) => {
+      paymentMethodInsert(cardData).then((response) => {
+        resolve(response.data)
+        console.log("bene")
+      }).catch(error => {
+        console.log("male")
         reject(error)
       })
     })

@@ -8,6 +8,7 @@ const getters = {
   userEmail: state => state.user.userData.email,
   userNumber: state => state.user.userData.number,
   userBalance: state => state.user.userData.balance,
+  userPaymentMethod: state => state.user.userData.payment_method,
   routes: state => state.routes.routes,
   hourlyWeather: state => state.weather.weatherData.fullHourly,
   dailyWeather: state => state.weather.weatherData.fullDaily,
