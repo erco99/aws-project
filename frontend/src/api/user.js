@@ -61,6 +61,14 @@ export function user() {
   });
 }
 
+export function paymentMethodInsert(data) {
+  return request({
+    url: "/users/paymentMethodInsert",
+    method: "post",
+    data
+  })
+}
+
 export function getUsers() {
   return request({
     url: "/users",
