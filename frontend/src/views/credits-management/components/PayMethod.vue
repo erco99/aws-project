@@ -91,7 +91,6 @@
                   <v-btn
                     outlined 
                     color="green"
-                    type="submit"
                     block
                     class="me-4"
                     text="Conferma"
@@ -101,20 +100,17 @@
                   <v-btn
                     outlined
                     color="red"
-                    type="cancel"
                     block
                     @click="cancelPayInsert"
                     text="Annulla"
                   ></v-btn>
-      
-
             </v-form>
           </v-card-text>
           </v-card>
         </v-dialog>
       </div>
 
-      <div class="text-caption">
+      <div class="text-caption" v-if="isPaymentMethodInserted==true">
         <v-card-item>
           <v-btn variant="outlined">
             Deposita
@@ -127,11 +123,13 @@
           </v-btn>
         </v-card-item>
       </div>
+      <h1>{{ userPaymentMethod }}</h1>
     </v-card>
 </template>
 
 <script>
 import VuePaycard from "vue-paycard/vue-paycard"
+import { mapGetters } from 'vuex';
 
 export default {
   components: {
@@ -176,14 +174,24 @@ export default {
     ]
   }),
   computed: {
+    ...mapGetters([
+      'userPaymentMethod'
+    ]),
     formatCardNumber(){
       return this.valueFields.cardNumber ? this.valueFields.cardNumber.match(/.{1,4}/g).join(' ') : '';
     } 
   },
   methods: {
+    isPaymentMethodInserted() {
+      if(userPaymentMethod == null) {
+        return false
+      }
+      return true
+    },
     cancelPayInsert() {
       this.dialog = false
       this.$refs.form.reset()
+      console.log(this.$store.getters.userPaymentMethod)
     },
     updateValue(e){
       this.valueFields.cardNumber = e.target.value.replace(/ /g,'');
@@ -207,9 +215,19 @@ export default {
     async validate () {
       this.loading = true
       
-        const { valid } = this.$refs.form.validate()
+        const { valid } = await this.$refs.form.validate()
         if (valid) {
           alert('Form is valid')
+
+          let data = {
+            payment_method: {
+              card_number: this.valueFields.cardNumber,
+              card_owner: this.valueFields.cardName,
+              card_expiration: "0"+this.valueFields.cardMonth+"/"+this.valueFields.cardYear,
+              card_cvv: this.valueFields.cardCvv
+            }
+          }
+          this.$store.dispatch('user/paymentMethodInsert', data)
         }
     },
   }
