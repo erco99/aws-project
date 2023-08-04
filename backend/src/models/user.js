@@ -30,6 +30,25 @@ const userSchema = mongoose.Schema(
             required: true
         },
 
+        payment_method: {
+            card_number: {
+                type: Number,
+                required: false
+            },
+            card_owner: {
+                type: String,
+                required: false
+            },
+            card_expiration: {
+                type: String,
+                required: false
+            }, 
+            card_cvv: {
+                type: String,
+                required: false
+            },
+        },
+
         hash: {
             type: String,
             required: true
