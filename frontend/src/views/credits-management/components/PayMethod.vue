@@ -35,16 +35,16 @@
           <v-divider></v-divider>
 
             <v-card-text class="pa-5">
-            <v-form validate-on="submit lazy" @submit.prevent="submit">
+            <v-form ref="form">
               <div class="font-weight-medium label-div">Numero carta</div>
               <v-text-field 
                 placeholder="xxxx-xxxx-xxxx-xxxx"
                 density="compact"
+                :rules="cardNumberRules"
                 :value="formatCardNumber"
                 @input="updateValue"
                 v-model="valueFields.cardNumber" 
                 @keypress="isNumber($event)"
-
                 maxlength="19"
                 variant="outlined">
               </v-text-field>
@@ -52,10 +52,11 @@
               <v-text-field 
                 placeholder="es. Mario Rossi"
                 density="compact"
+                :rules="cardNameRules"
                 v-model="valueFields.cardName"
                 variant="outlined">
               </v-text-field>
-              <v-row>
+              <v-row style="margin-bottom: 5px">
                 <v-col cols="8">
                   <div class="font-weight-medium label-div">Scadenza carta</div>
                   <div style="display: flex">
@@ -65,41 +66,44 @@
                       density="compact"
                       variant="outlined"
                       v-model="valueFields.cardMonth"
-                      :items="months"></v-select>
+                      :items="months"
+                      :rules="dateYearRules"></v-select>
                     <v-select 
                       label="Anno"
                       density="compact"
                       variant="outlined"
                       v-model="valueFields.cardYear"
-                      :items="years"></v-select>
+                      :items="years"
+                      :rules="dateYearRules"></v-select>
                   </div>
                 </v-col>
                 <v-col>
                   <div class="font-weight-medium label-div">CVV/CVC</div>
                   <v-text-field 
+                    maxlength="3"
                     placeholder="xxx"
                     density="compact"
                     variant="outlined"
-                    v-model="valueFields.cardCvv"></v-text-field>
+                    v-model="valueFields.cardCvv"
+                    :rules="cardCvvRules"></v-text-field>
                 </v-col>
               </v-row>
                   <v-btn
                     outlined 
                     color="green"
-                    :loading="loading"
-                    type="Submit"
+                    type="submit"
                     block
                     class="me-4"
                     text="Conferma"
+                    @click="validate"
                     style="margin-bottom: 10px"
                   ></v-btn>
                   <v-btn
                     outlined
                     color="red"
-                    :loading="loading"
-                    type="Cancel"
+                    type="cancel"
                     block
-                    @click="dialog = false"
+                    @click="cancelPayInsert"
                     text="Annulla"
                   ></v-btn>
       
@@ -151,7 +155,25 @@ export default {
     dialog: false,
     months: [],
     years: [],
-    amount: 8
+    loading: false,
+    cardNumberRules: [
+      value => {
+        if(value?.length == 16) return true
+        return 'Numero non valido'
+      }
+    ],
+    cardNameRules: [
+      v => !!v || 'Il campo non può essere vuoto'
+    ],
+    dateYearRules: [
+      v => !!v || 'Campo obbligatorio'
+    ],
+    cardCvvRules: [
+      value => {
+        if(value?.length == 3) return true
+        return 'cvv/cvc non valido'
+      }
+    ]
   }),
   computed: {
     formatCardNumber(){
@@ -159,6 +181,10 @@ export default {
     } 
   },
   methods: {
+    cancelPayInsert() {
+      this.dialog = false
+      this.$refs.form.reset()
+    },
     updateValue(e){
       this.valueFields.cardNumber = e.target.value.replace(/ /g,'');
        const value = e.target.value
@@ -177,6 +203,14 @@ export default {
       } else {
         return true;
       }
+    },
+    async validate () {
+      this.loading = true
+      
+        const { valid } = this.$refs.form.validate()
+        if (valid) {
+          alert('Form is valid')
+        }
     },
   }
 
