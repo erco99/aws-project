@@ -22,7 +22,7 @@ export default {
 }
 .button {
   border-radius: 3%;
-  margin: 0.4px;
+  margin-right: 1px;
   width: 75px;
   height: 60px;
   text-align: center;
