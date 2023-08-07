@@ -112,7 +112,7 @@
 
       <div class="paycard" v-else>
         <vue-paycard :value-fields="valueFields"
-            :has-random-backgrounds="false" />
+            :has-random-backgrounds="false"/>
         <v-card-item>
           <v-btn variant="outlined" @click="sendCredit">
             Deposita
@@ -130,7 +130,7 @@
 </template>
 
 <script>
-import VuePaycard from "vue-paycard/vue-paycard"
+import VuePaycard from "/src/components/vue-paycard/vue-paycard.js"
 import { mapGetters } from 'vuex';
 
 export default {
@@ -144,16 +144,20 @@ export default {
       this.years.push(i)
     }
 
-    this.valueFields.cardName = this.$store.getters.userPaymentMethod.card_owner
+    if(this.$store.getters.userPaymentMethod != null) {
+      this.valueFields.cardName = this.$store.getters.userPaymentMethod.card_owner
 
-    let number = this.$store.getters.userPaymentMethod.card_number.toString()
-    this.valueFields.cardNumber = number.match(/.{1,4}/g).join(" ")
+      let number = this.$store.getters.userPaymentMethod.card_number.toString()
+      this.valueFields.cardNumber = number.match(/.{1,4}/g).join(" ")
 
-    let exp_date = this.$store.getters.userPaymentMethod.card_expiration.toString()
-    this.valueFields.cardMonth = exp_date.split("/")[0]  
-    this.valueFields.cardYear = exp_date.split("/")[1]
+      let exp_date = this.$store.getters.userPaymentMethod.card_expiration.toString()
+      this.valueFields.cardMonth = exp_date.split("/")[0]  
+      this.valueFields.cardYear = exp_date.split("/")[1]
 
-    this.valueFields.cardCvv = this.$store.getters.userPaymentMethod.card_cvv.toString()
+      this.valueFields.cardCvv = this.$store.getters.userPaymentMethod.card_cvv.toString()
+    } else {
+      console.log("dsds")
+    }
 
 
   },
