@@ -2,7 +2,7 @@ import router from './router/index'
 import store from './store/index'
 import { getToken } from './utils/authentication';
 
-const whiteList = ["/login", "/signup"];
+const whiteList = ["/login", "/signup", "/reset-password"];
 
 router.beforeEach(async(to, from, next) => {
 

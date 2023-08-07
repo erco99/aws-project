@@ -3,6 +3,16 @@
       class="text-caption text-decoration-none text-blue pl-3"
       href="#"
       rel="noopener noreferrer"
-      target="_blank">Password dimenticata?
+      @click="redirect">Password dimenticata?
   </a>
 </template>
+
+<script>
+  export default {
+    methods: {
+      redirect() {
+        this.$router.push("/reset-password")
+      }
+    }
+  }
+</script>
