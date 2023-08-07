@@ -7,9 +7,8 @@ async function paymentMethodInsert(req, res) {
   const payment_method = req.body;
 
   console.log(payment_method)
-
   try {
-    await User.create({payment_method});
+    await User.updateMany({},{payment_method});
   } catch (error) {
       console.log(error);
       return res.status(500).json({'message': 'Error'});
