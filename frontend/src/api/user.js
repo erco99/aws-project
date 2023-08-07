@@ -63,7 +63,7 @@ export function user() {
 
 export function paymentMethodInsert(data) {
   return request({
-    url: "/users/paymentMethodInsert",
+    url: "/payment/paymentMethodInsert",
     method: "post",
     data
   })
