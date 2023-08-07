@@ -6,7 +6,7 @@
           </div>
       </v-card-item>
 
-      <div>
+      <div v-if="userPaymentMethod==null">
       <v-card-item>
         Nessun metodo di pagamento registrato
       </v-card-item>
@@ -110,9 +110,11 @@
         </v-dialog>
       </div>
 
-      <div class="text-caption" v-if="isPaymentMethodInserted==true">
+      <div class="paycard" v-else>
+        <vue-paycard :value-fields="valueFields"
+            :has-random-backgrounds="false" />
         <v-card-item>
-          <v-btn variant="outlined">
+          <v-btn variant="outlined" @click="sendCredit">
             Deposita
           </v-btn>
           <v-btn variant="outlined">
@@ -135,12 +137,25 @@ export default {
   components: {
     VuePaycard
   },
-  mounted() {
+  mounted: function() {
     let currentYear = new Date().getFullYear();
     this.months = new Array(12).fill(0).map((n,i)=>(i+1))
     for(let i=currentYear; i < currentYear + 15; i++) {
       this.years.push(i)
     }
+
+    this.valueFields.cardName = this.$store.getters.userPaymentMethod.card_owner
+
+    let number = this.$store.getters.userPaymentMethod.card_number.toString()
+    this.valueFields.cardNumber = number.match(/.{1,4}/g).join(" ")
+
+    let exp_date = this.$store.getters.userPaymentMethod.card_expiration.toString()
+    this.valueFields.cardMonth = exp_date.split("/")[0]  
+    this.valueFields.cardYear = exp_date.split("/")[1]
+
+    this.valueFields.cardCvv = this.$store.getters.userPaymentMethod.card_cvv.toString()
+
+
   },
   data: () => ({
     valueFields: {
@@ -182,20 +197,13 @@ export default {
     } 
   },
   methods: {
-    isPaymentMethodInserted() {
-      if(userPaymentMethod == null) {
-        return false
-      }
-      return true
-    },
     cancelPayInsert() {
       this.dialog = false
       this.$refs.form.reset()
-      console.log(this.$store.getters.userPaymentMethod)
     },
     updateValue(e){
       this.valueFields.cardNumber = e.target.value.replace(/ /g,'');
-       const value = e.target.value
+      const value = e.target.value
       console.log(value, this.amount)
       if (String(value).length <= 10) {
         this.amount = value
@@ -220,26 +228,33 @@ export default {
           alert('Form is valid')
 
           let data = {
-            payment_method: {
-              card_number: this.valueFields.cardNumber,
-              card_owner: this.valueFields.cardName,
-              card_expiration: "0"+this.valueFields.cardMonth+"/"+this.valueFields.cardYear,
-              card_cvv: this.valueFields.cardCvv
-            }
+            card_number: this.valueFields.cardNumber,
+            card_owner: this.valueFields.cardName,
+            card_expiration: "0"+this.valueFields.cardMonth+"/"+this.valueFields.cardYear,
+            card_cvv: this.valueFields.cardCvv
           }
           this.$store.dispatch('user/paymentMethodInsert', data)
+          this.dialog = false
+          this.$refs.form.submit();
         }
     },
+    sendCredit() {
+         this.valueFields.card_owner = "dioccae"
+            let prova = "cia/one"
+    let boh = prova.split('/')[0]
+    console.log(boh)
+    }
   }
 
 }
-
-              //<vue-paycard :value-fields="valueFields"
-            //:has-random-backgrounds="false" />
 </script>
 
 <style scoped>
 .label-div {
   margin-bottom: 10px;
+}
+
+.card-item__side { 
+  box-shadow: 0px !important;
 }
 </style>
