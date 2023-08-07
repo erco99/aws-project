@@ -113,19 +113,28 @@
       <div class="paycard" v-else>
         <vue-paycard :value-fields="valueFields"
             :has-random-backgrounds="false"/>
-        <v-card-item>
-          <v-btn variant="outlined" @click="sendCredit">
+        <v-card-item style="margin-top: 10px;">
+          <v-btn 
+            @click="sendCredit"
+            color="green-darken-4"
+            style="margin-right: 5px;"
+            width="150">
             Deposita
           </v-btn>
-          <v-btn variant="outlined">
+          <v-btn 
+            color="red-darken-4"
+            style="margin-right: 5px;"
+            width="150">
             Ritira
+
           </v-btn>
-          <v-btn variant="outlined">
+          <v-btn v
+            color="yellow-darken-4"
+            width="150">
             Invia
           </v-btn>
         </v-card-item>
       </div>
-      <h1>{{ userPaymentMethod }}</h1>
     </v-card>
 </template>
 

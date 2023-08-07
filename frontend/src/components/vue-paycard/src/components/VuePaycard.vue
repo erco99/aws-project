@@ -439,4 +439,4 @@ export default {
 }
 </script>
 
-<style src="../assets/css/style.min.css" scoped></style>
+<style src="../assets/css/style.css" scoped></style>
