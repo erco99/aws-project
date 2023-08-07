@@ -4,7 +4,7 @@ dotenv.config({ path: join(__dirname, "docker", "config.env") });
 dotenv.config({ path: join(__dirname, ".env") });
 
 const cookieParser = require("cookie-parser");
-const useragent = require('express-useragent');
+const useragent = require("express-useragent");
 const mongoose = require("mongoose");
 const mongodbConfig = require("./src/configs/mongodb");
 const auth = require("./src/routes/auth");
@@ -50,7 +50,12 @@ io.on("connection", (socket) => {
   socket.on("get-week", (day) => controller.getWeek(socket, day));
   socket.on("new-booking", async (newBooking) => {
     for (const instance of newBooking) {
-      io.emit("new-booking", await controller.book(instance));
+      const response = await controller.book(instance);
+      if (typeof newBooking === "string") {
+        socket.emit("error", response);
+      } else {
+        io.emit("new-booking", response);
+      }
     }
   });
   socket.on("disconnect", () => console.log("disconnected"));

@@ -8,31 +8,27 @@ export default {
     this.socket.on("week", (fields) => (this.fields = fields));
     this.socket.on("new-booking", (newBooking) => {
       this.loading = false;
-      if (typeof newBooking === "string") {
-        alert(newBooking);
-      } else {
-        for (const field of this.fields) {
-          if (field.name === newBooking.field) {
-            let found = false;
-            for (const bookingDay of field.bookingsPerDay) {
-              if (bookingDay.day === newBooking.day) {
-                found = true;
-                bookingDay.bookings.push(newBooking.newBooking);
-                break;
-              }
-            }
-            if (!found) {
-              field.bookingsPerDay.push({
-                day: newBooking.day,
-                bookings: [newBooking.newBooking],
-              });
+      for (const field of this.fields) {
+        if (field.name === newBooking.field) {
+          let found = false;
+          for (const bookingDay of field.bookingsPerDay) {
+            if (bookingDay.day === newBooking.day) {
+              found = true;
+              bookingDay.bookings.push(newBooking.newBooking);
               break;
             }
+          }
+          if (!found) {
+            field.bookingsPerDay.push({
+              day: newBooking.day,
+              bookings: [newBooking.newBooking],
+            });
+            break;
           }
         }
       }
     });
-    this.socket.on("error", (msg) => console.log(msg));
+    this.socket.on("error", (msg) => alert(msg));
     this.socket.emit("get-week", this.day);
 
     // ask for position
