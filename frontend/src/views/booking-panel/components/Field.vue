@@ -39,9 +39,7 @@ export default {
   watch: {
     bookings: {
       handler: function (_newValue) {
-        console.log("il lupo perde il pelo...");
         if (this.dialog) {
-          console.log("... ma non il vizio");
           this.dialog = false;
           alert("L'ora che stavi cercando di prenotare non è più disponibile");
         }
@@ -77,10 +75,16 @@ export default {
       } else {
         const newBooking = [];
         for (let i = 0; i < this.duration; i++) {
-          const pushMe = this.newBooking;
-          pushMe.time.hours += i;
-          pushMe.day = this.day;
-          pushMe.field = this.name;
+          const pushMe = {
+            field: this.name,
+            day: this.day,
+            time: {
+              hours: this.newBooking.time.hours + i,
+              minutes: this.newBooking.time.minutes,
+            },
+            players: this.newBooking.players,
+            owner: this.newBooking.owner,
+          };
           newBooking.push(pushMe);
         }
         this.$emit("newBooking", newBooking);
@@ -90,13 +94,23 @@ export default {
     hourButtonProps(hour) {
       for (const book of this.currentDayBookings) {
         if (book.time.hours == hour) {
+          let text;
+          if (book.players.length === 3) {
+            text = [book.owner.surname, ...book.players.map((p) => p.surname)];
+          } else {
+            text = [
+              ,
+              book.owner.surname,
+              ...book.players.map((p) => p.surname),
+            ];
+          }
           return {
-            text: book.owner.name.concat(" ", book.owner.surname),
+            text: text,
             disabled: true,
           };
         }
       }
-      return { text: stringfy(hour, this.minutes), disabled: false };
+      return { text: [, stringfy(hour, this.minutes)], disabled: false };
     },
     book(time) {
       this.duration = 1;

@@ -51,7 +51,7 @@ io.on("connection", (socket) => {
   socket.on("new-booking", async (newBooking) => {
     for (const instance of newBooking) {
       const response = await controller.book(instance);
-      if (typeof newBooking === "string") {
+      if (typeof response === "string") {
         socket.emit("error", response);
       } else {
         io.emit("new-booking", response);

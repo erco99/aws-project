@@ -53,7 +53,7 @@ async function book(newBooking) {
   });
   if (!document) {
     if (imChecking) {
-      return "Concurrency conflict";
+      return "Si è verificato un conflitto durante la prenotazione";
     } else {
       imChecking = true;
       const newDocument = {
@@ -72,7 +72,6 @@ async function book(newBooking) {
       imChecking = false;
     }
   } else {
-    // TODO: some -> newBooking.time >= instance.time && newBooking.time <= instance.time + 1
     if (
       document.bookings.some(
         (instance) =>
@@ -80,7 +79,12 @@ async function book(newBooking) {
           before(newBooking.time, nextHour(instance.time)) > 0
       )
     ) {
-      return "Already exist";
+      return (
+        newBooking.time.hours +
+        ":" +
+        newBooking.time.minutes +
+        " è un orario già prenotato"
+      );
     }
     const newSubDocument = {
       services: newBooking.services,
