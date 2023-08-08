@@ -7,87 +7,85 @@
       </v-card-item>
 
       <div v-if="userPaymentMethod==null">
-      <v-card-item>
-        Nessun metodo di pagamento registrato
-      </v-card-item>
+        <v-card-item>
+          Nessun metodo di pagamento registrato
+        </v-card-item>
 
-      <v-card-item>
-              <v-btn          
-          color="primary"
-          @click="dialog = true; " 
-          variant="outlined">
-          Aggiungi
-        </v-btn>
-      </v-card-item>
+        <v-card-item>
+                <v-btn          
+            color="primary"
+            @click="dialog = true; " 
+            variant="outlined">
+            Aggiungi
+          </v-btn>
+        </v-card-item>
   
 
         <v-dialog
           persistent
           v-model="dialog"
           width="500">
-
           <v-card>
-          <v-card-item>
-            <div class="text-overline mb-1">
-              Inserimento metodo di pagamento
-            </div>
-          </v-card-item>
-          <v-divider></v-divider>
-
+            <v-card-item>
+              <div class="text-overline mb-1">
+                Inserimento metodo di pagamento
+              </div>
+            </v-card-item>
+            <v-divider></v-divider>
             <v-card-text class="pa-5">
-            <v-form ref="form">
-              <div class="font-weight-medium label-div">Numero carta</div>
-              <v-text-field 
-                placeholder="xxxx-xxxx-xxxx-xxxx"
-                density="compact"
-                :rules="cardNumberRules"
-                :value="formatCardNumber"
-                @input="updateValue"
-                v-model="valueFields.cardNumber" 
-                @keypress="isNumber($event)"
-                maxlength="19"
-                variant="outlined">
-              </v-text-field>
-              <div class="font-weight-medium label-div">Titolare carta</div>
-              <v-text-field 
-                placeholder="es. Mario Rossi"
-                density="compact"
-                :rules="cardNameRules"
-                v-model="valueFields.cardName"
-                variant="outlined">
-              </v-text-field>
-              <v-row style="margin-bottom: 5px">
-                <v-col cols="8">
-                  <div class="font-weight-medium label-div">Scadenza carta</div>
-                  <div style="display: flex">
-                    <v-select
-                      label="Mese"
-                      style="margin-right: 15px"
-                      density="compact"
-                      variant="outlined"
-                      v-model="valueFields.cardMonth"
-                      :items="months"
-                      :rules="dateYearRules"></v-select>
-                    <v-select 
-                      label="Anno"
-                      density="compact"
-                      variant="outlined"
-                      v-model="valueFields.cardYear"
-                      :items="years"
-                      :rules="dateYearRules"></v-select>
-                  </div>
-                </v-col>
-                <v-col>
-                  <div class="font-weight-medium label-div">CVV/CVC</div>
+              <v-form ref="form">
+                <div class="font-weight-medium label-div">Numero carta</div>
                   <v-text-field 
-                    maxlength="3"
-                    placeholder="xxx"
+                    placeholder="xxxx-xxxx-xxxx-xxxx"
                     density="compact"
-                    variant="outlined"
-                    v-model="valueFields.cardCvv"
-                    :rules="cardCvvRules"></v-text-field>
-                </v-col>
-              </v-row>
+                    :rules="cardNumberRules"
+                    :value="formatCardNumber"
+                    @input="updateValue"
+                    v-model="valueFields.cardNumber" 
+                    @keypress="isNumber($event)"
+                    maxlength="19"
+                    variant="outlined">
+                  </v-text-field>
+                  <div class="font-weight-medium label-div">Titolare carta</div>
+                  <v-text-field 
+                    placeholder="es. Mario Rossi"
+                    density="compact"
+                    :rules="cardNameRules"
+                    v-model="valueFields.cardName"
+                    variant="outlined">
+                  </v-text-field>
+                  <v-row style="margin-bottom: 5px">
+                    <v-col cols="8">
+                      <div class="font-weight-medium label-div">Scadenza carta</div>
+                      <div style="display: flex">
+                        <v-select
+                          label="Mese"
+                          style="margin-right: 15px"
+                          density="compact"
+                          variant="outlined"
+                          v-model="valueFields.cardMonth"
+                          :items="months"
+                          :rules="dateYearRules"></v-select>
+                        <v-select 
+                          label="Anno"
+                          density="compact"
+                          variant="outlined"
+                          v-model="valueFields.cardYear"
+                          :items="years"
+                          :rules="dateYearRules"></v-select>
+                      </div>
+                    </v-col>
+                    <v-col>
+                      <div class="font-weight-medium label-div">CVV/CVC</div>
+                      <v-text-field 
+                        maxlength="3"
+                        placeholder="xxx"
+                        density="compact"
+                        variant="outlined"
+                        v-model="valueFields.cardCvv"
+                        :rules="cardCvvRules"></v-text-field>
+                    </v-col>
+                  </v-row>
                   <v-btn
                     outlined 
                     color="green"
@@ -104,36 +102,16 @@
                     @click="cancelPayInsert"
                     text="Annulla"
                   ></v-btn>
-            </v-form>
-          </v-card-text>
+              </v-form>
+            </v-card-text>
           </v-card>
         </v-dialog>
       </div>
 
       <div class="paycard" v-else>
         <vue-paycard :value-fields="valueFields"
-            :has-random-backgrounds="false"/>
-        <v-card-item style="margin-top: 10px;">
-          <v-btn 
-            @click="sendCredit"
-            color="green-darken-4"
-            style="margin-right: 5px;"
-            width="150">
-            Deposita
-          </v-btn>
-          <v-btn 
-            color="red-darken-4"
-            style="margin-right: 5px;"
-            width="150">
-            Ritira
-
-          </v-btn>
-          <v-btn v
-            color="yellow-darken-4"
-            width="150">
-            Invia
-          </v-btn>
-        </v-card-item>
+            :has-random-backgrounds="false"
+            style="margin-bottom:15px"/>
       </div>
     </v-card>
 </template>
@@ -250,12 +228,6 @@ export default {
           this.dialog = false
           this.$refs.form.submit();
         }
-    },
-    sendCredit() {
-         this.valueFields.card_owner = "dioccae"
-            let prova = "cia/one"
-    let boh = prova.split('/')[0]
-    console.log(boh)
     }
   }
 
