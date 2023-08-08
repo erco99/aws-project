@@ -19,7 +19,6 @@
             Aggiungi
           </v-btn>
         </v-card-item>
-  
 
         <v-dialog
           persistent
@@ -145,8 +144,6 @@ export default {
     } else {
       console.log("dsds")
     }
-
-
   },
   data: () => ({
     valueFields: {
@@ -194,11 +191,6 @@ export default {
     },
     updateValue(e){
       this.valueFields.cardNumber = e.target.value.replace(/ /g,'');
-      const value = e.target.value
-      console.log(value, this.amount)
-      if (String(value).length <= 10) {
-        this.amount = value
-      }
       this.$forceUpdate()
     },
     isNumber(evt) {
@@ -237,9 +229,5 @@ export default {
 <style scoped>
 .label-div {
   margin-bottom: 10px;
-}
-
-.card-item__side { 
-  box-shadow: 0px !important;
 }
 </style>
