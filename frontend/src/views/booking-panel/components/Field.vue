@@ -28,7 +28,7 @@ export default {
         owner: {
           name: this.$store.getters.userName,
           surname: this.$store.getters.userSurname,
-          emai: this.$store.getters.userEmail,
+          email: this.$store.getters.userEmail,
         },
         players: [],
         servicies: [],

@@ -1,6 +1,7 @@
 const { default: mongoose } = require("mongoose");
 const bookings = require("../models/bookings");
 const field = require("../models/field");
+const notificationsController = require("./notificationsController");
 
 async function getWeek(socket, day) {
   const from = new Date(day);
@@ -95,6 +96,8 @@ async function book(newBooking) {
     document.bookings.push(newSubDocument);
     await document.save();
   }
+  await notificationsController.notifyOwner(newBooking);
+  await notificationsController.notifyPlayers(newBooking);
   return {
     day: newBooking.day,
     field: newBooking.field,

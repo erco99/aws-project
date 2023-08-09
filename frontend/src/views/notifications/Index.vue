@@ -1,25 +1,46 @@
 <template>
   <v-row>
-    <v-col v-for="n in 10" :key="n" cols="12" md="4" sm="6">
-      <v-card>
+    <v-col
+      v-for="(notification, index) in notifications"
+      :key="index"
+      cols="12"
+      sm="6">
+      <v-card height="280">
         <v-img
-          height="100"
-          src="https://random.imagecdn.app/500/150"
+          height="50"
+          src="https://random.imagecdn.app/50/150"
           cover
           class="text-white"></v-img>
-        <v-card-title>Titolo</v-card-title>
-        <v-card-subtitle>Sottotitolo</v-card-subtitle>
-        <v-card-text
-          >Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ex
-          repellendus eius, itaque deserunt repellat odio saepe numquam quos
-          molestiae doloremque sunt quod fugit libero quia unde autem aspernatur
-          neque voluptatibus!</v-card-text
-        >
-        <v-card-actions>
-          <v-btn>Action 1</v-btn>
-          <v-btn>Action 2</v-btn>
+        <v-card-title>{{ notification.title }}</v-card-title>
+        <v-card-subtitle>{{ notification.subtitle }}</v-card-subtitle>
+        <v-card-text>{{ notification.text }}</v-card-text>
+        <v-card-actions v-if="notification.expiration">
+          <v-btn>Accetta</v-btn>
+          <v-btn>Rifiuta</v-btn>
         </v-card-actions>
       </v-card>
     </v-col>
   </v-row>
 </template>
+
+<script>
+import io from "socket.io-client";
+export default {
+  data() {
+    return {
+      notifications: [],
+      socket: io("http://localhost:10000"),
+    };
+  },
+  mounted() {
+    this.socket.on("notifications", (notifications) => {
+      this.notifications = notifications;
+      console.log(notifications);
+    });
+    this.socket.emit("getNotifications", this.$store.getters.userEmail);
+  },
+  unmounted() {
+    this.socket.disconnect();
+  },
+};
+</script>

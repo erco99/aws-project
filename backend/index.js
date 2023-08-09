@@ -47,14 +47,14 @@ server.listen(port, () => {
 });
 
 // Socket
-const controller = require("./src/controllers/bookingController");
+const bookingController = require("./src/controllers/bookingController");
+const notificationsController = require("./src/controllers/notificationsController");
 const io = socketio(server, { cors: corsOptions });
 io.on("connection", (socket) => {
-  console.log("conected");
-  socket.on("get-week", (day) => controller.getWeek(socket, day));
+  socket.on("get-week", (day) => bookingController.getWeek(socket, day));
   socket.on("new-booking", async (newBooking) => {
     for (const instance of newBooking) {
-      const response = await controller.book(instance);
+      const response = await bookingController.book(instance);
       if (typeof response === "string") {
         socket.emit("error", response);
       } else {
@@ -62,5 +62,7 @@ io.on("connection", (socket) => {
       }
     }
   });
-  socket.on("disconnect", () => console.log("disconnected"));
+  socket.on("getNotifications", (owner) =>
+    notificationsController.getNotifications(socket, owner)
+  );
 });
