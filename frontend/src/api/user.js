@@ -69,6 +69,14 @@ export function paymentMethodInsert(data) {
   })
 }
 
+export function depositMoney(data) {
+  return request({
+    url: "/payment/depositMoney",
+    method: "post",
+    data
+  })
+}
+
 export function getUsers() {
   return request({
     url: "/users",
