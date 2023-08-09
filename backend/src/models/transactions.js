@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 
 const transactionsSchema = mongoose.Schema({
-    _id: true,
     amount: {
         type: Number,
         required: true
@@ -15,11 +14,7 @@ const transactionsSchema = mongoose.Schema({
         required: true
     },
     user: {
-        name: {
-            type: String,
-            required: true
-        },
-        surname: {
+        fullname: {
             type: String,
             required: true
         },
