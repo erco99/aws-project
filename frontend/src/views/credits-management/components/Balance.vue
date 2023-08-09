@@ -95,7 +95,12 @@ import { mapGetters } from "vuex";
 
 export default {
   computed: {
-    ...mapGetters(["userBalance", "userPaymentMethod"]),
+    ...mapGetters([
+      "userBalance", 
+      "userPaymentMethod",
+      "userFullname",
+      "userSurname",
+      "userEmail"]),
   },
   methods: {
     sendCredit() {
@@ -156,6 +161,30 @@ export default {
           }
 
           amountValue = amountValue.replace(/^0+/, '');
+
+
+
+          const currentTime = new Date();
+
+          console.log(this.userEmail)
+          
+    
+
+          const data = {
+            amount: this.amountValue,
+            date: currentTime.getDate().toString() + '/' 
+            + currentTime.getMonth().toString() + '/'
+            + currentTime.getFullYear.toString(),
+            time: currentTime.getHours().toString() + ":"
+            + currentTime.getMinutes().toString() + ":"
+            + currentTime.getSeconds().toString(),
+            user: {
+              name: this.userFullname,
+              email: this.userEmail
+            }
+          }
+
+          this.$store.dispatch('user/depositMoney', data)
 
           console.log(amountValue)
 
