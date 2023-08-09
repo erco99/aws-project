@@ -14,7 +14,7 @@
         <v-card-title>{{ notification.title }}</v-card-title>
         <v-card-subtitle>{{ notification.subtitle }}</v-card-subtitle>
         <v-card-text>{{ notification.text }}</v-card-text>
-        <v-card-actions v-if="notification.expiration">
+        <v-card-actions v-if="new Date(notification.expiration) > new Date()">
           <v-btn>Accetta</v-btn>
           <v-btn>Rifiuta</v-btn>
         </v-card-actions>

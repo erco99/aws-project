@@ -24,7 +24,7 @@ async function notifyOwner(newBooking) {
   }
   text =
     text +
-    "ricevuto il tuo invito. Torna qui per controllare nuovi aggiornamenti.";
+    " ricevuto il tuo invito. Torna qui per controllare nuovi aggiornamenti.";
   await notifications.create({
     title: title,
     subtitle: subtitle,
