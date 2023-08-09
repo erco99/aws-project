@@ -1,4 +1,4 @@
-import {login, logout, register, newOTP, verifyOTP, user, refresh, cancelRegistration, paymentMethodInsert} from '@/api/user'
+import {login, logout, register, newOTP, verifyOTP, user, refresh, cancelRegistration, paymentMethodInsert, depositMoney} from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/authentication'
 import store from "@/store";
 
@@ -115,9 +115,17 @@ const actions = {
     return new Promise((resolve, reject) => {
       paymentMethodInsert(cardData).then((response) => {
         resolve(response.data)
-        console.log("bene")
       }).catch(error => {
-        console.log("male")
+        reject(error)
+      })
+    })
+  },
+
+  depositMoney({commit}, amount) {
+    return new Promise((resolve, reject) => {
+      depositMoney(amount).then((response) => {
+        resolve(response.data)
+      }).catch(error => {
         reject(error)
       })
     })
