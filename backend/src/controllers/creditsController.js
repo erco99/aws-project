@@ -15,25 +15,36 @@ async function paymentMethodInsert(req, res) {
   }
 }
 
-async function depositMoney(req, res) {
-  let {amount, date, time, user} = req.body
+async function depositWithdrawMoney(req, res) {
+  const {amount, transaction_type, date, time, user} = req.body
 
   const retrievedUser = await User.findOne({email: user.email}).exec()
 
+  let newBalance = amount
+
   //change , to . in amount
   if(amount.includes(',')) {
-    amount = amount.replace(',', '.')
+    newBalance = amount.replace(',', '.')
   }
 
+  let amountValue = newBalance
 
-  amount = parseFloat(retrievedUser.balance) + parseFloat(amount)
+  console.log(parseFloat(amount))
 
-  console.log(amount.toFixed(2))
+  if(transaction_type == 'positive') {
+    newBalance = parseFloat(retrievedUser.balance) + parseFloat(newBalance)
+  } else if(transaction_type == 'negative') {
+    newBalance = parseFloat(retrievedUser.balance) - parseFloat(newBalance)
+  }
+
+  console.log(newBalance)
+
+
   const filter = {email: user.email}
-  const update = {balance: amount.toFixed(2)}
+  const update = {balance: newBalance.toFixed(2)}
 
   try {
-    //await Transactions.create({},{payment_method});
+    await Transactions.create({amount: amountValue, transaction_type, date, time, user});
     await User.findOneAndUpdate(filter, update)
   } catch (error) {
       console.log(error);
@@ -41,4 +52,4 @@ async function depositMoney(req, res) {
   }
 }
 
-module.exports = {paymentMethodInsert, depositMoney}
+module.exports = {paymentMethodInsert, depositWithdrawMoney}

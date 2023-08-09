@@ -16,7 +16,7 @@
     </v-card-item>  
     <v-card-item v-else>
       <v-btn
-        @click="dialog = true; operationType='deposito'"     
+        @click="dialog = true; operationTypeText='deposito'; operationType='positive'"     
         color="green-darken-4"
         style="margin-right: 5px"
         width="150"
@@ -24,14 +24,14 @@
         Deposita
       </v-btn>
       <v-btn 
-        @click="dialog = true; operationType='ritiro'"
+        @click="dialog = true; operationTypeText='ritiro';  operationType='negative'"
         color="red-darken-4" 
         style="margin-right: 5px" 
         width="150">
         Ritira
       </v-btn>
       <v-btn 
-        @click="dialog = true; operationType='invio'"
+        @click="dialog = true; operationTypeText='invio'"
         color="yellow-darken-4" 
         width="150"> 
         Invia </v-btn>
@@ -44,7 +44,7 @@
       <v-card>
         <v-card-item>
               <div class="text-overline mb-1">
-                {{ operationType }} denaro
+                {{ operationTypeText }} denaro
               </div>
             </v-card-item>
             <v-divider></v-divider>
@@ -160,34 +160,32 @@ export default {
               return resolve("Inserire un numero nel formato valido")
           }
 
+          if(this.operationType=='negative' && parseFloat(amountValue.replace(',','.')) > parseFloat(this.userBalance)) {
+              return resolve("Non può ritirare un valore più alto del bilancio")
+          }
+
           amountValue = amountValue.replace(/^0+/, '');
-
-
 
           const currentTime = new Date();
 
-          console.log(this.userEmail)
-          
-    
-
           const data = {
             amount: this.amountValue,
+            transaction_type: this.operationType,
             date: currentTime.getDate().toString() + '/' 
             + currentTime.getMonth().toString() + '/'
-            + currentTime.getFullYear.toString(),
+            + currentTime.getFullYear().toString(),
             time: currentTime.getHours().toString() + ":"
             + currentTime.getMinutes().toString() + ":"
             + currentTime.getSeconds().toString(),
             user: {
-              name: this.userFullname,
+              fullname: this.userFullname,
               email: this.userEmail
             }
           }
 
-          this.$store.dispatch('user/depositMoney', data)
-
-          console.log(amountValue)
-
+          this.$store.dispatch('user/depositWithdrawMoney', data)
+          this.dialog = false
+          this.$refs.form.submit();
           return resolve(true)
         }, 1000)
       })
@@ -196,6 +194,7 @@ export default {
   data: vm => ({
     dialog: false,
     operationType: '',
+    operationTypeTextText: '',
     amountValue: '',
     loading: false,
     rules: [value => vm.checkApi(value)],
