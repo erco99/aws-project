@@ -6,7 +6,7 @@ const creditsController = require('../controllers/creditsController')
 router.post('/paymentMethodInsert', creditsController.paymentMethodInsert)
 
 // Deposit money
-router.post('/depositMoney', creditsController.depositMoney)
+router.post('/depositWithdrawMoney', creditsController.depositWithdrawMoney)
 
 
 module.exports = router;

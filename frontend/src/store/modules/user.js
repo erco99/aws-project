@@ -1,5 +1,6 @@
-import {login, logout, register, newOTP, verifyOTP, user, refresh, cancelRegistration, paymentMethodInsert, depositMoney} from '@/api/user'
+import {login, logout, register, newOTP, verifyOTP, user, refresh, cancelRegistration} from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/authentication'
+import { paymentMethodInsert, depositWithdrawMoney } from '@/api/credits';
 import store from "@/store";
 
 const state = {
@@ -121,9 +122,9 @@ const actions = {
     })
   },
 
-  depositMoney({commit}, amount) {
+  depositWithdrawMoney({commit}, amount) {
     return new Promise((resolve, reject) => {
-      depositMoney(amount).then((response) => {
+      depositWithdrawMoney(amount).then((response) => {
         resolve(response.data)
       }).catch(error => {
         reject(error)

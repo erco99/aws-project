@@ -10,7 +10,7 @@ const mongodbConfig = require("./src/configs/mongodb");
 const auth = require("./src/routes/auth");
 const users = require("./src/routes/users");
 const weather = require("./src/routes/weather");
-const payment = require("./src/routes/payment");
+const credits = require("./src/routes/credits");
 const cors = require("cors");
 const corsOptions = require("./src/configs/cors");
 const express = require("express");
@@ -40,7 +40,7 @@ app.use("/users", cors(corsOptions), users);
 app.use("/weather", cors(corsOptions), weather);
 
 // Register weather routes
-app.use("/payment", cors(corsOptions), payment);
+app.use("/credits", cors(corsOptions), credits);
 
 server.listen(port, () => {
   console.log(`Server listening on http://localhost:${port}`);
