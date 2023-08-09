@@ -49,28 +49,32 @@
             </v-card-item>
             <v-divider></v-divider>
             <v-card-text class="pa-5">
-              <v-form ref="form">
+              <v-form ref="form" validate-on="submit lazy" @submit.prevent="submit">
                 <div class="currency-input-container">
                   <div class="font-weight-medium label-div" 
                     style="margin-bottom: 10px;">
                     Importo
                   </div>
                   <v-text-field 
+                    placeholder="xx oppure xx,xx"
                     variant="outlined"
                     prepend-inner-icon="mdi-currency-eur"
                     type="text" 
                     id="currency-input" 
                     v-model="amountValue"
-                    v-on:keypress="isNumber($event, amountValue)">
+                    v-on:keypress="isNumber($event, amountValue)"
+                    :rules="rules">
                   </v-text-field>
                 </div>
-                <v-btn
+                  <v-btn
                     outlined 
                     color="green"
                     block
                     class="me-4"
                     text="Conferma"
-                    style="margin-bottom: 10px"
+                    style="margin: 10px 0 10px 0"
+                    :loading="loading"
+                    type="submit"
                   ></v-btn>
                   <v-btn
                     outlined
@@ -102,17 +106,71 @@ export default {
       this.$refs.form.reset()
     },
     isNumber(event, value) {
-      if (!/\d/.test(event.key) &&  (event.key !== "," || /\./.test(value))) {
+      if(value.includes(',')){
+        if (!/\d/.test(event.key)) {
+          return event.preventDefault(); 
+        }
+      } else  if (!/\d/.test(event.key) &&  (event.key !== "," || /\./.test(value))) {
         return event.preventDefault(); 
       }
 
       if (/\,\d{2}/.test(value)) return event.preventDefault(); 
     },
+    async submit (event) {
+      this.loading = true
+
+      const results = await event
+
+      this.loading = false
+
+    },
+    async checkApi (amountValue) {
+      return new Promise(resolve => {
+        clearTimeout(this.timeout)
+
+        this.timeout = setTimeout(() => {
+          if (!amountValue) {
+            return resolve('Il campo non può essere vuoto')
+          }
+
+          if (amountValue.replace(/[^,]/g, "").length == 1){
+            let integer_part = amountValue.split(',')[0];
+            let decimal_part = amountValue.split(',')[1];
+
+            //check if both integer and decimal parts contain only digits
+            if (/^\d+$/.test(integer_part) && /^\d+$/.test(decimal_part)) {
+              if (decimal_part.length > 2) {
+                return resolve("Formato non valido")
+              } else if(decimal_part.length == 1) {
+                amountValue += '0'
+              }
+            }
+          } else if(amountValue.replace(/[^,]/g, "").length == 0) {
+            if (/^\d+$/.test(amountValue) == false) {
+              return resolve("Inserire un numero nel formato valido")
+            } else {
+              amountValue += ',00'
+            }
+          } else {
+              return resolve("Inserire un numero nel formato valido")
+          }
+
+          amountValue = amountValue.replace(/^0+/, '');
+
+          console.log(amountValue)
+
+          return resolve(true)
+        }, 1000)
+      })
+    }
   },
-  data: () => ({
+  data: vm => ({
     dialog: false,
     operationType: '',
-    amountValue: ''
+    amountValue: '',
+    loading: false,
+    rules: [value => vm.checkApi(value)],
+    timeout: null,
   })
 };
 </script>
