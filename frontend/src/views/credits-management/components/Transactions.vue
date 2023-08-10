@@ -20,15 +20,17 @@
             </thead>
             <tbody>
               <tr
-                v-for="item in desserts"
-                :key="item.name"
+                v-for="item in this.$store.getters.transactions "
+                :key="item.user"
               >
-                <td>{{ item.name }}</td>
-                <td>{{ item.calories }}</td>
-                <td>{{ item.importo }}</td>
+                <td>{{ item.date }}</td>
+                <td>{{ item.description }}</td>
+                <td v-bind:style="[item.transaction_type == 'positive' ? {fontWeight: 900, color: 'green'} : {fontWeight: 900, color: 'red'}]">
+                  {{ getSign(item.transaction_type) + item.amount }}
+                </td>
               </tr>
             </tbody>
-              </v-table>
+            </v-table>
       </v-card-item>
     </v-card>
 </template>
@@ -37,49 +39,8 @@
 export default {
   data: () => {
      return {
-        desserts: [
-          {
-            name: 'Frozen Yogurt',
-            calories: 159,
-            importo: 43
-          },
-          {
-            name: 'Ice cream sandwich',
-            calories: 237,
-          },
-          {
-            name: 'Eclair',
-            calories: 262,
-          },
-          {
-            name: 'Cupcake',
-            calories: 305,
-          },
-          {
-            name: 'Gingerbread',
-            calories: 356,
-          },
-          {
-            name: 'Jelly bean',
-            calories: 375,
-          },
-          {
-            name: 'Lollipop',
-            calories: 392,
-          },
-          {
-            name: 'Honeycomb',
-            calories: 408,
-          },
-          {
-            name: 'Donut',
-            calories: 452,
-          },
-          {
-            name: 'KitKat',
-            calories: 518,
-          },
-        ],
+        transactions: [],
+        sign: '',
       }
   },
   mounted: function() {
@@ -87,9 +48,17 @@ export default {
       fullname: this.$store.getters.userFullname,
       email: this.$store.getters.userEmail
     }
-    console.log(data)
     this.$store.dispatch('transactions/getTransactions', data)
-    console.log(this.$store.getters.getTransactions)
-  }
+
+  },
+  methods: {
+    getSign(value) {
+      if(value==='positive') {
+        return '+ '
+      } else {
+        return '- '
+      }
+    }
+  } 
 }
 </script>

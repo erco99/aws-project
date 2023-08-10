@@ -61,7 +61,6 @@ async function getTransactions(req, res) {
   const email = req.body.email
 
   const prova = await Transactions.find({ user: {fullname: fullname, email: email }}).exec()
-  console.log(prova)
   
   return res.status(200).json(prova)
 }

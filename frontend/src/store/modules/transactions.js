@@ -1,7 +1,7 @@
 import { getTransactions } from '@/api/credits'
 
 const state = {
-  transactions: ''
+  transactions: []
 }
 
 const mutations = {
@@ -16,8 +16,6 @@ const actions = {
       getTransactions(email).then(response => {
         const { data } = response
         commit('SET_TRANSACTIONS', data)
-        console.log(state.transactions)
-
         resolve()
       }).catch(error => {
         reject(error)
