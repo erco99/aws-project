@@ -15,3 +15,11 @@ export function depositWithdrawMoney(data) {
     data
   })
 }
+
+export function getTransactions(data) {
+  return request({
+    url: "/credits/getTransactions",
+    method: "post",
+    data
+  })
+}

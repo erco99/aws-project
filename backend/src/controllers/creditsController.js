@@ -20,7 +20,7 @@ async function paymentMethodInsert(req, res) {
 }
 
 async function depositWithdrawMoney(req, res) {
-  const {amount, transaction_type, date, time, user} = req.body
+  const {amount, transaction_type, description, date, time, user} = req.body
 
   const retrievedUser = await User.findOne({email: user.email}).exec()
 
@@ -48,7 +48,7 @@ async function depositWithdrawMoney(req, res) {
   const update = {balance: newBalance.toFixed(2)}
 
   try {
-    await Transactions.create({amount: amountValue, transaction_type, date, time, user});
+    await Transactions.create({amount: amountValue, transaction_type, description, date, time, user});
     await User.findOneAndUpdate(filter, update)
   } catch (error) {
       console.log(error);
@@ -56,4 +56,14 @@ async function depositWithdrawMoney(req, res) {
   }
 }
 
-module.exports = {paymentMethodInsert, depositWithdrawMoney}
+async function getTransactions(req, res) {
+  const fullname = req.body.fullname
+  const email = req.body.email
+
+  const prova = await Transactions.find({ user: {fullname: fullname, email: email }}).exec()
+  console.log(prova)
+  
+  return res.status(200).json(prova)
+}
+
+module.exports = {paymentMethodInsert, depositWithdrawMoney, getTransactions}
