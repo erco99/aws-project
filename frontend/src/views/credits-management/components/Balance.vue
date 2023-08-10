@@ -16,7 +16,7 @@
     </v-card-item>  
     <v-card-item v-else>
       <v-btn
-        @click="dialog = true; operationTypeText='deposito'; operationType='positive'"     
+        @click="dialog = true; operationTypeText='Deposito'; operationType='positive'"     
         color="green-darken-4"
         style="margin-right: 5px"
         width="150"
@@ -24,14 +24,14 @@
         Deposita
       </v-btn>
       <v-btn 
-        @click="dialog = true; operationTypeText='ritiro';  operationType='negative'"
+        @click="dialog = true; operationTypeText='Ritiro';  operationType='negative'"
         color="red-darken-4" 
         style="margin-right: 5px" 
         width="150">
         Ritira
       </v-btn>
       <v-btn 
-        @click="dialog = true; operationTypeText='invio'"
+        @click="dialog = true; operationTypeText='Invio'"
         color="yellow-darken-4" 
         width="150"> 
         Invia </v-btn>
@@ -171,6 +171,7 @@ export default {
           const data = {
             amount: this.amountValue,
             transaction_type: this.operationType,
+            description: this.operationTypeText + ' denaro sul conto',
             date: currentTime.getDate().toString() + '/' 
             + currentTime.getMonth().toString() + '/'
             + currentTime.getFullYear().toString(),
@@ -194,7 +195,7 @@ export default {
   data: vm => ({
     dialog: false,
     operationType: '',
-    operationTypeTextText: '',
+    operationTypeText: '',
     amountValue: '',
     loading: false,
     rules: [value => vm.checkApi(value)],
