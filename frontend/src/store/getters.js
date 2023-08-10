@@ -12,6 +12,7 @@ const getters = {
   routes: state => state.routes.routes,
   hourlyWeather: state => state.weather.weatherData.fullHourly,
   dailyWeather: state => state.weather.weatherData.fullDaily,
-  weatherDataReady: state => state.weather.dataReady
+  weatherDataReady: state => state.weather.dataReady,
+  transactions: state => state.transactions.transactions
 }
 export default getters

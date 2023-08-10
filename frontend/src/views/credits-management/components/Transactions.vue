@@ -8,10 +8,13 @@
             <thead>
               <tr>
                 <th class="text-left">
-                  Name
+                  Data
                 </th>
                 <th class="text-left">
-                  Calories
+                  Descrizione
+                </th>
+                <th class="text-left">
+                  Importo
                 </th>
               </tr>
             </thead>
@@ -22,6 +25,7 @@
               >
                 <td>{{ item.name }}</td>
                 <td>{{ item.calories }}</td>
+                <td>{{ item.importo }}</td>
               </tr>
             </tbody>
               </v-table>
@@ -33,10 +37,11 @@
 export default {
   data: () => {
      return {
-desserts: [
+        desserts: [
           {
             name: 'Frozen Yogurt',
             calories: 159,
+            importo: 43
           },
           {
             name: 'Ice cream sandwich',
@@ -76,7 +81,15 @@ desserts: [
           },
         ],
       }
-
+  },
+  mounted: function() {
+    const data = {
+      fullname: this.$store.getters.userFullname,
+      email: this.$store.getters.userEmail
+    }
+    console.log(data)
+    this.$store.dispatch('transactions/getTransactions', data)
+    console.log(this.$store.getters.getTransactions)
   }
 }
 </script>

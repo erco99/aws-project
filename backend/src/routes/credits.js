@@ -8,5 +8,8 @@ router.post('/paymentMethodInsert', creditsController.paymentMethodInsert)
 // Deposit money
 router.post('/depositWithdrawMoney', creditsController.depositWithdrawMoney)
 
+// Get all transactions
+router.post('/getTransactions', creditsController.getTransactions)
+
 
 module.exports = router;
