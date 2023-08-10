@@ -5,10 +5,14 @@ async function paymentMethodInsert(req, res) {
   //qui ci andrebbe il controllo per verificare che la carta
   //è una carta reale ma noi lo saltiamo in quanto i pagamenti
   //sono ovviamente simulati
-  const payment_method = req.body;
+  const payment_method = req.body.payment_method;
+  const user_email = req.body.user_email
+
+  console.log(payment_method)
+  console.log(user_email)
 
   try {
-    await User.updateMany({},{payment_method});
+    await User.findOneAndUpdate({email: user_email},{payment_method: payment_method});
   } catch (error) {
       console.log(error);
       return res.status(500).json({'message': 'Error'});

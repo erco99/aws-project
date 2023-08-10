@@ -77,6 +77,7 @@
                     <v-col>
                       <div class="font-weight-medium label-div">CVV/CVC</div>
                       <v-text-field 
+                        @keypress="isNumber($event)"
                         maxlength="3"
                         placeholder="xxx"
                         density="compact"
@@ -211,11 +212,15 @@ export default {
           alert('Form is valid')
 
           let data = {
-            card_number: this.valueFields.cardNumber,
-            card_owner: this.valueFields.cardName,
-            card_expiration: "0"+this.valueFields.cardMonth+"/"+this.valueFields.cardYear,
-            card_cvv: this.valueFields.cardCvv
+            payment_method: {
+              card_number: this.valueFields.cardNumber,
+              card_owner: this.valueFields.cardName,
+              card_expiration: "0"+this.valueFields.cardMonth+"/"+this.valueFields.cardYear,
+              card_cvv: this.valueFields.cardCvv 
+            },
+            user_email: this.$store.getters.userEmail
           }
+
           this.$store.dispatch('user/paymentMethodInsert', data)
           this.dialog = false
           this.$refs.form.submit();
