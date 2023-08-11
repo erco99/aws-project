@@ -11,7 +11,7 @@
   export default {
     methods: {
       redirect() {
-        this.$router.push("/reset-password")
+        this.$router.push("/forgot-password")
       }
     }
   }

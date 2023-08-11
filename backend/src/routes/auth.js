@@ -24,6 +24,12 @@ router.post('/logout', authController.logout);
 // Refresh route
 router.post('/refresh', authController.refresh);
 
+// Reset password route
+router.post('/reset-password', authController.resetPassword);
+
+// Change password route
+router.post('/change-password', authController.changePassword);
+
 // User route
 router.get('/user', authentication, authController.user);
 

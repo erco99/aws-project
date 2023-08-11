@@ -2,7 +2,7 @@ import router from './router/index'
 import store from './store/index'
 import { getToken } from './utils/authentication';
 
-const whiteList = ["/login", "/signup", "/reset-password"];
+const whiteList = ["/login", "/signup", "/forgot-password", "/reset-password"];
 
 router.beforeEach(async(to, from, next) => {
 
@@ -19,7 +19,7 @@ router.beforeEach(async(to, from, next) => {
                 next()
           }
     } else {
-        if (whiteList.indexOf(to.path) !== -1) {
+        if (isWhiteListed(to.path)) {
             next();
         } else {
             next(`/login`);
@@ -27,3 +27,12 @@ router.beforeEach(async(to, from, next) => {
         }
     }
 })
+
+function isWhiteListed(path) {
+    if (whiteList.indexOf(path) !== -1) return true
+    // === For dynamic routing ===
+    //for (const entry in whiteList) {
+    //    if (path.match(entry)) return true
+    //}
+    return false
+}

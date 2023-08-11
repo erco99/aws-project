@@ -22,7 +22,7 @@ const transporter = nodemailer.createTransport(
     }
 )
 
-async function sendEmail(username, userEmail, otp) {
+async function sendOtpEmail(username, userEmail, otp) {
     const email = {
         body: {
             greeting: 'Ciao',
@@ -47,11 +47,46 @@ async function sendEmail(username, userEmail, otp) {
 
     try {
         const info = await transporter.sendMail(message);
-        console.log("Sent email URL: " + nodemailer.getTestMessageUrl(info))
+        console.log("Sent OTP email URL: " + nodemailer.getTestMessageUrl(info))
         transporter.close();
     } catch (error) {
         throw new Error("Error while sending email")
     }
 }
 
-module.exports = { sendEmail }
+async function sendResetPasswordLinkEmail(username, userEmail, link) {
+    const email = {
+        body: {
+            greeting: 'Ciao',
+            name: username,
+            intro: "Qualcuno ha richiesto di reimpostare la password per questo account",
+            action: {
+                instructions: 'Per reimpostare la tua password clicca qui sotto:',
+                button: {
+                    color: '#22BC66', // Optional action button color
+                    text: 'Reimposta la tua password',
+                    link: link
+                }
+            },
+            outro: "Se non hai richiesto la reimpostazione della password, puoi tranquillamente ignorare questa email. Solo una persona con accesso alla tua email può reimpostare la password del tuo account"
+        }
+    }
+    const emailBody = mailGenerator.generate(email);
+
+    const message = {
+        from: config.user,
+        to: userEmail,
+        subject: "Reimposta la tua password",
+        html: emailBody
+    }
+
+    try {
+        const info = await transporter.sendMail(message);
+        console.log("Sent password reset email URL: " + nodemailer.getTestMessageUrl(info))
+        transporter.close();
+    } catch (error) {
+        throw new Error("Error while sending email")
+    }
+}
+
+module.exports = { sendOtpEmail, sendResetPasswordLinkEmail }

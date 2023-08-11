@@ -2,7 +2,7 @@ const User = require('../models/user');
 const bcrypt = require('bcrypt');
 const { SignJWT, jwtVerify } = require("jose");
 const otpUtils = require('../utils/otp-utils');
-const { sendEmail } = require('../utils/mailer');
+const { sendOtpEmail, sendResetPasswordLinkEmail} = require('../utils/mailer');
 
 async function register(req, res) {
     const { full_name, email, number, password} = req.body;
@@ -36,7 +36,7 @@ async function register(req, res) {
         const { otp, otp_hash, iat } = await otpUtils.generateOTP(email);
 
         // Send email with OTP
-        await sendEmail(name, email, otp);
+        await sendOtpEmail(name, email, otp);
 
         // Set cookie with otp info
         const otpInfo = {hash: otp_hash, iat, attempts: 0};
@@ -70,7 +70,7 @@ async function newOTP(req, res) {
     if (!user.status || (user.status && user.status !== "pending")) return res.sendStatus(400);
 
     const { otp, otp_hash, iat } = await otpUtils.generateOTP(user.email);
-    await sendEmail(user.name, user.email, otp);
+    await sendOtpEmail(user.name, user.email, otp);
 
     const otpInfo = {hash: otp_hash, iat, attempts: 0};
     const cookieAttributes = { httpOnly: true, maxAge: 24*60*60*1000, overwrite: true};
@@ -293,6 +293,53 @@ async function refresh(req, res) {
     }
 }
 
+async function resetPassword(req, res) {
+    const user = await User.findOne({ email: req.body.email }).exec();
+    // Wrong email -> no user found -> 400: Bad request
+    if (!user) return res.sendStatus(400);
+
+    const alg = 'HS256';
+    const resetPasswordTokenSecret = new TextEncoder().encode(process.env.RESET_PASSWORD_TOKEN_SECRET);
+    const resetPasswordToken = await new SignJWT({id: user.id})
+        .setProtectedHeader({alg})
+        .setIssuedAt()
+        .setExpirationTime(Math.floor((Date.now() / 1000) + Number(process.env.RESET_PASSWORD_TOKEN_EXPIRATION_TIME)))
+        .sign(resetPasswordTokenSecret);
+
+    // TODO: Generate link depending on reset token
+    const link = `http://localhost:5173/reset-password?resetToken=${resetPasswordToken}&userId=${user.id}`
+
+    await sendResetPasswordLinkEmail(user.name, user.email, link);
+
+    return res.sendStatus(200)
+}
+
+async function changePassword(req, res) {
+    const { resetToken, userId, password } = req.body;
+
+    const user = await User.findOne({ _id: userId }).exec();
+    if (!user) return res.sendStatus(400);
+
+    try {
+        const resetTokenSecret = new TextEncoder().encode(process.env.RESET_PASSWORD_TOKEN_SECRET);
+        const {payload, _} = await jwtVerify(resetToken, resetTokenSecret);
+        if (userId !== payload.id) return res.sendStatus(403);
+
+        // Hash password and save in db
+        const salt = await bcrypt.genSalt(10);
+        user.hash = await bcrypt.hash(password, salt);
+        await user.save();
+
+        return res.sendStatus(200);
+    } catch (error) {
+        if (error.code === "ERR_JWT_EXPIRED") {
+            return res.status(400).json({message: "error", code: "reset-token-expired"});
+        } else {
+            return res.sendStatus(500);
+        }
+    }
+}
+
 async function user(req, res) {
     if (req.user) {
         return res.status(200).json({'user_data': req.user});
@@ -301,4 +348,4 @@ async function user(req, res) {
     }
 }
 
-module.exports = { register, newOTP, verifyOTP, cancel, login, logout, refresh, user }
+module.exports = { register, newOTP, verifyOTP, cancel, login, logout, refresh, resetPassword, changePassword, user }

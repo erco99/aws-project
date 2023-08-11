@@ -1,4 +1,4 @@
-import {login, logout, register, newOTP, verifyOTP, user, refresh, cancelRegistration} from '@/api/user'
+import {login, logout, register, newOTP, verifyOTP, user, refresh, cancelRegistration, changePassword, resetPassword} from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/authentication'
 import { paymentMethodInsert, depositWithdrawMoney } from '@/api/credits';
 import store from "@/store";
@@ -94,6 +94,28 @@ const actions = {
       logout().then(() => {
         commit('SET_TOKEN', '')
         removeToken()
+        resolve()
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+
+  resetPassword({ commit }, email) {
+    return new Promise((resolve, reject) => {
+      resetPassword(email).then(() => {
+        console.log("email sent")
+        resolve()
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+
+  changePassword({ commit }, data) {
+    return new Promise((resolve, reject) => {
+      changePassword(data).then(() => {
+        console.log("Password changed")
         resolve()
       }).catch(error => {
         reject(error)

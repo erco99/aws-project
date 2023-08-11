@@ -53,6 +53,21 @@ export function logout() {
     method: "post",
   });
 }
+export function resetPassword(data) {
+  return request({
+    url: "/auth/reset-password",
+    method: "post",
+    data,
+  });
+}
+
+export function changePassword(data) {
+  return request({
+    url: "/auth/change-password",
+    method: "post",
+    data,
+  })
+}
 
 export function user() {
   return request({

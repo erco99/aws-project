@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import Layout from "../layout/Index.vue";
 import BookingPanel from "../views/booking-panel/Index.vue";
 import Login from "../views/login/Index.vue";
+import ForgotPassword from "@/views/forgot-password/Index.vue";
 import ResetPassword from "@/views/reset-password/Index.vue";
 import SignUp from "@/views/signup/Index.vue";
 import CreditsManagement from "@/views/credits-management/Index.vue";
@@ -13,6 +14,10 @@ export const main_routes = [
     path: "/login",
     component: Login,
     hidden: true,
+  },
+  {
+    path: "/forgot-password",
+    component: ForgotPassword,
   },
   {
     path: "/reset-password",
