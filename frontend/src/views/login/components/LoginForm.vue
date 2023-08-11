@@ -12,8 +12,6 @@
 
       <PasswordField v-model:password="password.value.value" v-model:error="password.errorMessage.value"></PasswordField>
 
-      <v-checkbox class="pt-n10" v-model="staySignedIn" type="checkbox" label="Resta connesso"></v-checkbox>
-
       <ForgotPassword></ForgotPassword>
 
       <SubmitButton :loading="signinButtonLoading"></SubmitButton>
@@ -62,9 +60,8 @@ export default {
 
     // Default values for debug
     email.value.value = "enrico.lumini@studio.unibo.it"
-    password.value.value = "123er56"
+    password.value.value = "123456s#"
 
-    const staySignedIn = ref(false);
     const alert = ref(false);
     const signinButtonLoading = ref(false);
 
@@ -90,7 +87,7 @@ export default {
           })
     })
 
-    return {email, password, staySignedIn, alert, submit, signinButtonLoading}
+    return {email, password, alert, submit, signinButtonLoading}
   },
   methods: {
     signup: function() {
