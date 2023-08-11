@@ -54,7 +54,7 @@ async function notifyPlayers(newBooking) {
   text =
     text +
     " se non ci sei puoi rifiutare l'invito cancellando la prenotazione. Hai tempo fino al giorno prima della prenotazione per decidere.";
-  notifications.create({
+  await notifications.create({
     title: title,
     subtitle: subtitle,
     text: text,
@@ -64,6 +64,26 @@ async function notifyPlayers(newBooking) {
     field: newBooking.field,
     time: newBooking.time,
     accepters: [],
+    inviter: newBooking.owner.email,
+  });
+}
+
+async function notifyDelete(invitation) {
+  const title = "Cancellazione " + invitation.day.toISOString().split("T")[0];
+  const subtitle =
+    invitation.field +
+    " alle " +
+    invitation.time.hours +
+    ":" +
+    invitation.time.minutes;
+  const text =
+    "La prenotazione è stata cancellata. Segnala all'amministratore eventuali refusi.";
+  await notifications.create({
+    title: title,
+    subtitle: subtitle,
+    text: text,
+    owners: new Array(...invitation.owners, invitation.inviter),
+    invitationId: invitation._id,
   });
 }
 
@@ -92,7 +112,11 @@ async function refuse(notificationId, refuseTime) {
     );
     notificationToUpdate.expiration = refuseTime;
     await notificationToUpdate.save();
-    return notificationToUpdate.owners;
+    await notifyDelete(notificationToUpdate);
+    return {
+      owners: notificationToUpdate.owners,
+      inviter: notificationToUpdate.inviter,
+    };
   }
   return undefined;
 }
@@ -101,6 +125,7 @@ async function findNotificationById(notificationId) {
   return await notifications.findById(notificationId);
 }
 
+// TO DO: check for invitation expired
 async function findInvitation({ day, field, time }) {
   return await notifications.findOne({
     day: day,
@@ -108,6 +133,10 @@ async function findInvitation({ day, field, time }) {
     "time.hours": time.hours,
     "time.minutes": time.minutes,
   });
+}
+
+async function findByInvitationId(invitationId) {
+  return await notifications.findOne({ invitationId: invitationId });
 }
 
 module.exports = {
@@ -118,4 +147,5 @@ module.exports = {
   refuse,
   findInvitation,
   findNotificationById,
+  findByInvitationId,
 };

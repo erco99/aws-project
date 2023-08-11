@@ -10,6 +10,8 @@ const notificationSchema = mongoose.Schema({
   day: Date,
   field: String,
   time: { hours: Number, minutes: Number },
+  inviter: String,
+  invitationId: String,
 });
 
 module.exports = mongoose.model("notifications", notificationSchema);

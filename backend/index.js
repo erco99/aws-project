@@ -66,12 +66,16 @@ io.on("connection", (socket) => {
     notificationsController.getNotifications(socket, owner)
   );
   socket.on("refuse", async (notificationId, refuseTime) => {
-    const owners = await notificationsController.refuse(
+    const result = await notificationsController.refuse(
       notificationId,
       refuseTime
     );
-    if (owners) {
-      io.emit("refuse", { id: notificationId, owners: owners });
+    if (result) {
+      io.emit("refuse", {
+        id: notificationId,
+        owners: result.owners,
+        inviter: result.inviter,
+      });
     }
   });
   socket.on("accept", (notificationId, userEmail) => {
@@ -89,4 +93,10 @@ io.on("connection", (socket) => {
       await notificationsController.findInvitation(invitation)
     )
   );
+  socket.on("getDelete", async (invitationId) => {
+    socket.emit(
+      "invitation",
+      await notificationsController.findByInvitationId(invitationId)
+    );
+  });
 });

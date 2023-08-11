@@ -63,7 +63,7 @@ export default {
       notification.accepters.push(this.$store.getters.userEmail);
     },
     handleInvitation(notification) {
-      this.notifications.splice(0, 0, notification);
+      this.notifications.push(notification);
     },
     handleRefresh(notification) {
       for (let i = 0; i < this.notifications.length; i++) {
@@ -76,6 +76,9 @@ export default {
     handleRefuse(invitation) {
       if (invitation.owners.includes(this.$store.getters.userEmail)) {
         this.socket.emit("getRefresh", invitation.id);
+        this.socket.emit("getDelete", invitation.id);
+      } else if (invitation.inviter === this.$store.getters.userEmail) {
+        this.socket.emit("getDelete", invitation.id);
       }
     },
     handleNewBooking(newBooking) {
