@@ -1,4 +1,5 @@
 const notifications = require("../models/notifications");
+const bookings = require("../models/bookings");
 
 async function getNotifications(socket, owner) {
   const query = await notifications.find({ owners: owner });
@@ -59,7 +60,62 @@ async function notifyPlayers(newBooking) {
     text: text,
     expiration: newBooking.day,
     owners: newBooking.players.map((player) => player.email),
+    day: newBooking.day,
+    field: newBooking.field,
+    time: newBooking.time,
+    accepters: [],
   });
 }
 
-module.exports = { notifyOwner, notifyPlayers, getNotifications };
+async function accept(notificationId, userEmail) {
+  const notificationToUpdate = await notifications.findById(notificationId);
+  notificationToUpdate.accepters.push(userEmail);
+  await notificationToUpdate.save();
+}
+
+async function refuse(notificationId, refuseTime) {
+  const notificationToUpdate = await notifications.findById(notificationId);
+  if (new Date(notificationToUpdate.expiration) > new Date(refuseTime)) {
+    await bookings.updateOne(
+      {
+        day: notificationToUpdate.day,
+        field: notificationToUpdate.field,
+      },
+      {
+        $pull: {
+          bookings: {
+            "time.hours": notificationToUpdate.time.hours,
+            "time.minutes": notificationToUpdate.time.minutes,
+          },
+        },
+      }
+    );
+    notificationToUpdate.expiration = refuseTime;
+    await notificationToUpdate.save();
+    return notificationToUpdate.owners;
+  }
+  return undefined;
+}
+
+async function findNotificationById(notificationId) {
+  return await notifications.findById(notificationId);
+}
+
+async function findInvitation({ day, field, time }) {
+  return await notifications.findOne({
+    day: day,
+    field: field,
+    "time.hours": time.hours,
+    "time.minutes": time.minutes,
+  });
+}
+
+module.exports = {
+  notifyOwner,
+  notifyPlayers,
+  getNotifications,
+  accept,
+  refuse,
+  findInvitation,
+  findNotificationById,
+};

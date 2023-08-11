@@ -65,4 +65,28 @@ io.on("connection", (socket) => {
   socket.on("getNotifications", (owner) =>
     notificationsController.getNotifications(socket, owner)
   );
+  socket.on("refuse", async (notificationId, refuseTime) => {
+    const owners = await notificationsController.refuse(
+      notificationId,
+      refuseTime
+    );
+    if (owners) {
+      io.emit("refuse", { id: notificationId, owners: owners });
+    }
+  });
+  socket.on("accept", (notificationId, userEmail) => {
+    notificationsController.accept(notificationId, userEmail);
+  });
+  socket.on("getRefresh", async (notificationId) => {
+    socket.emit(
+      "refresh",
+      await notificationsController.findNotificationById(notificationId)
+    );
+  });
+  socket.on("getInvitation", async (invitation) =>
+    socket.emit(
+      "invitation",
+      await notificationsController.findInvitation(invitation)
+    )
+  );
 });

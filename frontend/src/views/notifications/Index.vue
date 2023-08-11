@@ -5,18 +5,17 @@
       :key="index"
       cols="12"
       sm="6">
-      <v-card height="280">
-        <v-img
-          height="50"
-          src="https://random.imagecdn.app/50/150"
-          cover
-          class="text-white"></v-img>
+      <v-card height="220">
         <v-card-title>{{ notification.title }}</v-card-title>
         <v-card-subtitle>{{ notification.subtitle }}</v-card-subtitle>
         <v-card-text>{{ notification.text }}</v-card-text>
-        <v-card-actions v-if="new Date(notification.expiration) > new Date()">
-          <v-btn>Accetta</v-btn>
-          <v-btn>Rifiuta</v-btn>
+        <v-card-actions
+          v-if="
+            new Date(notification.expiration) > new Date() &&
+            !notification.accepters.includes(this.$store.getters.userEmail)
+          ">
+          <v-btn @click="accept(notification)">Accetta</v-btn>
+          <v-btn @click="refuse(notification._id)">Rifiuta</v-btn>
         </v-card-actions>
       </v-card>
     </v-col>
@@ -35,12 +34,63 @@ export default {
   mounted() {
     this.socket.on("notifications", (notifications) => {
       this.notifications = notifications;
-      console.log(notifications);
     });
+    this.socket.on("new-booking", (newBooking) =>
+      this.handleNewBooking(newBooking)
+    );
+    this.socket.on("refuse", (invitation) => this.handleRefuse(invitation));
+    this.socket.on("refresh", (notification) =>
+      this.handleRefresh(notification)
+    );
+    this.socket.on("invitation", (notification) =>
+      this.handleInvitation(notification)
+    );
     this.socket.emit("getNotifications", this.$store.getters.userEmail);
   },
   unmounted() {
     this.socket.disconnect();
+  },
+  methods: {
+    refuse(notificationId) {
+      this.socket.emit("refuse", notificationId, new Date().toISOString());
+    },
+    accept(notification) {
+      this.socket.emit(
+        "accept",
+        notification._id,
+        this.$store.getters.userEmail
+      );
+      notification.accepters.push(this.$store.getters.userEmail);
+    },
+    handleInvitation(notification) {
+      this.notifications.splice(0, 0, notification);
+    },
+    handleRefresh(notification) {
+      for (let i = 0; i < this.notifications.length; i++) {
+        if (this.notifications[i]._id === notification._id) {
+          this.notifications.splice(i, 1, notification);
+          break;
+        }
+      }
+    },
+    handleRefuse(invitation) {
+      if (invitation.owners.includes(this.$store.getters.userEmail)) {
+        this.socket.emit("getRefresh", invitation.id);
+      }
+    },
+    handleNewBooking(newBooking) {
+      if (
+        newBooking.newBooking.players.some(
+          (p) => p.email === this.$store.getters.userEmail
+        )
+      ) {
+        this.socket.emit("getInvitation", {
+          day: newBooking.day,
+          field: newBooking.field,
+          time: newBooking.newBooking.time,
+        });
+      }
+    },
   },
 };
 </script>
