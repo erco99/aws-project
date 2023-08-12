@@ -1,4 +1,5 @@
 <template>
+  <BgImage></BgImage>
   <v-container class="fill-height">
     <v-row justify="center" align="center">
       <v-col>
@@ -70,8 +71,10 @@ import {useField, useForm} from "vee-validate";
 import {useRoute, useRouter} from "vue-router";
 import {useStore} from "vuex";
 import {ref} from "vue";
+import BgImage from "@/components/bg-image/Index.vue";
 
 export default {
+  components: { BgImage },
   data: () => ({
     visible1: false,
     visible2: false,

@@ -1,4 +1,5 @@
 <template>
+  <BgImage></BgImage>
   <v-container class="fill-height">
     <v-row justify="center" align="center">
       <v-col>
@@ -55,8 +56,10 @@ import {useField, useForm} from "vee-validate";
 import {useStore} from "vuex";
 import {ref} from "vue";
 import {useRouter} from "vue-router";
+import BgImage from "@/components/bg-image/Index.vue";
 
   export default {
+    components: { BgImage },
     setup() {
       const {handleSubmit, handleReset} = useForm({
         validationSchema: {

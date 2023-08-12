@@ -1,4 +1,5 @@
 <template>
+  <BgImage></BgImage>
   <v-container class="fill-height">
     <v-row justify="center" align="center">
       <v-col>
@@ -31,12 +32,14 @@ import SignupForm from "@/views/signup/components/signup-form-page/Index.vue";
 import PageNumber from "@/views/signup/components/commons/PageNumber.vue";
 import EmailVerifyForm from "@/views/signup/components/email-verify-page/Index.vue";
 import ConfirmPage from "@/views/signup/components/confirm-page/Index.vue";
+import BgImage from "@/components/bg-image/Index.vue";
 export default {
   components: {
     PageNumber,
     SignupForm,
     EmailVerifyForm,
-    ConfirmPage
+    ConfirmPage,
+    BgImage
   },
   data: () => ({
     step: 1,
