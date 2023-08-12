@@ -10,11 +10,13 @@
   "dependencies": {
     "aws-project": "file:..",
     "axios": "^1.4.0",
+    "chart.js": "^4.3.3",
     "js-cookie": "^3.0.5",
     "mitt": "^3.0.1",
     "socket.io-client": "^4.7.1",
     "vee-validate": "^4.10.3",
     "vue": "^3.3.4",
+    "vue-chartjs": "^5.2.0",
     "vue-router": "^4.2.2",
     "vuetify": "^3.3.6",
     "vuex": "^4.0.2"
