@@ -21,9 +21,9 @@ router.beforeEach(async(to, from, next) => {
             } else {
                 // Retrieve all user data (saving it in store) and catch the user role
                 const { role } = await store.dispatch('user/user')
-                await store.dispatch('routes/generateRoutes', role)
-                // console.log(token)
-                next()
+                const accessRoutes = await store.dispatch('routes/generateRoutes', role)
+                router.addRoute(accessRoutes)
+                next({...to, replace: true})
             }
         }
     } else {

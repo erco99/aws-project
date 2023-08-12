@@ -37,7 +37,7 @@ const actions = {
         }
       });
       commit('SET_ROUTES', filtered_routes)
-      resolve()
+      resolve(filtered_routes)
     })
   }
 }
