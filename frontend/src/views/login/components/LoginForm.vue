@@ -60,7 +60,7 @@ export default {
 
     // Default values for debug
     email.value.value = "enrico.lumini@studio.unibo.it"
-    password.value.value = "123456s#"
+    password.value.value = "123er56#"
 
     const alert = ref(false);
     const signinButtonLoading = ref(false);
