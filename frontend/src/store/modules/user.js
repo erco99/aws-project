@@ -16,6 +16,9 @@ const mutations = {
   SET_USER_DATA: (state, userData) => {
     state.userData = userData
   },
+  CLEAN_USER_DATA: (state) => {
+    state.userData = {}
+  }
 }
 
 const actions = {
@@ -93,6 +96,7 @@ const actions = {
     return new Promise((resolve, reject) => {
       logout().then(() => {
         commit('SET_TOKEN', '')
+        commit('CLEAN_USER_DATA')
         removeToken()
         resolve()
       }).catch(error => {

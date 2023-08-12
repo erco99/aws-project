@@ -4,19 +4,20 @@ import { getToken } from './utils/authentication';
 
 router.beforeEach(async(to, from, next) => {
 
-    if (!to.meta.authRequired) return next();
-
     const token = getToken()
-
     if(token) {
         if (to.path === '/login') {
             // if is logged in, redirect to the home page
             next({ path: '/' })
             NProgress.done()
-          } else {
-            const hasRole = store.getters.userRole
-            if (hasRole) {
-                next()
+        } else {
+            const role = store.getters.userRole
+            if (role) {
+                if (hasPermission(role, to)) {
+                    next()
+                } else {
+                    next({ path: from.path })
+                }
             } else {
                 // Retrieve all user data (saving it in store) and catch the user role
                 const { role } = await store.dispatch('user/user')
@@ -24,9 +25,21 @@ router.beforeEach(async(to, from, next) => {
                 // console.log(token)
                 next()
             }
-          }
+        }
     } else {
-        next(`/login`);
-        NProgress.done();
+        if (!to.meta.authRequired) {
+            return next();
+        } else {
+            next(`/login`);
+            NProgress.done();
+        }
     }
 })
+
+function hasPermission(role, route) {
+    if (route.meta && route.meta.roles) {
+        return route.meta.roles.includes(role)
+    } else {
+        return true
+    }
+}
