@@ -14,18 +14,30 @@ export const main_routes = [
     path: "/login",
     component: Login,
     hidden: true,
+    meta: {
+      authRequired: false
+    },
   },
   {
     path: "/forgot-password",
     component: ForgotPassword,
+    meta: {
+      authRequired: false
+    },
   },
   {
     path: "/reset-password",
     component: ResetPassword,
+    meta: {
+      authRequired: false
+    },
   },
   {
     path: "/signup",
     component: SignUp,
+    meta: {
+      authRequired: false
+    },
   },
   {
     sidebar: "yes",
@@ -40,6 +52,9 @@ export const main_routes = [
         icon: "mdi-calendar-range",
       },
     ],
+    meta: {
+      authRequired: true
+    },
   },
   {
     sidebar: "yes",
@@ -53,6 +68,9 @@ export const main_routes = [
         icon: "mdi-currency-eur",
       },
     ],
+    meta: {
+      authRequired: true
+    },
   },
   {
     sidebar: "no",
@@ -65,6 +83,9 @@ export const main_routes = [
         component: Profile,
       },
     ],
+    meta: {
+      authRequired: true
+    },
   },
   {
     sidebar: "yes",
@@ -78,6 +99,9 @@ export const main_routes = [
         icon: "mdi-email-outline",
       },
     ],
+    meta: {
+      authRequired: true
+    },
   },
 ];
 
