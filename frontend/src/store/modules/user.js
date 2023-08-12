@@ -126,8 +126,10 @@ const actions = {
   user({ commit }) {
     return new Promise((resolve, reject) => {
       user().then((response) => {
-        commit('SET_USER_DATA', response.data.user_data)
-        resolve()
+        const user_data = response.data.user_data
+        user_data.role = user_data.role.key
+        commit('SET_USER_DATA', user_data)
+        resolve(user_data)
       }).catch(error => {
         reject(error)
       })

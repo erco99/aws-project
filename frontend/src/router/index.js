@@ -8,6 +8,7 @@ import SignUp from "@/views/signup/Index.vue";
 import CreditsManagement from "@/views/credits-management/Index.vue";
 import Profile from "@/views/profile/Index.vue";
 import NotificationArea from "@/views/notifications/Index.vue";
+import StatsPanel from "@/views/stats-panel/Index.vue";
 
 export const main_routes = [
   {
@@ -53,7 +54,8 @@ export const main_routes = [
       },
     ],
     meta: {
-      authRequired: true
+      authRequired: true,
+      roles: ['standard', 'admin']
     },
   },
   {
@@ -69,7 +71,8 @@ export const main_routes = [
       },
     ],
     meta: {
-      authRequired: true
+      authRequired: true,
+      roles: ['standard', 'admin']
     },
   },
   {
@@ -84,7 +87,8 @@ export const main_routes = [
       },
     ],
     meta: {
-      authRequired: true
+      authRequired: true,
+      roles: ['standard', 'admin']
     },
   },
   {
@@ -100,9 +104,27 @@ export const main_routes = [
       },
     ],
     meta: {
-      authRequired: true
+      authRequired: true,
+      roles: ['standard', 'admin']
     },
   },
+  {
+    sidebar: "yes",
+    path: "/stats",
+    component: Layout,
+    children: [
+      {
+        path: "/stats",
+        name: "Statistiche",
+        component: StatsPanel,
+        icon: "mdi-chart-areaspline",
+      },
+    ],
+    meta: {
+      authRequired: true,
+      roles: ['admin']
+    },
+  }
 ];
 
 const router = createRouter({

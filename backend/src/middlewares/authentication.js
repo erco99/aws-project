@@ -11,7 +11,7 @@ async function authentication(req, res, next) {
         const accessTokenSecret = new TextEncoder().encode(process.env.ACCESS_TOKEN_SECRET);
         try {
             const {payload, protectedHeader} = await jwtVerify(token, accessTokenSecret);
-            User.findOne({_id: payload.id}, {name: 1, surname: 1, email: 1, number: 1, balance:1, payment_method: 1,_id:0})
+            User.findOne({_id: payload.id}, {name: 1, surname: 1, email: 1, number: 1, balance:1, payment_method: 1, role: 1,_id:0})
                 .then(data => {
                     req.user = data
                     next()

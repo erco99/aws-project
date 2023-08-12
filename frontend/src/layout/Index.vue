@@ -2,8 +2,6 @@
   <v-layout
     class="rounded rounded-md"
     style="display: block"
-    v-if="dataReady"
-    v-model="dataReady"
   >
   <appbar />
   <sidebar />
@@ -34,17 +32,12 @@ export default {
     drawer: true,
     rail: true,
     items: [{ title: "Logout" }],
-    dataReady: false,
   }),
   methods: {
     toggleSidebar() {
       this.drawer = !this.drawer;
       this.emitter.emit("toggle-sidebar", this.drawer);
     },
-  },
-  async beforeMount() {
-    await this.$store.dispatch("user/user");
-    this.dataReady = true;
   },
 };
 </script>

@@ -1,5 +1,13 @@
 import { main_routes } from '@/router'
-0
+
+function hasPermission(role, route) {
+  if (route.meta && route.meta.roles) {
+    return route.meta.roles.includes(role)
+  } else {
+    return true
+  }
+}
+
 const state = {
   routes: [],
 }
@@ -11,11 +19,11 @@ const mutations = {
 }
 
 const actions = {
-  generateRoutes({ commit }) {
+  generateRoutes({ commit }, role) {
     return new Promise(resolve => {
       let filtered_routes = []
       main_routes.forEach(route => {
-        if(route.sidebar == "yes") {
+        if(route.sidebar == "yes" && hasPermission(role, route)) {
           route.children.forEach(child => {
             const component_path = child.path
             const component_name = child.name

@@ -14,9 +14,16 @@ router.beforeEach(async(to, from, next) => {
             next({ path: '/' })
             NProgress.done()
           } else {
-                await store.dispatch('routes/generateRoutes')
+            const hasRole = store.getters.userRole
+            if (hasRole) {
+                next()
+            } else {
+                // Retrieve all user data (saving it in store) and catch the user role
+                const { role } = await store.dispatch('user/user')
+                await store.dispatch('routes/generateRoutes', role)
                 // console.log(token)
                 next()
+            }
           }
     } else {
         next(`/login`);
