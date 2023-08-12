@@ -10,7 +10,7 @@ async function register(req, res) {
     const user = await User.findOne({email}).exec();
     let name = "";
     if (user) {
-        if (!user.status || (user.status && user.status !== "pending")) {
+        if (user.verified) {
             return res.sendStatus(409);
         } else {
             name = user.name;
@@ -21,10 +21,10 @@ async function register(req, res) {
         const names = full_name.trim().split(/\s+/);
         const surname = names.pop();
         name = names.join(" ");
-        const status = "pending";
+        const role = {id: 0, key: "standard"}
         // Save user in db
         try {
-            await User.create({name, surname, email, number, hash, status, balance: 0});
+            await User.create({name, surname, email, number, hash, role, verified: false, balance: 0});
         } catch (error) {
             console.log(error);
             return res.status(500).json({'message': 'Could not register'});
@@ -67,7 +67,7 @@ async function newOTP(req, res) {
     if (!user) return res.sendStatus(400);
 
     // User found but already verified -> 400: Bad request
-    if (!user.status || (user.status && user.status !== "pending")) return res.sendStatus(400);
+    if (user.verified) return res.sendStatus(400);
 
     const { otp, otp_hash, iat } = await otpUtils.generateOTP(user.email);
     await sendOtpEmail(user.name, user.email, otp);
@@ -92,13 +92,14 @@ async function verifyOTP(req, res) {
     if (!user) return res.sendStatus(400);
 
     // User found but already verified -> 400: Bad request
-    if (!user.status || (user.status && user.status !== "pending")) return res.sendStatus(400);
+    if (user.verified) return res.sendStatus(400);
 
     try {
         const isValid = await otpUtils.verifyOTP(req.body, JSON.parse(cookies.otp_info));
         if (isValid) {
-            // User verified -> remove status field from document
-            await user.updateOne({ $unset: {status: "" } }).exec();
+            // User verified -> set verifvied to true
+            user.verified = true;
+            await user.save();
             // Clear cookie after user is verified
             const cookieAttributes = { httpOnly: true }
             if (!req.useragent.isSafari) {
@@ -165,7 +166,7 @@ async function cancel(req, res) {
 
     const user = await User.findOne({ email: req.body.email }).exec();
     // If otp expires user is deleted in verifyOTP
-    if (user && user?.status === "pending") user.deleteOne({});
+    if (user && !user.verified) user.deleteOne({});
 
     return res.sendStatus(200);
 }

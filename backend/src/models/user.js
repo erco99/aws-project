@@ -30,6 +30,17 @@ const userSchema = mongoose.Schema(
             required: true
         },
 
+        role: {
+            id: {
+                type: Number,
+                required: true
+            },
+            key: {
+                type: String,
+                required: true
+            }
+        },
+
         payment_method: {
             card_number: {
                 type: Number,
@@ -54,7 +65,10 @@ const userSchema = mongoose.Schema(
             required: true
         },
 
-        status: String,
+        verified: {
+            type: Boolean,
+            required: true
+        },
 
         refresh_token: {
             value: {
