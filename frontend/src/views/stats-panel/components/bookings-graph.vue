@@ -1,7 +1,6 @@
 <template>
   <v-card class="mx-auto rounded-0" elevation="4">
-    <Bar
-        id="my-chart-id"
+    <Line
         :options="chartOptions"
         :data="chartData"
     />
@@ -9,13 +8,13 @@
 </template>
 
 <script>
-import { Bar } from 'vue-chartjs'
-import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js'
+import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js'
+import { Line } from 'vue-chartjs'
 
-ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
+ChartJS.register( CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend )
 
 export default {
-  components: { Bar },
+  components: { Line },
   data() {
     return {
       chartData: {
@@ -26,7 +25,8 @@ export default {
           data: [40, 20, 12] } ]
       },
       chartOptions: {
-        responsive: true
+        responsive: true,
+        maintainAspectRatio: false
       }
     }
   }
