@@ -31,7 +31,7 @@
         Ritira
       </v-btn>
       <v-btn 
-        @click="dialog = true; operationTypeText='Invio'"
+        @click="dialog = true; operationTypeText='Invio'; operationType='send'"
         color="yellow-darken-4" 
         width="150"> 
         Invia </v-btn>
@@ -65,6 +65,21 @@
                     v-on:keypress="isNumber($event, amountValue)"
                     :rules="rules">
                   </v-text-field>
+                  <div v-if="operationType=='send'">
+                    <div class="font-weight-medium label-div" 
+                      style="margin-bottom: 10px;">
+                      Email destinatario
+                    </div>
+                    <v-text-field 
+                      placeholder="Es. mariorossi@gmail.com"
+                      prepend-inner-icon="mdi-account"
+                      variant="outlined"
+                      type="text" 
+                      v-model="receiverEmail"
+                      >
+                    </v-text-field>
+                  </div>
+
                 </div>
                   <v-btn
                     outlined 
@@ -132,67 +147,104 @@ export default {
     async checkApi (amountValue) {
       return new Promise(resolve => {
         clearTimeout(this.timeout)
+        const currentTime = new Date();
 
         this.timeout = setTimeout(() => {
-          if (!amountValue) {
-            return resolve('Il campo non può essere vuoto')
-          }
+          if(this.operationType != 'send') {
+            if (!amountValue) {
+              return resolve('Il campo non può essere vuoto')
+            }
 
-          if (amountValue.replace(/[^,]/g, "").length == 1){
-            let integer_part = amountValue.split(',')[0];
-            let decimal_part = amountValue.split(',')[1];
+            if (amountValue.replace(/[^,]/g, "").length == 1){
+              let integer_part = amountValue.split(',')[0];
+              let decimal_part = amountValue.split(',')[1];
 
-            //check if both integer and decimal parts contain only digits
-            if (/^\d+$/.test(integer_part) && /^\d+$/.test(decimal_part)) {
-              if (decimal_part.length > 2) {
-                return resolve("Formato non valido")
-              } else if(decimal_part.length == 1) {
-                amountValue += '0'
+              //check if both integer and decimal parts contain only digits
+              if (/^\d+$/.test(integer_part) && /^\d+$/.test(decimal_part)) {
+                if (decimal_part.length > 2) {
+                  return resolve("Formato non valido")
+                } else if(decimal_part.length == 1) {
+                  amountValue += '0'
+                }
+              }
+            } else if(amountValue.replace(/[^,]/g, "").length == 0) {
+              if (/^\d+$/.test(amountValue) == false) {
+                return resolve("Inserire un numero nel formato valido")
+              } else {
+                amountValue += ',00'
+              }
+            } else {
+                return resolve("Inserire un numero nel formato valido")
+            }
+
+            if(this.operationType=='negative' && parseFloat(amountValue.replace(',','.')) > parseFloat(this.userBalance)) {
+                return resolve("Non è possibile ritirare un valore più alto del bilancio")
+            }
+
+            amountValue = amountValue.replace(/^0+/, '');
+
+            const data = {
+              amount: this.amountValue,
+              transaction_type: this.operationType,
+              description: this.operationTypeText + ' denaro sul conto',
+              date: currentTime.getDate().toString() + '/' 
+              + currentTime.getMonth().toString() + '/'
+              + currentTime.getFullYear().toString(),
+              time: currentTime.getHours().toString() + ":"
+              + currentTime.getMinutes().toString() + ":"
+              + currentTime.getSeconds().toString(),
+              user: {
+                fullname: this.userFullname,
+                email: this.userEmail
               }
             }
-          } else if(amountValue.replace(/[^,]/g, "").length == 0) {
-            if (/^\d+$/.test(amountValue) == false) {
-              return resolve("Inserire un numero nel formato valido")
-            } else {
-              amountValue += ',00'
-            }
+
+            this.$store.dispatch('user/depositWithdrawMoney', data)
+            this.dialog = false
+            this.$refs.form.submit();
           } else {
-              return resolve("Inserire un numero nel formato valido")
-          }
-
-          if(this.operationType=='negative' && parseFloat(amountValue.replace(',','.')) > parseFloat(this.userBalance)) {
-              return resolve("Non può ritirare un valore più alto del bilancio")
-          }
-
-          amountValue = amountValue.replace(/^0+/, '');
-
-          const currentTime = new Date();
-
-          const data = {
-            amount: this.amountValue,
-            transaction_type: this.operationType,
-            description: this.operationTypeText + ' denaro sul conto',
-            date: currentTime.getDate().toString() + '/' 
-            + currentTime.getMonth().toString() + '/'
-            + currentTime.getFullYear().toString(),
-            time: currentTime.getHours().toString() + ":"
-            + currentTime.getMinutes().toString() + ":"
-            + currentTime.getSeconds().toString(),
-            user: {
-              fullname: this.userFullname,
-              email: this.userEmail
+            if(parseFloat(amountValue.replace(',','.')) > parseFloat(this.userBalance)) {
+                return resolve("Non è possibile inviare un valore più alto del bilancio")
             }
+            const data = {
+              sender_data: {
+                fullname: this.$store.getters.userFullname,
+                email: this.$store.getters.userEmail,
+                balance: this.$store.getters.userBalance
+              },
+              receiver_data: {
+                email: this.receiverEmail
+              },
+              amount: this.amountValue,
+              date: currentTime.getDate().toString() + '/' 
+              + currentTime.getMonth().toString() + '/'
+              + currentTime.getFullYear().toString(),
+              time: currentTime.getHours().toString() + ":"
+              + currentTime.getMinutes().toString() + ":"
+              + currentTime.getSeconds().toString()
+            }
+
+            let wrong_email = 0;
+
+            this.$store.dispatch('transactions/sendMoney', data).then(
+              () => {
+                this.dialog = false
+                this.$refs.form.submit();
+              },
+              (error) => {
+                console.log("Inserire un utente registrato")
+              }
+            )
           }
 
-          this.$store.dispatch('user/depositWithdrawMoney', data)
-          this.dialog = false
-          this.$refs.form.submit();
+
           return resolve(true)
         }, 1000)
       })
     }
   },
   data: vm => ({
+    receiverEmail: '',
     dialog: false,
     operationType: '',
     operationTypeText: '',

@@ -1,4 +1,4 @@
-import { getTransactions } from '@/api/credits'
+import { getTransactions, sendMoney } from '@/api/credits'
 
 const state = {
   transactions: []
@@ -17,6 +17,15 @@ const actions = {
         const { data } = response
         commit('SET_TRANSACTIONS', data)
         resolve()
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+  sendMoney({commit}, data) {
+    return new Promise((resolve, reject) => {
+      sendMoney(data).then(response => {
+        resolve(response.data)
       }).catch(error => {
         reject(error)
       })

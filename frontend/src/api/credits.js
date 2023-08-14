@@ -31,3 +31,11 @@ export function deletePaymentMethod(data) {
     data
   })
 }
+
+export function sendMoney(data) {
+  return request({
+    url: "/credits/sendMoney",
+    method: "post",
+    data
+  })
+}

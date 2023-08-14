@@ -13,9 +13,8 @@
 
         <v-card-item>
           <v-btn          
-            color="primary"
-            @click="dialog = true; " 
-            variant="outlined">
+            color="yellow-darken-4" 
+            @click="dialog = true; ">
             Aggiungi
           </v-btn>
         </v-card-item>

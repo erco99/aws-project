@@ -68,4 +68,69 @@ async function deletePaymentMethod(req, res) {
   }
 }
 
-module.exports = {paymentMethodInsert, depositWithdrawMoney, getTransactions, deletePaymentMethod}
+async function sendMoney(req, res) {
+  const sender_data = req.body.sender_data
+  const receiver_data = req.body.receiver_data
+  const date = req.body.date
+  const time = req.body.time
+  const amount = req.body.amount
+
+  const receiverEmail = receiver_data.email
+
+  const user = await User.findOne({email: receiverEmail}).exec();
+
+  if (!user) return res.status(401).json({'message': 'Email or password is incorrect'});
+
+  const sender = {
+    fullname: sender_data.fullname,
+    email: sender_data.email
+  }
+
+  receiver_fullname = user.name + ' ' + user.surname
+
+  const receiver = {
+    fullname: receiver_fullname,
+    email: receiver_data.email 
+  }
+
+  console.log(sender_data.email)
+  console.log(receiver_data.email)
+
+  newBalanceSender = parseFloat(sender_data.balance) - parseFloat(amount)
+  newBalanceReceiver = parseFloat(user.balance) + parseFloat(amount)
+
+  try {
+    // negative transaction and balance reduced for sender
+    await Transactions.create({
+      amount: amount, 
+      transaction_type: 'negative', 
+      description: 'Invio denaro a ' + receiver_fullname, 
+      date: date, 
+      time: time, 
+      user: sender});
+    await User.findOneAndUpdate({email: sender_data.email}, {balance: newBalanceSender.toFixed(2)})
+
+    //positive transaciton and balance increased for receiver
+    await Transactions.create({
+      amount: amount,
+      transaction_type: 'positive',
+      description: "Ricezione denaro da " + sender.fullname,
+      date: date,
+      time:time,
+      user: receiver
+    })
+    await User.findOneAndUpdate({email: receiver_data.email}, {balance: newBalanceReceiver.toFixed(2)})
+
+  } catch(error) {
+    console.log(error);
+    return res.status(500).json({'message': 'Error'});
+  }
+}
+
+module.exports = {
+  paymentMethodInsert, 
+  depositWithdrawMoney, 
+  getTransactions, 
+  deletePaymentMethod,
+  sendMoney
+}

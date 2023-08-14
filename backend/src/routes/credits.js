@@ -14,5 +14,7 @@ router.post('/getTransactions', creditsController.getTransactions)
 // Delete payment method
 router.post('/deletePaymentMethod', creditsController.deletePaymentMethod)
 
+// Send money
+router.post('/sendMoney', creditsController.sendMoney)
 
 module.exports = router;
