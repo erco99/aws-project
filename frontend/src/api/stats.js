@@ -7,3 +7,11 @@ export function getYearDistribution(year) {
         params: year,
     });
 }
+
+export function getFieldDistribution(year) {
+    return request({
+        url: "/stats/fieldDistribution",
+        method: "get",
+        params: year,
+    })
+}

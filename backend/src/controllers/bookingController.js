@@ -141,4 +141,23 @@ async function getYearDistribution(req, res) {
   return res.status(200).json(dist);
 }
 
-module.exports = { getWeek, book, getYearDistribution };
+async function getFieldDistribution(req, res) {
+  const year = req.query.year;
+  if (!year) return res.sendStatus(400);
+
+  const fields = await field.find({}, {name: 1, _id: 0});
+
+  const dist = [];
+  for (const field of fields) {
+    const fieldBookings = await bookings.find({ day: { $gte: year.concat("-01-01"), $lte: year.concat("-12-31") }, field: field.name});
+    const data = {value: 0, name: field.name}
+    for (const book of fieldBookings) {
+      data.value = data.value + book.bookings.length;
+    }
+    dist.push(data);
+  }
+  res.status(200).json(dist);
+
+}
+
+module.exports = { getWeek, book, getYearDistribution, getFieldDistribution };
