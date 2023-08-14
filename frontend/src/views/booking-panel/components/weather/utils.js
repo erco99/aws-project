@@ -37,10 +37,13 @@ export function getDayWmo(day, alg = "most_freq") {
             acc[val] = (acc[val] || 0) + 1
             return acc
         },{})
-        const maxValues = Object.keys(hashmap).filter(x => {
-            return hashmap[x] === Math.max.apply(null, Object.values(hashmap))
-        }).map(Number.parseInt)
-        wmo = Math.max(maxValues);
+        const maxValue = Math.max(...Object.values(hashmap));
+        for (const [key, value] of Object.entries(hashmap)) {
+            if (value === maxValue) {
+                wmo = parseInt(key);
+                break;
+            }
+        }
     } else if (alg === "average") {
         let wmoSum = 0;
         for (let i in dayHourlyWeather.wmo) {
