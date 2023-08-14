@@ -1,11 +1,11 @@
 <template>
   <v-row >
-    <v-col sm="12" md="4" class="align-self-baseline">
+    <v-col sm="12" md="6" class="align-self-baseline">
       <BookingsGraph></BookingsGraph>
     </v-col>
 
-    <v-col sm="12" md="8">
-
+    <v-col sm="12" md="6">
+      <BookingPie></BookingPie>
     </v-col>
 
   </v-row>
@@ -17,7 +17,8 @@
 
 <script>
 import BookingsGraph from "@/views/stats-panel/components/bookings-graph.vue";
+import BookingPie from "@/views/stats-panel/components/booking-pie.vue";
 export default {
-    components: { BookingsGraph }
+    components: { BookingsGraph, BookingPie }
 }
 </script>
