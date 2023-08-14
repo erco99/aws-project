@@ -11,6 +11,7 @@ const auth = require("./src/routes/auth");
 const users = require("./src/routes/users");
 const weather = require("./src/routes/weather");
 const credits = require("./src/routes/credits");
+const stats = require("./src/routes/stats");
 const cors = require("cors");
 const corsOptions = require("./src/configs/cors");
 const express = require("express");
@@ -41,6 +42,9 @@ app.use("/weather", cors(corsOptions), weather);
 
 // Register weather routes
 app.use("/credits", cors(corsOptions), credits);
+
+// Register stats routes
+app.use("/stats", cors(corsOptions), stats);
 
 server.listen(port, () => {
   console.log(`Server listening on http://localhost:${port}`);
