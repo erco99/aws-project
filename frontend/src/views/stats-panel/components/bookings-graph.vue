@@ -12,7 +12,8 @@ import { CanvasRenderer } from "echarts/renderers";
 import { LineChart } from "echarts/charts";
 import { GridComponent } from 'echarts/components';
 import { TitleComponent, TooltipComponent, LegendComponent } from "echarts/components";
-import VChart, { THEME_KEY } from "vue-echarts";
+import VChart from "vue-echarts";
+import { getYearDistribution } from "@/api/stats";
 
 import PageNumber from "@/views/signup/components/commons/PageNumber.vue";
 
@@ -92,11 +93,16 @@ export default {
               emphasis: {
                 focus: 'series'
               },
-              data: [ 20, 30, 70, 10, 0, 0, 10, 20, 30, 20, 60, 20 ]
+              data: [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ]
           }
         ],
       }
     }
+  },
+  mounted() {
+    getYearDistribution({ year: new Date().getFullYear() }).then((response) => {
+      this.option.series[0].data = response.data;
+    })
   }
 }
 </script>

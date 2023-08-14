@@ -16,6 +16,7 @@ import {
   LegendComponent,
 } from 'echarts/components';
 import VChart from 'vue-echarts';
+import { getFieldDistribution } from "@/api/stats";
 
 echarts.use([
   CanvasRenderer,
@@ -62,6 +63,17 @@ export default {
         ]
       }
     }
+  },
+  mounted() {
+    getFieldDistribution({ year: new Date().getFullYear() }).then((response) => {
+      const data = [...response.data];
+      for (let i = 0; i < data.length; i++) {
+        if (data[i].value === 0) {
+          data.splice(i, 1)
+        }
+      }
+      this.option.series[0].data = data;
+    })
   }
 }
 </script>

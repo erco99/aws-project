@@ -93,8 +93,7 @@ async function book(newBooking) {
       owner: newBooking.owner,
       time: newBooking.time,
     };
-    document.bookings.push(newSubDocument);
-    await document.save();
+    await bookings.updateOne({_id: document._id}, { $push: { bookings: newSubDocument }});
   }
   await notificationsController.notifyOwner(newBooking);
   await notificationsController.notifyPlayers(newBooking);
@@ -126,4 +125,39 @@ function nextHour(time) {
   return time;
 }
 
-module.exports = { getWeek, book };
+async function getYearDistribution(req, res) {
+
+  const year = req.query.year;
+  if (!year) return res.sendStatus(400);
+
+  const yearBookings = await bookings.find({ day: { $gte: year.concat("-01-01"), $lte: year.concat("-12-31") }});
+
+  const dist = new Array(12).fill(0);
+  for (const book of yearBookings) {
+    const mounth = new Date(book.day).getMonth();
+    dist[mounth] = dist[mounth] + book.bookings.length;
+  }
+
+  return res.status(200).json(dist);
+}
+
+async function getFieldDistribution(req, res) {
+  const year = req.query.year;
+  if (!year) return res.sendStatus(400);
+
+  const fields = await field.find({}, {name: 1, _id: 0});
+
+  const dist = [];
+  for (const field of fields) {
+    const fieldBookings = await bookings.find({ day: { $gte: year.concat("-01-01"), $lte: year.concat("-12-31") }, field: field.name});
+    const data = {value: 0, name: field.name}
+    for (const book of fieldBookings) {
+      data.value = data.value + book.bookings.length;
+    }
+    dist.push(data);
+  }
+  res.status(200).json(dist);
+
+}
+
+module.exports = { getWeek, book, getYearDistribution, getFieldDistribution };
