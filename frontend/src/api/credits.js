@@ -23,3 +23,11 @@ export function getTransactions(data) {
     data
   })
 }
+
+export function deletePaymentMethod(data) {
+  return request({
+    url: "/credits/deletePaymentMethod",
+    method: "post",
+    data
+  })
+}

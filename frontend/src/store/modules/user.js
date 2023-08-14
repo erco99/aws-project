@@ -1,6 +1,6 @@
 import {login, logout, register, newOTP, verifyOTP, user, refresh, cancelRegistration, changePassword, resetPassword} from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/authentication'
-import { paymentMethodInsert, depositWithdrawMoney } from '@/api/credits';
+import { paymentMethodInsert, depositWithdrawMoney, deletePaymentMethod} from '@/api/credits';
 import store from "@/store";
 
 const state = {
@@ -158,7 +158,18 @@ const actions = {
         reject(error)
       })
     })
+  },
+
+  deletePaymentMethod({commit}, email) {
+    return new Promise((resolve, reject) => {
+      deletePaymentMethod(email).then((response) => {
+        resolve(response.data)
+      }).catch(error => {
+        reject(error)
+      })
+    })
   }
+
 }
 
 export default {

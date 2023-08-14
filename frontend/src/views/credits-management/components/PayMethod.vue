@@ -12,7 +12,7 @@
         </v-card-item>
 
         <v-card-item>
-                <v-btn          
+          <v-btn          
             color="primary"
             @click="dialog = true; " 
             variant="outlined">
@@ -109,9 +109,64 @@
       </div>
 
       <div class="paycard" v-else>
+        <v-card-item>
         <vue-paycard :value-fields="valueFields"
             :has-random-backgrounds="false"
             style="margin-bottom:15px"/>
+        </v-card-item>
+        <v-card-item>
+          <v-btn
+            outlined
+            width="150"
+            style="margin-right: 5px"
+            color="blue"
+            text="Modifica"
+          ></v-btn> 
+          <v-btn
+            outlined
+            width="150"
+            color="red"
+            text="Elimina"
+            @click="deleteDialog = true;"
+          ></v-btn> 
+        </v-card-item>
+
+        <v-dialog
+          persistent
+          v-model="deleteDialog"
+          width="450">
+            <v-card>
+              <v-card-item>
+                <div class="text-overline mb-1">
+                  Conferma eliminazione metodo di pagamento
+                </div>
+              </v-card-item>
+              <v-divider></v-divider>
+              <v-card-text class="font-weight-regular">
+                Vuoi confermare l'eliminazione del tuo metodo di pagamento?
+              </v-card-text>
+              <v-card-item>
+                <v-row >
+                  <v-col align-self="end">
+                    <v-btn
+                      text="Conferma"
+                      outlined 
+                      color="green"
+                      @click="deletePayment"
+                      style="margin-bottom: 10px; margin-right: 5px">                 
+                    </v-btn>
+                    <v-btn
+                      text="Cancella"
+                      outlined
+                      color="red"
+                      @click="deleteDialog = false"
+                      style="margin-bottom: 10px">
+                    </v-btn>
+                  </v-col>
+                </v-row>
+              </v-card-item>
+            </v-card>
+        </v-dialog>
       </div>
     </v-card>
 </template>
@@ -154,6 +209,7 @@ export default {
       cardYear: "",
       cardCvv: "",
     },
+    deleteDialog: false,
     dialog: false,
     months: [],
     years: [],
@@ -225,6 +281,14 @@ export default {
           this.dialog = false
           this.$refs.form.submit();
         }
+    },
+    deletePayment() {
+      const user_email = {
+        email: this.$store.getters.userEmail
+      }
+      this.$store.dispatch('user/deletePaymentMethod', user_email)
+      location.reload()
+      this.deleteDialog = false
     }
   }
 

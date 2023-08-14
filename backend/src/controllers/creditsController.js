@@ -8,9 +8,6 @@ async function paymentMethodInsert(req, res) {
   const payment_method = req.body.payment_method;
   const user_email = req.body.user_email
 
-  console.log(payment_method)
-  console.log(user_email)
-
   try {
     await User.findOneAndUpdate({email: user_email},{payment_method: payment_method});
   } catch (error) {
@@ -33,16 +30,11 @@ async function depositWithdrawMoney(req, res) {
 
   let amountValue = newBalance
 
-  console.log(parseFloat(amount))
-
   if(transaction_type == 'positive') {
     newBalance = parseFloat(retrievedUser.balance) + parseFloat(newBalance)
   } else if(transaction_type == 'negative') {
     newBalance = parseFloat(retrievedUser.balance) - parseFloat(newBalance)
   }
-
-  console.log(newBalance)
-
 
   const filter = {email: user.email}
   const update = {balance: newBalance.toFixed(2)}
@@ -65,4 +57,15 @@ async function getTransactions(req, res) {
   return res.status(200).json(prova)
 }
 
-module.exports = {paymentMethodInsert, depositWithdrawMoney, getTransactions}
+async function deletePaymentMethod(req, res) {
+  const user_email = req.body.email
+  console.log(user_email)
+  try {
+    await User.updateOne({email: user_email}, {$unset: {payment_method:1}})
+  } catch (error) {
+      console.log(error);
+      return res.status(500).json({'message': 'Error'});
+  }
+}
+
+module.exports = {paymentMethodInsert, depositWithdrawMoney, getTransactions, deletePaymentMethod}

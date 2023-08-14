@@ -11,5 +11,8 @@ router.post('/depositWithdrawMoney', creditsController.depositWithdrawMoney)
 // Get all transactions
 router.post('/getTransactions', creditsController.getTransactions)
 
+// Delete payment method
+router.post('/deletePaymentMethod', creditsController.deletePaymentMethod)
+
 
 module.exports = router;
