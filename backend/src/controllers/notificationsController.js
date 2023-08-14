@@ -125,13 +125,13 @@ async function findNotificationById(notificationId) {
   return await notifications.findById(notificationId);
 }
 
-// TO DO: check for invitation expired
 async function findInvitation({ day, field, time }) {
   return await notifications.findOne({
     day: day,
     field: field,
     "time.hours": time.hours,
     "time.minutes": time.minutes,
+    expiration: { $gt: new Date() },
   });
 }
 
