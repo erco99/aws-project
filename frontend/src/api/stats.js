@@ -15,3 +15,10 @@ export function getFieldDistribution(year) {
         params: year,
     })
 }
+
+export function getUsersDistribution() {
+    return request({
+        url: "/stats/usersDistribution",
+        method: "get",
+    })
+}

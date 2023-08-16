@@ -45,13 +45,7 @@ export default {
             type: "pie",
             radius: "50%",
             center: ["50%", "60%"],
-            data: [
-              { value: 30, name: "Campo 1" },
-              { value: 200, name: "Campo 2" },
-              { value: 500, name: "Campo 3" },
-              { value: 100, name: "Campo 4" },
-              { value: 150, name: "Campo 5" }
-            ],
+            data: [],
             emphasis: {
               itemStyle: {
                 shadowBlur: 10,

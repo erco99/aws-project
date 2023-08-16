@@ -5,4 +5,19 @@ async function users(req, res) {
   return res.status(200).json(users);
 }
 
-module.exports = { users };
+async function getUsersDistribution(req, res) {
+  const roles = await User.find({}, { role: 1, _id:0 })
+  const rolesKey = roles.map(obj => obj.role.key)
+  const uniqueRolesKey = [... new Set(rolesKey)]
+
+  const usersCount = uniqueRolesKey.map((role) => ({
+    key: role,
+    value: rolesKey.filter((r) => r === role).length,
+  }))
+
+  const usersDistribution = usersCount.map(obj => ({ name: obj.key, value: obj.value }))
+
+  return res.status(200).json({ usersDistribution })
+}
+
+module.exports = { users, getUsersDistribution };
