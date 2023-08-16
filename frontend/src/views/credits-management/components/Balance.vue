@@ -182,13 +182,14 @@ export default {
             }
 
             amountValue = amountValue.replace(/^0+/, '');
+            let month = parseInt(currentTime.getMonth()) + 1
 
             const data = {
               amount: this.amountValue,
               transaction_type: this.operationType,
               description: this.operationTypeText + ' denaro sul conto',
               date: currentTime.getDate().toString() + '/' 
-              + currentTime.getMonth().toString() + '/'
+              + month + '/'
               + currentTime.getFullYear().toString(),
               time: currentTime.getHours().toString() + ":"
               + currentTime.getMinutes().toString() + ":"
@@ -217,7 +218,7 @@ export default {
               },
               amount: this.amountValue,
               date: currentTime.getDate().toString() + '/' 
-              + currentTime.getMonth().toString() + '/'
+              + month.toString() + '/'
               + currentTime.getFullYear().toString(),
               time: currentTime.getHours().toString() + ":"
               + currentTime.getMinutes().toString() + ":"
