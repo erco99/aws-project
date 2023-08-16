@@ -59,7 +59,7 @@ export default {
             name: "Numero di account registrati",
             type: "pie",
             radius: [80, 110],
-            center: ["50%", "55%"],
+            center: ["50%", "58%"],
             data: [],
             emphasis: {
               itemStyle: {
@@ -97,9 +97,10 @@ export default {
     src: local("BebasNeue"),
     url("./fonts/BebasNeue/BebasNeue-Regular.ttf") format("truetype");
   }
+</style>
 
-  .chart {
-    height: 30vh;
-    display: flex;
-  }
+<style scoped>
+.chart {
+  height: 300px;
+}
 </style>
