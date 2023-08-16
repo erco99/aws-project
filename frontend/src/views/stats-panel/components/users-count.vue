@@ -59,7 +59,7 @@ export default {
             name: "Numero di account registrati",
             type: "pie",
             radius: [80, 110],
-            center: ["50%", "55%"],
+            center: ["50%", "58%"],
             data: [],
             emphasis: {
               itemStyle: {
@@ -99,7 +99,6 @@ export default {
   }
 
   .chart {
-    height: 30vh;
-    display: flex;
+    height: 300px;
   }
 </style>
