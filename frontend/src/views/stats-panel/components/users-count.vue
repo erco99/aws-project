@@ -97,8 +97,10 @@ export default {
     src: local("BebasNeue"),
     url("./fonts/BebasNeue/BebasNeue-Regular.ttf") format("truetype");
   }
+</style>
 
-  .chart {
-    height: 300px;
-  }
+<style scoped>
+.chart {
+  height: 300px;
+}
 </style>
