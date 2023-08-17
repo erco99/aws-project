@@ -2,7 +2,7 @@
     <v-card class="mx-auto rounded-0" elevation="4">
       <v-card-item>
           <div class="text-overline mb-1">
-            Grafico
+            Grafico annuale transazioni
           </div>
           <div>
             <v-chart class="chart" :option="option" autoresize></v-chart>

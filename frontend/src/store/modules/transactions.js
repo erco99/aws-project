@@ -25,7 +25,7 @@ const actions = {
   sendMoney({commit}, data) {
     return new Promise((resolve, reject) => {
       sendMoney(data).then(response => {
-        resolve(response.data)
+        resolve()
       }).catch(error => {
         reject(error)
       })

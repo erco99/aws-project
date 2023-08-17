@@ -51,6 +51,12 @@
             <v-card-text class="pa-5">
               <v-form ref="form" validate-on="submit lazy" @submit.prevent="submit">
                 <div class="currency-input-container">
+                  <v-alert
+                    v-model="alert"
+                    close-text="Close Alert"
+                    color="deep-red accent-4"
+                    closable
+                  >Email inesistente</v-alert>
                   <div class="font-weight-medium label-div" 
                     style="margin-bottom: 10px;">
                     Importo
@@ -149,6 +155,8 @@ export default {
         clearTimeout(this.timeout)
         const currentTime = new Date();
 
+        let month = parseInt(currentTime.getMonth()) + 1
+
         this.timeout = setTimeout(() => {
           if(this.operationType != 'send') {
             if (!amountValue) {
@@ -182,7 +190,6 @@ export default {
             }
 
             amountValue = amountValue.replace(/^0+/, '');
-            let month = parseInt(currentTime.getMonth()) + 1
 
             const data = {
               amount: this.amountValue,
@@ -199,7 +206,6 @@ export default {
                 email: this.userEmail
               }
             }
-
             this.$store.dispatch('user/depositWithdrawMoney', data)
             this.dialog = false
             this.$refs.form.submit();
@@ -230,10 +236,10 @@ export default {
             this.$store.dispatch('transactions/sendMoney', data).then(
               () => {
                 this.dialog = false
-                this.$refs.form.submit();
+                this.$refs.form.submit();   
               },
               (error) => {
-                console.log("Inserire un utente registrato")
+                this.alert = true;
               }
             )
           }
@@ -245,6 +251,7 @@ export default {
     }
   },
   data: vm => ({
+    alert: false,
     receiverEmail: '',
     dialog: false,
     operationType: '',
