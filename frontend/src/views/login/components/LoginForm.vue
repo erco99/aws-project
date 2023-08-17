@@ -73,7 +73,6 @@ export default {
       signinButtonLoading.value = true;
       store.dispatch('user/login', values).then(
           () => {
-            console.log("Login OK")
             router.push({ path: '/' })
           },
           (error) => {
