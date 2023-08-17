@@ -136,37 +136,49 @@ export default {
     defaultServices(time, inside) {
       const today = new Date(this.day);
       const month = today.getMonth();
-      switch (month) {
-        case 1:
-        case 2:
-        case 10:
-        case 11:
-        case 12:
-          if (inside) {
-            return ["lighting", "heating"];
-          } else if (time >= 17) {
-            return ["lighting"];
-          }
-          return [];
-        case 3:
-        case 4:
-        case 9:
-          if (inside || time >= 18) {
-            return ["lighting"];
-          }
-          return [];
-        case 5:
-        case 8:
-          if (inside || time >= 19) {
-            return ["lighting"];
-          }
-          return [];
-        case 6:
-        case 7:
-          if (inside || time >= 20) {
-            return ["lighting"];
-          }
-          return [];
+      const weatherData = this.$store.getters.weatherData;
+      if (weatherData) {
+        const { sunset, sunrise } = weatherData.fullDaily;
+        if (month <= 2 || month >= 10) {
+          if (inside) return ["lighting", "heating"];
+          else return time <= sunrise || time >= sunset ? ["lighting"] : [];
+        } else {
+          if (inside || (time <= sunrise || time >= sunset)) return ["lighting"];
+        }
+      } else {
+        // If weather data is not ready use default services
+        switch (month) {
+          case 1:
+          case 2:
+          case 10:
+          case 11:
+          case 12:
+            if (inside) {
+              return ["lighting", "heating"];
+            } else if (time >= 17) {
+              return ["lighting"];
+            }
+            return [];
+          case 3:
+          case 4:
+          case 9:
+            if (inside || time >= 18) {
+              return ["lighting"];
+            }
+            return [];
+          case 5:
+          case 8:
+            if (inside || time >= 19) {
+              return ["lighting"];
+            }
+            return [];
+          case 6:
+          case 7:
+            if (inside || time >= 20) {
+              return ["lighting"];
+            }
+            return [];
+        }
       }
     },
   },
