@@ -93,7 +93,10 @@ async function book(newBooking) {
       owner: newBooking.owner,
       time: newBooking.time,
     };
-    await bookings.updateOne({_id: document._id}, { $push: { bookings: newSubDocument }});
+    await bookings.updateOne(
+      { _id: document._id },
+      { $push: { bookings: newSubDocument } }
+    );
   }
   await notificationsController.notifyOwner(newBooking);
   await notificationsController.notifyPlayers(newBooking);
@@ -126,11 +129,12 @@ function nextHour(time) {
 }
 
 async function getYearDistribution(req, res) {
-
   const year = req.query.year;
   if (!year) return res.sendStatus(400);
 
-  const yearBookings = await bookings.find({ day: { $gte: year.concat("-01-01"), $lte: year.concat("-12-31") }});
+  const yearBookings = await bookings.find({
+    day: { $gte: year.concat("-01-01"), $lte: year.concat("-12-31") },
+  });
 
   const dist = new Array(12).fill(0);
   for (const book of yearBookings) {
@@ -145,19 +149,53 @@ async function getFieldDistribution(req, res) {
   const year = req.query.year;
   if (!year) return res.sendStatus(400);
 
-  const fields = await field.find({}, {name: 1, _id: 0});
+  const fields = await field.find({}, { name: 1, _id: 0 });
 
   const dist = [];
   for (const field of fields) {
-    const fieldBookings = await bookings.find({ day: { $gte: year.concat("-01-01"), $lte: year.concat("-12-31") }, field: field.name});
-    const data = {value: 0, name: field.name}
+    const fieldBookings = await bookings.find({
+      day: { $gte: year.concat("-01-01"), $lte: year.concat("-12-31") },
+      field: field.name,
+    });
+    const data = { value: 0, name: field.name };
     for (const book of fieldBookings) {
       data.value = data.value + book.bookings.length;
     }
     dist.push(data);
   }
   res.status(200).json(dist);
-
 }
 
-module.exports = { getWeek, book, getYearDistribution, getFieldDistribution };
+async function deleteBooking({ day, field, time }) {
+  await bookings.updateOne(
+    { day: day, field: field },
+    {
+      $pull: {
+        bookings: {
+          "time.hours": time.hours,
+          "time.minutes": time.minutes,
+        },
+      },
+    }
+  );
+  const invitation = await notificationsController.findInvitation({
+    day,
+    field,
+    time,
+  });
+  invitation.expiration = new Date();
+  await invitation.save();
+  await notificationsController.notifyDelete(invitation);
+  return {
+    owners: invitation.owners,
+    inviter: invitation.inviter,
+  };
+}
+
+module.exports = {
+  getWeek,
+  book,
+  getYearDistribution,
+  getFieldDistribution,
+  deleteBooking,
+};

@@ -28,6 +28,26 @@ export default {
         }
       }
     });
+    this.socket.on("delete-booking", (deleteBooking) => {
+      this.loading = false;
+      for (const field of this.fields) {
+        if (field.name === deleteBooking.field) {
+          for (const bookingDay of field.bookingsPerDay) {
+            if (bookingDay.day === deleteBooking.day) {
+              for (let i = 0; i < bookingDay.bookings.length; i++) {
+                if (
+                  bookingDay.bookings[i].time.hours === deleteBooking.time.hours
+                ) {
+                  bookingDay.bookings.splice(i, 1);
+                }
+              }
+              break;
+            }
+          }
+          break;
+        }
+      }
+    });
     this.socket.on("error", (msg) => alert(msg));
     this.socket.emit("get-week", this.day);
 
@@ -67,6 +87,10 @@ export default {
       this.loading = true;
       this.socket.emit("new-booking", newBooking);
     },
+    deleteBook(deleteBooking) {
+      this.loading = true;
+      this.socket.emit("delete-booking", deleteBooking);
+    },
   },
 };
 </script>
@@ -86,7 +110,8 @@ export default {
             :state="field.state"
             :surface="field.surface"
             :day="day"
-            @new-booking="book" />
+            @new-booking="book"
+            @delete-booking="deleteBook" />
         </div>
       </div>
     </v-card>

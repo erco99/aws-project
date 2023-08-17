@@ -4,11 +4,23 @@ export default {
     text: { type: Array, required: true },
     disabled: Boolean,
   },
+  computed: {
+    computedClass() {
+      switch (this.$store.getters.userRole) {
+        case "admin":
+          return (this.disabled ? "disabled" : "enabled") + " button";
+        default:
+          return (
+            (this.disabled ? "disabled unclickable" : "enabled") + " button"
+          );
+      }
+    },
+  },
 };
 </script>
 
 <template>
-  <div role="button" :class="(disabled ? 'disabled' : 'enabled') + ' button'">
+  <div role="button" :class="computedClass">
     <div class="inner">{{ text[0] }}</div>
     <div class="inner">{{ text[1] }}</div>
     <div class="inner">{{ text[2] }}</div>
@@ -34,6 +46,9 @@ export default {
   font-size: x-small;
   background-color: #e53935;
   color: #eeeeee;
+}
+
+.unclickable {
   pointer-events: none;
 }
 </style>

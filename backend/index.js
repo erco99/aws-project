@@ -66,6 +66,17 @@ io.on("connection", (socket) => {
       }
     }
   });
+  socket.on("delete-booking", async (deleteBooking) => {
+    console.log(deleteBooking);
+    const result = await bookingController.deleteBooking(deleteBooking);
+    io.emit("delete-booking", {
+      day: deleteBooking.day,
+      field: deleteBooking.field,
+      time: deleteBooking.time,
+      owners: result.owners,
+      inviter: result.inviter,
+    });
+  });
   socket.on("getNotifications", (owner) =>
     notificationsController.getNotifications(socket, owner)
   );

@@ -126,13 +126,13 @@ async function findNotificationById(notificationId) {
 }
 
 async function findInvitation({ day, field, time }) {
-  return await notifications.findOne({
+  const toReturn = await notifications.findOne({
     day: day,
     field: field,
     "time.hours": time.hours,
     "time.minutes": time.minutes,
-    expiration: { $gt: new Date() },
   });
+  return toReturn;
 }
 
 async function findByInvitationId(invitationId) {
@@ -142,6 +142,7 @@ async function findByInvitationId(invitationId) {
 module.exports = {
   notifyOwner,
   notifyPlayers,
+  notifyDelete,
   getNotifications,
   accept,
   refuse,
