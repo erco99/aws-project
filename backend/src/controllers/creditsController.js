@@ -52,9 +52,9 @@ async function getTransactions(req, res) {
   const fullname = req.body.fullname
   const email = req.body.email
 
-  const prova = await Transactions.find({ user: {fullname: fullname, email: email }}).exec()
+  const data = await Transactions.find({ user: {fullname: fullname, email: email }}).exec()
   
-  return res.status(200).json(prova)
+  return res.status(200).json(data)
 }
 
 async function deletePaymentMethod(req, res) {
