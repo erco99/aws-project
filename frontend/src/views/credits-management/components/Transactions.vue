@@ -4,41 +4,37 @@
           <div class="text-overline mb-1">
             Transazioni
           </div>
-            <v-table>
-            <thead>
+          <v-data-table 
+            :headers="headers"
+            :items="this.$store.getters.transactions">
+            <template v-slot:item="i">
               <tr>
-                <th class="text-left">
-                  Data
-                </th>
-                <th class="text-left">
-                  Descrizione
-                </th>
-                <th class="text-left">
-                  Importo
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr
-                v-for="item in this.$store.getters.transactions "
-                :key="item.user"
-              >
-                <td>{{ item.date }}</td>
-                <td>{{ item.description }}</td>
-                <td v-bind:style="[item.transaction_type == 'positive' ? {fontWeight: 900, color: 'green'} : {fontWeight: 900, color: 'red'}]">
-                  {{ getSign(item.transaction_type) + item.amount }}
+                <td>{{ i.item.selectable.date }}</td>
+                <td>{{ i.item.selectable.description }}</td>
+                <td v-bind:style="[i.item.selectable.transaction_type == 'positive' ? {fontWeight: 900, color: 'green'} : {fontWeight: 900, color: 'red'}]">
+                  {{ getSign(i.item.selectable.transaction_type) + i.item.selectable.amount }}
                 </td>
               </tr>
-            </tbody>
-            </v-table>
+            </template>
+          </v-data-table>
       </v-card-item>
     </v-card>
 </template>
 
 <script>
+import { VDataTable } from 'vuetify/labs/VDataTable'
+
 export default {
+  components: {
+    VDataTable,
+  },
   data: () => {
      return {
+      headers: [
+          { title: 'Data', align: 'start', key: 'date', width: '100px' },
+          { title: 'Descrizione', align: 'start', key: 'description', sortable: false,},
+          { title: 'Importo', align: 'start', key: 'amount', class: "blue lighten-5", sortable: false,}
+        ],
         transactions: [],
         sign: '',
       }
