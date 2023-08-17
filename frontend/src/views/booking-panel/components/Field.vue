@@ -2,13 +2,14 @@
 import Header from "./dialog/Header.vue";
 import Body from "./dialog/Body.vue";
 import HourButton from "./HourButton.vue";
+import AdminDialog from "./admin-dialog/AdminDialog.vue";
 import { stringfy, domainDate } from "./commons";
 export default {
   setup() {
     return { stringfy };
   },
-  components: { Body, Header, HourButton },
-  emits: ["newBooking"],
+  components: { Body, Header, HourButton, AdminDialog },
+  emits: ["newBooking", "deleteBooking"],
   props: {
     state: { type: Array, default: [] },
     name: { type: String, required: true },
@@ -34,6 +35,8 @@ export default {
         servicies: [],
       },
       dialog: false,
+      adminDialog: false,
+      deleteTime: {},
     };
   },
   watch: {
@@ -113,46 +116,69 @@ export default {
       return { text: [, stringfy(hour, this.minutes)], disabled: false };
     },
     book(time) {
-      this.duration = 1;
-      this.match = "single";
-      this.newBooking.time = time;
-      this.newBooking.servicies = this.defaultServices(time.hours, this.inside);
-      this.dialog = true;
+      if (
+        this.$store.getters.userRole === "admin" &&
+        this.hourButtonProps(time.hours).disabled
+      ) {
+        this.deleteTime = time;
+        this.adminDialog = true;
+      } else {
+        this.duration = 1;
+        this.match = "single";
+        this.newBooking.time = time;
+        this.newBooking.servicies = this.defaultServices(
+          time.hours,
+          this.inside
+        );
+        this.dialog = true;
+      }
     },
     defaultServices(time, inside) {
       const today = new Date(this.day);
       const month = today.getMonth();
-      switch (month) {
-        case 1:
-        case 2:
-        case 10:
-        case 11:
-        case 12:
-          if (inside) {
-            return ["lighting", "heating"];
-          } else if (time >= 17) {
-            return ["lighting"];
-          }
-          return [];
-        case 3:
-        case 4:
-        case 9:
-          if (inside || time >= 18) {
-            return ["lighting"];
-          }
-          return [];
-        case 5:
-        case 8:
-          if (inside || time >= 19) {
-            return ["lighting"];
-          }
-          return [];
-        case 6:
-        case 7:
-          if (inside || time >= 20) {
-            return ["lighting"];
-          }
-          return [];
+      const weatherData = this.$store.getters.weatherData;
+      if (weatherData) {
+        const { sunset, sunrise } = weatherData.fullDaily;
+        if (month <= 2 || month >= 10) {
+          if (inside) return ["lighting", "heating"];
+          else return time <= sunrise || time >= sunset ? ["lighting"] : [];
+        } else {
+          if (inside || (time <= sunrise || time >= sunset)) return ["lighting"];
+        }
+      } else {
+        // If weather data is not ready use default services
+        switch (month) {
+          case 1:
+          case 2:
+          case 10:
+          case 11:
+          case 12:
+            if (inside) {
+              return ["lighting", "heating"];
+            } else if (time >= 17) {
+              return ["lighting"];
+            }
+            return [];
+          case 3:
+          case 4:
+          case 9:
+            if (inside || time >= 18) {
+              return ["lighting"];
+            }
+            return [];
+          case 5:
+          case 8:
+            if (inside || time >= 19) {
+              return ["lighting"];
+            }
+            return [];
+          case 6:
+          case 7:
+            if (inside || time >= 20) {
+              return ["lighting"];
+            }
+            return [];
+        }
       }
     },
   },
@@ -204,6 +230,11 @@ export default {
       </v-card-actions>
     </v-card>
   </v-dialog>
+  <AdminDialog
+    :display="adminDialog"
+    :time="deleteTime"
+    @delete="(time) => this.$emit('deleteBooking', { day, field: name, time })"
+    @close="adminDialog = false"></AdminDialog>
 </template>
 
 <style>
