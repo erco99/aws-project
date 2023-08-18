@@ -199,7 +199,6 @@ export default {
 
 <template>
   <div class="fit-content pr-10">
-    <v-row></v-row>
     <div class="d-flex align-end mb-2 sticky" style="max-width: 80vw">
       <v-chip
           :class="'mr-2 '.concat(this.$store.getters.userRole === 'admin' ? '' : 'unclickable' )"
