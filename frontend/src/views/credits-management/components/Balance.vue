@@ -194,7 +194,7 @@ export default {
             const data = {
               amount: this.amountValue,
               transaction_type: this.operationType,
-              description: this.operationTypeText + ' denaro sul conto',
+              description: this.operationTypeText + ' denaro conto',
               date: currentTime.getDate().toString() + '/' 
               + month + '/'
               + currentTime.getFullYear().toString(),

@@ -1,15 +1,15 @@
 <template>
   <v-row>
-    <v-col sm="12" md="6" class="align-self-baseline">
+    <v-col cols="12" md="6" class="align-self-baseline">
       <balance />
       <transactions style="margin-top: 15px;"/>
     </v-col>
 
-    <v-col sm="12" md="6" class="align-self-baseline">
+    <v-col cols="12" md="6" class="align-self-baseline">
       <pay-method />
-      <graph  style="margin-top: 15px;"/>
+      <balance-graph  style="margin-top: 15px;"/>
+      <transactions-graph style="margin-top: 15px;" />
     </v-col>
-    
   </v-row>
 </template>
 
@@ -18,7 +18,8 @@
 import Balance from "./components/Balance.vue"
 import Transactions from "./components/Transactions.vue"
 import PayMethod from "./components/PayMethod.vue"
-import Graph from  "./components/Graph.vue"
+import BalanceGraph from  "./components/BalanceGraph.vue"
+import TransactionsGraph from "./components/TransactionsGraph.vue"
 
 export default {
   name: "Credits",
@@ -26,7 +27,8 @@ export default {
     Balance,
     Transactions,
     PayMethod,
-    Graph
+    BalanceGraph,
+    TransactionsGraph
   }
 
 }
