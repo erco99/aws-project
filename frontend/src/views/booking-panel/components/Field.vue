@@ -293,7 +293,12 @@ export default {
         "></Body>
       <v-card-actions class="justify-center">
         <v-btn color="primary" @click="dialog = false">Annulla</v-btn>
-        <v-btn color="primary" @click="notifyNewBooking()">Prenota ora</v-btn>
+        <v-btn
+          color="primary"
+          @click="notifyNewBooking()"
+          :disabled="newBooking.price > this.$store.getters.userBalance"
+          >Prenota ora</v-btn
+        >
       </v-card-actions>
     </v-card>
   </v-dialog>
