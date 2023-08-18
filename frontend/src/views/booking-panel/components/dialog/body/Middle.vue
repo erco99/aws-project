@@ -1,6 +1,6 @@
 <script>
 export default {
-  emits: ["serviciesUpdate"],
+  emits: ["serviciesUpdate", "myTreatUpdate"],
   props: {
     players: {
       type: Number,
@@ -43,7 +43,10 @@ export default {
   },
   methods: {
     notifyServices(value) {
-      this.$emit("serviciesUpdate", value);
+      this.$emit("serviciesUpdate", { value, price: this.price });
+    },
+    notifyMyTreat(value) {
+      this.$emit("myTreatUpdate", { value, price: this.price });
     },
   },
 };
@@ -77,10 +80,15 @@ export default {
         <v-checkbox
           hide-details
           label="Offri la partita"
-          v-model="myTreat"></v-checkbox>
+          v-model="myTreat"
+          @update:modelValue="notifyMyTreat"></v-checkbox>
       </v-col>
     </v-row>
     <v-card-text class="text-center pt-0">Saldo disponibile</v-card-text>
-    <v-card-text class="text-center pt-0">9,25</v-card-text>
+    <v-card-text
+      class="text-center pt-0"
+      :style="price > this.$store.getters.userBalance ? 'color:' + 'red' : ''"
+      >{{ this.$store.getters.userBalance }}</v-card-text
+    >
   </v-container>
 </template>

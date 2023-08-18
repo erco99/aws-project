@@ -48,7 +48,7 @@ export default {
         }
       }
     });
-    this.socket.on("update-states", ({states, field: fieldName}) => {
+    this.socket.on("update-states", ({ states, field: fieldName }) => {
       this.loading = false;
       for (const field of this.fields) {
         if (field.name === fieldName) {
@@ -102,7 +102,7 @@ export default {
     updateStates(states) {
       this.loading = true;
       this.socket.emit("update-states", states);
-    }
+    },
   },
 };
 </script>
@@ -124,7 +124,7 @@ export default {
             :day="day"
             @new-booking="book"
             @delete-booking="deleteBook"
-            @update-states="updateStates"/>
+            @update-states="updateStates" />
         </div>
       </div>
     </v-card>

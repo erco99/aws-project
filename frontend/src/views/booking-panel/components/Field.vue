@@ -5,10 +5,10 @@ import HourButton from "./HourButton.vue";
 import AdminDialog from "./admin-dialog/AdminDialog.vue";
 import StatusDialog from "./status-dialog/Index.vue";
 import { stringfy, domainDate } from "./commons";
-import {useDisplay} from "vuetify";
+import { useDisplay } from "vuetify";
 export default {
   setup() {
-    const display = useDisplay()
+    const display = useDisplay();
 
     return { stringfy, display };
   },
@@ -37,6 +37,7 @@ export default {
         },
         players: [],
         servicies: [],
+        price: 5.5,
       },
       dialog: false,
       adminDialog: false,
@@ -74,11 +75,14 @@ export default {
     },
     maxStatesForScreen() {
       switch (this.display.name.value) {
-        case 'xs': return 2
-        case 'sm': return 3
-        default: return 6
+        case "xs":
+          return 2;
+        case "sm":
+          return 3;
+        default:
+          return 6;
       }
-    }
+    },
   },
   methods: {
     notifyNewBooking() {
@@ -89,6 +93,7 @@ export default {
         alert("Il numero di partecipanti non è valido");
       } else {
         const newBooking = [];
+        const pricePerHour = this.newBooking.price / this.duration;
         for (let i = 0; i < this.duration; i++) {
           const pushMe = {
             field: this.name,
@@ -99,6 +104,8 @@ export default {
             },
             players: this.newBooking.players,
             owner: this.newBooking.owner,
+            price: pricePerHour,
+            myTreat: this.newBooking.myTreat,
           };
           newBooking.push(pushMe);
         }
@@ -135,6 +142,8 @@ export default {
         this.deleteTime = time;
         this.adminDialog = true;
       } else {
+        this.newBooking.myTreat = false;
+        this.newBooking.price = 5.5;
         this.duration = 1;
         this.match = "single";
         this.newBooking.time = time;
@@ -155,7 +164,7 @@ export default {
           if (inside) return ["lighting", "heating"];
           else return time <= sunrise || time >= sunset ? ["lighting"] : [];
         } else {
-          if (inside || (time <= sunrise || time >= sunset)) return ["lighting"];
+          if (inside || time <= sunrise || time >= sunset) return ["lighting"];
         }
       } else {
         // If weather data is not ready use default services
@@ -201,14 +210,22 @@ export default {
   <div class="fit-content pr-10">
     <div class="d-flex align-end mb-2 sticky" style="max-width: 80vw">
       <v-chip
-          :class="'mr-2 '.concat(this.$store.getters.userRole === 'admin' ? '' : 'unclickable' )"
-          variant="outlined"
-          @click="this.statusDialog = true">{{ name }}</v-chip>
+        :class="
+          'mr-2 '.concat(
+            this.$store.getters.userRole === 'admin' ? '' : 'unclickable'
+          )
+        "
+        variant="outlined"
+        @click="this.statusDialog = true"
+        >{{ name }}</v-chip
+      >
       <StatusDialog
-          :display="statusDialog"
-          :current-states="Object.values(state)"
-          @close="this.statusDialog = false"
-          @save-states="(states) => this.$emit('updateStates', { states, field: name })"></StatusDialog>
+        :display="statusDialog"
+        :current-states="Object.values(state)"
+        @close="this.statusDialog = false"
+        @save-states="
+          (states) => this.$emit('updateStates', { states, field: name })
+        "></StatusDialog>
 
       <v-chip
         class="mr-1"
@@ -216,7 +233,8 @@ export default {
         :key="index"
         variant="outlined"
         size="small"
-        >{{ key }}</v-chip>
+        >{{ key }}</v-chip
+      >
 
       <v-menu location="bottom" v-if="state.length > maxStatesForScreen">
         <template v-slot:activator="{ props }">
@@ -225,14 +243,15 @@ export default {
 
         <v-list>
           <v-list-item
-              v-for="(key, index) in state.slice(maxStatesForScreen, state.length + 1)"
-              :key="index"
-          >
+            v-for="(key, index) in state.slice(
+              maxStatesForScreen,
+              state.length + 1
+            )"
+            :key="index">
             <v-chip variant="outlined" size="small">{{ key }}</v-chip>
           </v-list-item>
         </v-list>
       </v-menu>
-
     </div>
     <div class="d-flex">
       <HourButton
@@ -259,8 +278,19 @@ export default {
         :defaultServicies="newBooking.servicies"
         @duration-update="(value) => (duration = value)"
         @match-update="(value) => (match = value)"
-        @servicies-update="(value) => (newBooking.servicies = value)"
-        @players-update="(value) => (newBooking.players = value)"></Body>
+        @servicies-update="
+          (update) => {
+            newBooking.servicies = update.value;
+            newBooking.price = update.price;
+          }
+        "
+        @players-update="(value) => (newBooking.players = value)"
+        @my-treat-update="
+          (update) => {
+            newBooking.myTreat = update.value;
+            newBooking.price = update.price;
+          }
+        "></Body>
       <v-card-actions class="justify-center">
         <v-btn color="primary" @click="dialog = false">Annulla</v-btn>
         <v-btn color="primary" @click="notifyNewBooking()">Prenota ora</v-btn>
@@ -272,7 +302,6 @@ export default {
     :time="deleteTime"
     @delete="(time) => this.$emit('deleteBooking', { day, field: name, time })"
     @close="adminDialog = false"></AdminDialog>
-
 </template>
 
 <style>
@@ -289,5 +318,4 @@ export default {
 .unclickable {
   pointer-events: none;
 }
-
 </style>
