@@ -2,7 +2,7 @@
   <v-card class="mx-auto rounded-0" elevation="4">
     <v-card-item>
       <div class="text-overline mb-1">
-        Variazione bilancio annuale
+        Tipologie di transazioni
       </div>
         <div>
           <v-chart class="chart" :option="option" autoresize></v-chart>
@@ -49,9 +49,7 @@ export default {
             name: 'Tipo transazione',
             type: 'pie',
             radius: '60%',
-            data: [
-              { value: 1048, name: 'Search Engine' },
-            ],
+            data: [],
             emphasis: {
               itemStyle: {
                 shadowBlur: 10,
