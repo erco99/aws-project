@@ -1,17 +1,17 @@
 <template>
   <v-container class="container">
     <v-row>
-      <v-col sm="12" md="6">
+      <v-col cols="12" lg="6">
         <BookingsGraph></BookingsGraph>
       </v-col>
 
-      <v-col sm="12" md="6">
+      <v-col cols="12" lg="6">
         <BookingPie></BookingPie>
       </v-col>
     </v-row>
 
     <v-row>
-      <v-col md="12">
+      <v-col cols="12">
           <UsersCount></UsersCount>
       </v-col>
     </v-row>
