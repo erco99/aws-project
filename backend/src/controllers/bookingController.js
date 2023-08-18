@@ -1,7 +1,8 @@
-const { default: mongoose } = require("mongoose");
 const bookings = require("../models/bookings");
 const field = require("../models/field");
 const notificationsController = require("./notificationsController");
+const transactions = require("../models/transactions");
+const user = require("../models/user");
 
 async function getWeek(socket, day) {
   const from = new Date(day);
@@ -48,6 +49,13 @@ async function getWeek(socket, day) {
 
 let imChecking = false;
 async function book(newBooking) {
+  if (!newBooking.myTreat) {
+    const haveMoney = await checkBalances(newBooking.players, newBooking.price);
+    console.log(haveMoney);
+    if (!haveMoney) {
+      return "Uno o più giocatori non hanno denaro sufficiente per partecipare";
+    }
+  }
   const document = await bookings.findOne({
     day: newBooking.day,
     field: newBooking.field,
@@ -100,6 +108,38 @@ async function book(newBooking) {
   }
   await notificationsController.notifyOwner(newBooking);
   await notificationsController.notifyPlayers(newBooking);
+  const today = new Date();
+  const date =
+    today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear();
+  const time =
+    today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+  if (!newBooking.myTreat) {
+    for (const player of newBooking.players) {
+      const userFound = await user.findOne({ email: player.email });
+      userFound.balance = userFound.balance - newBooking.price;
+      await userFound.save();
+      await transactions.create({
+        amount: newBooking.price,
+        transaction_type: "negative",
+        description: "Prenotazione campo",
+        date,
+        time,
+        user: { fullname: userFound.full_name, email: userFound.email },
+      });
+    }
+  }
+  const owner = await user.findOne({ email: newBooking.owner.email });
+  console.log(newBooking.price, owner.balance);
+  owner.balance = owner.balance - newBooking.price;
+  await owner.save();
+  await transactions.create({
+    amount: newBooking.price,
+    transaction_type: "negative",
+    description: "Prenotazione campo",
+    date,
+    time,
+    user: { fullname: owner.full_name, email: owner.email },
+  });
   return {
     day: newBooking.day,
     field: newBooking.field,
@@ -110,6 +150,19 @@ async function book(newBooking) {
       time: newBooking.time,
     },
   };
+}
+
+async function checkBalances(players, price) {
+  for (const player of players) {
+    const balanceObj = await user.findOne(
+      { email: player.email },
+      { balance: 1, _id: 0 }
+    );
+    if (balanceObj.balance < price) {
+      return false;
+    }
+  }
+  return true;
 }
 
 // Return > 0 if time1 < time2
