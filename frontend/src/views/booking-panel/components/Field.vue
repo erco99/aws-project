@@ -3,13 +3,17 @@ import Header from "./dialog/Header.vue";
 import Body from "./dialog/Body.vue";
 import HourButton from "./HourButton.vue";
 import AdminDialog from "./admin-dialog/AdminDialog.vue";
+import StatusDialog from "./status-dialog/Index.vue";
 import { stringfy, domainDate } from "./commons";
+import {useDisplay} from "vuetify";
 export default {
   setup() {
-    return { stringfy };
+    const display = useDisplay()
+
+    return { stringfy, display };
   },
-  components: { Body, Header, HourButton, AdminDialog },
-  emits: ["newBooking", "deleteBooking"],
+  components: { Body, Header, HourButton, AdminDialog, StatusDialog },
+  emits: ["newBooking", "deleteBooking", "updateStates"],
   props: {
     state: { type: Array, default: [] },
     name: { type: String, required: true },
@@ -36,6 +40,7 @@ export default {
       },
       dialog: false,
       adminDialog: false,
+      statusDialog: false,
       deleteTime: {},
     };
   },
@@ -67,6 +72,13 @@ export default {
     inside() {
       return this.state.includes("coperto");
     },
+    maxStatesForScreen() {
+      switch (this.display.name.value) {
+        case 'xs': return 2
+        case 'sm': return 3
+        default: return 6
+      }
+    }
   },
   methods: {
     notifyNewBooking() {
@@ -187,15 +199,41 @@ export default {
 
 <template>
   <div class="fit-content pr-10">
-    <div class="d-flex align-end mb-2 sticky">
-      <v-chip class="mr-2" variant="outlined">{{ name }}</v-chip>
+    <v-row></v-row>
+    <div class="d-flex align-end mb-2 sticky" style="max-width: 80vw">
       <v-chip
-        v-for="(key, index) in state"
+          :class="'mr-2 '.concat(this.$store.getters.userRole === 'admin' ? '' : 'unclickable' )"
+          variant="outlined"
+          @click="this.statusDialog = true">{{ name }}</v-chip>
+      <StatusDialog
+          :display="statusDialog"
+          :current-states="Object.values(state)"
+          @close="this.statusDialog = false"
+          @save-states="(states) => this.$emit('updateStates', { states, field: name })"></StatusDialog>
+
+      <v-chip
+        class="mr-1"
+        v-for="(key, index) in state.slice(0, maxStatesForScreen)"
         :key="index"
         variant="outlined"
         size="small"
-        >{{ key }}</v-chip
-      >
+        >{{ key }}</v-chip>
+
+      <v-menu location="bottom" v-if="state.length > maxStatesForScreen">
+        <template v-slot:activator="{ props }">
+          <v-icon icon="mdi-eye-outline" @click="props.onClick"></v-icon>
+        </template>
+
+        <v-list>
+          <v-list-item
+              v-for="(key, index) in state.slice(maxStatesForScreen, state.length + 1)"
+              :key="index"
+          >
+            <v-chip variant="outlined" size="small">{{ key }}</v-chip>
+          </v-list-item>
+        </v-list>
+      </v-menu>
+
     </div>
     <div class="d-flex">
       <HourButton
@@ -235,6 +273,7 @@ export default {
     :time="deleteTime"
     @delete="(time) => this.$emit('deleteBooking', { day, field: name, time })"
     @close="adminDialog = false"></AdminDialog>
+
 </template>
 
 <style>
@@ -247,4 +286,9 @@ export default {
   position: -webkit-sticky;
   left: 0;
 }
+
+.unclickable {
+  pointer-events: none;
+}
+
 </style>

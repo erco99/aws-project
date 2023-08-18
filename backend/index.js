@@ -53,6 +53,7 @@ server.listen(port, () => {
 // Socket
 const bookingController = require("./src/controllers/bookingController");
 const notificationsController = require("./src/controllers/notificationsController");
+const fieldController = require("./src/controllers/fieldController");
 const io = socketio(server, { cors: corsOptions });
 io.on("connection", (socket) => {
   socket.on("get-week", (day) => bookingController.getWeek(socket, day));
@@ -76,6 +77,11 @@ io.on("connection", (socket) => {
       owners: result.owners,
       inviter: result.inviter,
     });
+  });
+  socket.on("update-states", async (update) => {
+    // TODO: Save states
+    await fieldController.updateStates(update)
+    io.emit("update-states", update)
   });
   socket.on("getNotifications", (owner) =>
     notificationsController.getNotifications(socket, owner)

@@ -48,6 +48,14 @@ export default {
         }
       }
     });
+    this.socket.on("update-states", ({states, field: fieldName}) => {
+      this.loading = false;
+      for (const field of this.fields) {
+        if (field.name === fieldName) {
+          field.state = states;
+        }
+      }
+    });
     this.socket.on("error", (msg) => alert(msg));
     this.socket.emit("get-week", this.day);
 
@@ -91,6 +99,10 @@ export default {
       this.loading = true;
       this.socket.emit("delete-booking", deleteBooking);
     },
+    updateStates(states) {
+      this.loading = true;
+      this.socket.emit("update-states", states);
+    }
   },
 };
 </script>
@@ -111,7 +123,8 @@ export default {
             :surface="field.surface"
             :day="day"
             @new-booking="book"
-            @delete-booking="deleteBook" />
+            @delete-booking="deleteBook"
+            @update-states="updateStates"/>
         </div>
       </div>
     </v-card>
