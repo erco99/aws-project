@@ -50,9 +50,7 @@ async function getWeek(socket, day) {
 let imChecking = false;
 async function book(newBooking) {
   if (!newBooking.myTreat) {
-    const haveMoney = await checkBalances(newBooking.players, newBooking.price);
-    console.log(haveMoney);
-    if (!haveMoney) {
+    const haveMoney = await checkBalances(newBooking.players, newBooking.price);if (!haveMoney) {
       return "Uno o più giocatori non hanno denaro sufficiente per partecipare";
     }
   }
@@ -129,7 +127,6 @@ async function book(newBooking) {
     }
   }
   const owner = await user.findOne({ email: newBooking.owner.email });
-  console.log(newBooking.price, owner.balance);
   owner.balance = owner.balance - newBooking.price;
   await owner.save();
   await transactions.create({

@@ -105,8 +105,13 @@ export default {
       this.socket.emit("update-states", states);
     },
     updateUserBalance(newBooking) {
-      console.log(newBooking)
-      if (newBooking.owner.email === this.$store.getters.userEmail) {}
+      if (newBooking.owner.email === this.$store.getters.userEmail) {
+        this.$store.commit('user/SUB_USER_BALANCE', newBooking.price);
+      }
+      const playersEmails = newBooking.players.map(player => player.email)
+      if (playersEmails.includes(this.$store.getters.userEmail) && !newBooking.myTreat) {
+        this.$store.commit('user/SUB_USER_BALANCE', newBooking.price);
+      }
     }
   },
 };

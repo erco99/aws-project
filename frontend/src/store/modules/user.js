@@ -18,6 +18,9 @@ const mutations = {
   },
   CLEAN_USER_DATA: (state) => {
     state.userData = {}
+  },
+  SUB_USER_BALANCE: (state, amount) => {
+    state.userData.balance = state.userData.balance - amount
   }
 }
 

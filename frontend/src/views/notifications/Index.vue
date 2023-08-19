@@ -82,6 +82,7 @@ export default {
       }
     },
     handleNewBooking(newBooking) {
+      this.updateUserBalance(newBooking.newBooking)
       if (
         newBooking.newBooking.players.some(
           (p) => p.email === this.$store.getters.userEmail
@@ -94,6 +95,15 @@ export default {
         });
       }
     },
+    updateUserBalance(newBooking) {
+      if (newBooking.owner.email === this.$store.getters.userEmail) {
+        this.$store.commit('user/SUB_USER_BALANCE', newBooking.price);
+      }
+      const playersEmails = newBooking.players.map(player => player.email)
+      if (playersEmails.includes(this.$store.getters.userEmail) && !newBooking.myTreat) {
+        this.$store.commit('user/SUB_USER_BALANCE', newBooking.price);
+      }
+    }
   },
 };
 </script>

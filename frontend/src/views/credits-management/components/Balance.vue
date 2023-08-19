@@ -4,7 +4,7 @@
       <div>
         <div class="text-overline mb-1">Saldo</div>
         <div class="text-h6 mb-1">
-          <div class="text-h3 font-weight-medium">€ {{ userBalance }}</div>
+          <div class="text-h3 font-weight-medium">€ {{ balance }}</div>
         </div>
       </div>
     </v-card-item>
@@ -119,6 +119,7 @@
 
 <script>
 import { mapGetters } from "vuex";
+import io from "socket.io-client";
 
 export default {
   computed: {
@@ -280,17 +281,39 @@ export default {
         }, 1000);
       });
     },
+    updateUserBalance(newBooking) {
+      if (newBooking.owner.email === this.$store.getters.userEmail) {
+        this.$store.commit('user/SUB_USER_BALANCE', newBooking.price)
+      }
+      const playersEmails = newBooking.players.map(player => player.email)
+      if (playersEmails.includes(this.$store.getters.userEmail) && !newBooking.myTreat) {
+        this.$store.commit('user/SUB_USER_BALANCE', newBooking.price);
+      }
+      this.balance = this.$store.getters.userBalance;
+    }
   },
-  data: (vm) => ({
-    alert: false,
-    receiverEmail: "",
-    dialog: false,
-    operationType: "",
-    operationTypeText: "",
-    amountValue: "",
-    loading: false,
-    rules: [(value) => vm.checkApi(value)],
-    timeout: null,
-  }),
+  data: function (vm){
+    return {
+      alert: false,
+      receiverEmail: "",
+      dialog: false,
+      operationType: "",
+      operationTypeText: "",
+      amountValue: "",
+      loading: false,
+      rules: [(value) => vm.checkApi(value)],
+      timeout: null,
+      socket: io("http://localhost:10000"),
+      balance: this.$store.getters.userBalance
+    };
+  },
+  mounted() {
+    this.socket.on("new-booking", (newBooking) => {
+      this.updateUserBalance(newBooking.newBooking);
+    })
+  },
+  unmounted() {
+    this.socket.disconnect();
+  }
 };
 </script>
