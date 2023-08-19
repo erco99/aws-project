@@ -7,6 +7,7 @@ export default {
   mounted() {
     this.socket.on("week", (fields) => (this.fields = fields));
     this.socket.on("new-booking", (newBooking) => {
+      this.updateUserBalance(newBooking.newBooking);
       this.loading = false;
       for (const field of this.fields) {
         if (field.name === newBooking.field) {
@@ -103,6 +104,10 @@ export default {
       this.loading = true;
       this.socket.emit("update-states", states);
     },
+    updateUserBalance(newBooking) {
+      console.log(newBooking)
+      if (newBooking.owner.email === this.$store.getters.userEmail) {}
+    }
   },
 };
 </script>
