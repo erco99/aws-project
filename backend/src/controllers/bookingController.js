@@ -72,6 +72,8 @@ async function book(newBooking) {
             players: newBooking.players,
             owner: newBooking.owner,
             time: newBooking.time,
+            price: newBooking.price,
+            myTreat: newBooking.myTreat
           },
         ],
       };
@@ -98,6 +100,8 @@ async function book(newBooking) {
       players: newBooking.players,
       owner: newBooking.owner,
       time: newBooking.time,
+      price: newBooking.price,
+      myTreat: newBooking.myTreat
     };
     await bookings.updateOne(
       { _id: document._id },
@@ -245,6 +249,10 @@ async function deleteBooking({ day, field, time }) {
     owners: invitation.owners,
     inviter: invitation.inviter,
   };
+}
+
+function refoundPlayers() {
+
 }
 
 module.exports = {
