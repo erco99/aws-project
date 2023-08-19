@@ -36,7 +36,7 @@ export default {
           email: this.$store.getters.userEmail,
         },
         players: [],
-        servicies: [],
+        services: [],
         price: 5.5,
       },
       dialog: false,
@@ -147,7 +147,7 @@ export default {
         this.duration = 1;
         this.match = "single";
         this.newBooking.time = time;
-        this.newBooking.servicies = this.defaultServices(
+        this.newBooking.services = this.defaultServices(
           time.hours,
           this.inside
         );
@@ -275,18 +275,20 @@ export default {
         :defaultDuration="1"
         defaultMatch="single"
         :inside="inside"
-        :defaultServicies="newBooking.servicies"
+        :defaultServicies="newBooking.services"
         @duration-update="(value) => (duration = value)"
         @match-update="(value) => (match = value)"
-        @servicies-update="
+        @services-update="
           (update) => {
-            newBooking.servicies = update.value;
+            console.log(update)
+            newBooking.services = update.value;
             newBooking.price = update.price;
           }
         "
         @players-update="(value) => (newBooking.players = value)"
         @my-treat-update="
           (update) => {
+            console.log(update)
             newBooking.myTreat = update.value;
             newBooking.price = update.price;
           }

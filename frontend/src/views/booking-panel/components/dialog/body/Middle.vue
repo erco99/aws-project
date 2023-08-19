@@ -1,6 +1,6 @@
 <script>
 export default {
-  emits: ["serviciesUpdate", "myTreatUpdate"],
+  emits: ["servicesUpdate", "myTreatUpdate"],
   props: {
     players: {
       type: Number,
@@ -29,26 +29,34 @@ export default {
   },
   data() {
     return {
-      servicies: this.defaultServicies,
+      services: this.defaultServicies,
       myTreat: false,
     };
   },
   computed: {
     price() {
       let cost = 11;
-      this.servicies.forEach((element) => (cost = cost + 3));
+      this.services.forEach((element) => (cost = cost + 3));
       cost = cost * this.duration;
       return this.myTreat ? cost : cost / this.players;
     },
   },
   methods: {
-    notifyServices(value) {
-      this.$emit("serviciesUpdate", { value, price: this.price });
+    notifyServices(values) {
+      this.$emit("servicesUpdate", { value: values, price: this.price });
     },
     notifyMyTreat(value) {
       this.$emit("myTreatUpdate", { value, price: this.price });
     },
   },
+  watch: {
+    services: function(values) {
+      this.notifyServices(values)
+    },
+    myTreat: function(value) {
+      this.notifyMyTreat(value);
+    }
+  }
 };
 </script>
 
@@ -58,16 +66,14 @@ export default {
     <v-row class="justify-center">
       <v-col style="min-width: 190px" class="flex-grow-0">
         <v-switch
-          @update:modelValue="notifyServices"
           :disabled="inside"
-          v-model="servicies"
+          v-model="services"
           value="lighting"
           hide-details
           label="Illuminazione"></v-switch>
         <v-switch
           :disabled="!inside"
-          @update:modelValue="notifyServices"
-          v-model="servicies"
+          v-model="services"
           value="heating"
           hide-details
           label="Riscaldamento"></v-switch>
@@ -80,8 +86,7 @@ export default {
         <v-checkbox
           hide-details
           label="Offri la partita"
-          v-model="myTreat"
-          @update:modelValue="notifyMyTreat"></v-checkbox>
+          v-model="myTreat"></v-checkbox>
       </v-col>
     </v-row>
     <v-card-text class="text-center pt-0">Saldo disponibile</v-card-text>

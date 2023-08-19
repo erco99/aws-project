@@ -11,7 +11,7 @@ export default {
   emits: [
     "durationUpdate",
     "matchUpdate",
-    "serviciesUpdate",
+    "servicesUpdate",
     "playersUpdate",
     "myTreatUpdate",
   ],
@@ -70,7 +70,7 @@ export default {
       this.$emit("matchUpdate", value);
     },
     notifyServices(value) {
-      this.$emit("serviciesUpdate", value);
+      this.$emit("servicesUpdate", value);
     },
     notifyPlayers(value) {
       this.$emit("playersUpdate", value);
@@ -98,7 +98,7 @@ export default {
         :defaultServicies="defaultServicies"
         :duration="duration"
         :players="numberOfPlayers"
-        @servicies-update="notifyServices"
+        @services-update="notifyServices"
         @my-treat-update="notifyMyTreat"></Middle>
     </v-col>
     <v-col cols="12" md="4" sm="8">
