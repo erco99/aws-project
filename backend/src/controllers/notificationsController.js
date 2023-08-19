@@ -1,5 +1,6 @@
 const notifications = require("../models/notifications");
 const bookings = require("../models/bookings");
+const bookingController = require("./bookingController");
 
 async function getNotifications(socket, owner) {
   const query = await notifications.find({ owners: owner });
@@ -84,7 +85,7 @@ async function notifyDelete(invitation) {
     text: text,
     owners: new Array(...invitation.owners, invitation.inviter),
     invitationId: invitation._id,
-  });
+  });1
 }
 
 async function accept(notificationId, userEmail) {
@@ -93,26 +94,24 @@ async function accept(notificationId, userEmail) {
   await notificationToUpdate.save();
 }
 
-async function refuse(notificationId, refuseTime) {
+async function refuse(io, notificationId, refuseTime) {
   const notificationToUpdate = await notifications.findById(notificationId);
   if (new Date(notificationToUpdate.expiration) > new Date(refuseTime)) {
-    await bookings.updateOne(
-      {
-        day: notificationToUpdate.day,
-        field: notificationToUpdate.field,
-      },
-      {
-        $pull: {
-          bookings: {
-            "time.hours": notificationToUpdate.time.hours,
-            "time.minutes": notificationToUpdate.time.minutes,
-          },
-        },
-      }
-    );
-    notificationToUpdate.expiration = refuseTime;
-    await notificationToUpdate.save();
-    await notifyDelete(notificationToUpdate);
+    const deleteBooking = {
+      day: notificationToUpdate.day.toISOString().split("T")[0],
+      field: notificationToUpdate.field,
+      time: {hours: notificationToUpdate.time.hours, minutes: notificationToUpdate.time.minutes}
+    }
+
+    // Reuse delete booking function and emit event for booking deletion (for live update)
+    const result = await bookingController.deleteBooking(deleteBooking);
+    io.emit("delete-booking", {
+      day: deleteBooking.day,
+      field: deleteBooking.field,
+      time: deleteBooking.time,
+      owners: result.owners,
+      inviter: result.inviter,
+    });
     return {
       owners: notificationToUpdate.owners,
       inviter: notificationToUpdate.inviter,

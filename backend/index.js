@@ -68,7 +68,6 @@ io.on("connection", (socket) => {
     }
   });
   socket.on("delete-booking", async (deleteBooking) => {
-    console.log(deleteBooking);
     const result = await bookingController.deleteBooking(deleteBooking);
     io.emit("delete-booking", {
       day: deleteBooking.day,
@@ -79,7 +78,6 @@ io.on("connection", (socket) => {
     });
   });
   socket.on("update-states", async (update) => {
-    // TODO: Save states
     await fieldController.updateStates(update)
     io.emit("update-states", update)
   });
@@ -88,6 +86,7 @@ io.on("connection", (socket) => {
   );
   socket.on("refuse", async (notificationId, refuseTime) => {
     const result = await notificationsController.refuse(
+      io,
       notificationId,
       refuseTime
     );

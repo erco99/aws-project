@@ -230,6 +230,9 @@ async function deleteBooking({ day, field, time }) {
       },
     }
   );
+
+  // TODO: Create positive transaction to refund money (only if not offered)
+
   const invitation = await notificationsController.findInvitation({
     day,
     field,
@@ -251,3 +254,6 @@ module.exports = {
   getFieldDistribution,
   deleteBooking,
 };
+
+// Workaround for circular imports
+exports.deleteBooking = deleteBooking;
