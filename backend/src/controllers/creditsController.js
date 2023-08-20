@@ -76,6 +76,13 @@ async function sendMoney(req, res) {
   const time = req.body.time
   const amount = req.body.amount
 
+  let amountValue;
+  if(amount.includes(',')) {
+    amountValue = parseFloat(amount.replace(',', '.'));
+  } else {
+    amountValue = parseInt(amount);
+  }
+
   const receiverEmail = receiver_data.email
 
   const user = await User.findOne({email: receiverEmail}).exec();
@@ -87,47 +94,45 @@ async function sendMoney(req, res) {
     email: sender_data.email
   }
 
-  receiver_fullname = user.name + ' ' + user.surname
+  const receiver_fullname = user.name + ' ' + user.surname
 
   const receiver = {
     fullname: receiver_fullname,
     email: receiver_data.email 
   }
 
-  console.log(sender_data.email)
-  console.log(receiver_data.email)
-
-  newBalanceSender = parseFloat(sender_data.balance) - parseFloat(amount)
-  newBalanceReceiver = parseFloat(user.balance) + parseFloat(amount)
+  const newBalanceSender = parseFloat(sender_data.balance) - amountValue
+  const newBalanceReceiver = parseFloat(user.balance) + amountValue
 
   try {
     // negative transaction and balance reduced for sender
-    await Transactions.create({
-      amount: amount, 
-      transaction_type: 'negative', 
-      description: 'Invio denaro a ' + receiver_fullname, 
-      date: date, 
-      time: time, 
-      user: sender});
+    const senderTransactionData = {
+      amount: amountValue,
+      transaction_type: 'negative',
+      description: 'Invio denaro a ' + receiver_fullname,
+      date: date,
+      time: time,
+      user: sender};
+    await Transactions.create(senderTransactionData);
     await User.findOneAndUpdate({email: sender_data.email}, {balance: newBalanceSender.toFixed(2)})
+    global.io.emit("new-transaction", senderTransactionData);
 
     //positive transaciton and balance increased for receiver
-    await Transactions.create({
-      amount: amount,
+    const receiverTransactionData = {
+      amount: amountValue,
       transaction_type: 'positive',
       description: "Ricezione denaro da " + sender.fullname,
       date: date,
       time:time,
-      user: receiver
-    })
+      user: receiver};
+    await Transactions.create(receiverTransactionData)
     await User.findOneAndUpdate({email: receiver_data.email}, {balance: newBalanceReceiver.toFixed(2)})
-
+    global.io.emit("new-transaction", receiverTransactionData);
+    return res.sendStatus(200)
   } catch(error) {
     console.log(error);
     return res.status(500).json({'message': 'Error'});
   }
-
-  return res.sendStatus(200);
 }
 
 module.exports = {

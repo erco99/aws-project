@@ -137,7 +137,7 @@ export default {
     },
     cancel() {
       this.dialog = false;
-      this.$refs.form.reset();
+      //this.$refs.form.reset();
     },
     isNumber(event, value) {
       if (value.includes(",")) {
@@ -268,7 +268,6 @@ export default {
             this.$store.dispatch("transactions/sendMoney", data).then(
               () => {
                 this.dialog = false;
-                this.$refs.form.submit();
               },
               (error) => {
                 this.alert = true;
@@ -313,12 +312,21 @@ export default {
     };
   },
   mounted() {
+    // TODO: Remove this event's and use new-transaction to update balance
     this.socket.on("new-booking", (newBooking) => {
       this.updateUserBalance(newBooking.newBooking, '-');
     });
     this.socket.on("delete-booking", (deleteBooking) => {
       this.updateUserBalance(deleteBooking, '+');
-    })
+    });
+    this.socket.on("new-transaction", (transactionData) => {
+
+      const { transaction_type, amount, user } = transactionData;
+      if (user.email === this.$store.getters.userEmail) {
+        this.$store.commit('user/INC_USER_BALANCE', transaction_type === "negative" ? -amount : amount)
+        this.balance = this.$store.getters.userBalance;
+      }
+    });
   },
   unmounted() {
     this.socket.disconnect();

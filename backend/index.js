@@ -122,3 +122,5 @@ io.on("connection", (socket) => {
     );
   });
 });
+
+global.io = io;
