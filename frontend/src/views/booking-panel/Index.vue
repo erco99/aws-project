@@ -7,7 +7,7 @@ export default {
   mounted() {
     this.socket.on("week", (fields) => (this.fields = fields));
     this.socket.on("new-booking", (newBooking) => {
-      this.updateUserBalance(newBooking.newBooking);
+      this.updateUserBalance(newBooking.newBooking, '-');
       this.loading = false;
       for (const field of this.fields) {
         if (field.name === newBooking.field) {
@@ -30,6 +30,7 @@ export default {
       }
     });
     this.socket.on("delete-booking", (deleteBooking) => {
+      this.updateUserBalance(deleteBooking, '+')
       this.loading = false;
       for (const field of this.fields) {
         if (field.name === deleteBooking.field) {
@@ -104,14 +105,21 @@ export default {
       this.loading = true;
       this.socket.emit("update-states", states);
     },
-    updateUserBalance(newBooking) {
-      if (newBooking.owner.email === this.$store.getters.userEmail) {
-        this.$store.commit('user/SUB_USER_BALANCE', newBooking.price);
+    updateUserBalance(data, sign) {
+      const userEmail = this.$store.getters.userEmail
+      if (data.owner && data.owner.email === userEmail || data.inviter && data.inviter === userEmail) {
+        this.$store.commit('user/INC_USER_BALANCE', sign === '-' ?  - data.price : data.price)
       }
-      const playersEmails = newBooking.players.map(player => player.email)
-      if (playersEmails.includes(this.$store.getters.userEmail) && !newBooking.myTreat) {
-        this.$store.commit('user/SUB_USER_BALANCE', newBooking.price);
+      const playersEmails = []
+      if (data.players) {
+        playersEmails.push(...data.players.map(player => player.email))
+      } else if (data.owners) {
+        playersEmails.push(...data.owners)
       }
+      if (playersEmails.includes(userEmail) && !data.myTreat) {
+        this.$store.commit('user/INC_USER_BALANCE', sign === '-' ?  - data.price : data.price);
+      }
+      this.balance = this.$store.getters.userBalance;
     }
   },
 };

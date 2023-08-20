@@ -5,15 +5,12 @@
       :key="index"
       cols="12"
       sm="6">
-      <v-card height="220">
+      <v-card :height="cardHeight(notification)">
         <v-card-title>{{ notification.title }}</v-card-title>
         <v-card-subtitle>{{ notification.subtitle }}</v-card-subtitle>
         <v-card-text>{{ notification.text }}</v-card-text>
         <v-card-actions
-          v-if="
-            new Date(notification.expiration) > new Date() &&
-            !notification.accepters.includes(this.$store.getters.userEmail)
-          ">
+          v-if="displayCardActions(notification)">
           <v-btn @click="accept(notification)">Accetta</v-btn>
           <v-btn @click="refuse(notification._id)">Rifiuta</v-btn>
         </v-card-actions>
@@ -24,6 +21,7 @@
 
 <script>
 import io from "socket.io-client";
+import {useDisplay} from "vuetify";
 export default {
   data() {
     return {
@@ -38,6 +36,9 @@ export default {
     this.socket.on("new-booking", (newBooking) =>
       this.handleNewBooking(newBooking)
     );
+    this.socket.on("delete-booking", (deleteBooking) => {
+      this.updateUserBalance(deleteBooking, '+')
+    })
     this.socket.on("refuse", (invitation) => this.handleRefuse(invitation));
     this.socket.on("refresh", (notification) =>
       this.handleRefresh(notification)
@@ -82,7 +83,7 @@ export default {
       }
     },
     handleNewBooking(newBooking) {
-      this.updateUserBalance(newBooking.newBooking)
+      this.updateUserBalance(newBooking.newBooking, '-')
       if (
         newBooking.newBooking.players.some(
           (p) => p.email === this.$store.getters.userEmail
@@ -95,13 +96,34 @@ export default {
         });
       }
     },
-    updateUserBalance(newBooking) {
-      if (newBooking.owner.email === this.$store.getters.userEmail) {
-        this.$store.commit('user/SUB_USER_BALANCE', newBooking.price);
+    updateUserBalance(data, sign) {
+      const userEmail = this.$store.getters.userEmail
+      if (data.owner && data.owner.email === userEmail || data.inviter && data.inviter === userEmail) {
+        this.$store.commit('user/INC_USER_BALANCE', sign === '-' ?  - data.price : data.price)
       }
-      const playersEmails = newBooking.players.map(player => player.email)
-      if (playersEmails.includes(this.$store.getters.userEmail) && !newBooking.myTreat) {
-        this.$store.commit('user/SUB_USER_BALANCE', newBooking.price);
+      const playersEmails = []
+      if (data.players) {
+        playersEmails.push(...data.players.map(player => player.email))
+      } else if (data.owners) {
+        playersEmails.push(...data.owners)
+      }
+      if (playersEmails.includes(userEmail) && !data.myTreat) {
+        this.$store.commit('user/INC_USER_BALANCE', sign === '-' ?  - data.price : data.price);
+      }
+      this.balance = this.$store.getters.userBalance;
+    },
+    displayCardActions(notification) {
+      return new Date(notification.expiration) > new Date() &&
+          !notification.accepters.includes(this.$store.getters.userEmail)
+    },
+    cardHeight(notification) {
+      if (this.displayCardActions(notification)) {
+        const display = useDisplay();
+        // TODO: Make more precise
+        if (display.width._object.width <= 1200) return 280;
+        else return 220;
+      } else {
+        return 220;
       }
     }
   },

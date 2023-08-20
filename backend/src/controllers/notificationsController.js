@@ -111,6 +111,8 @@ async function refuse(io, notificationId, refuseTime) {
       time: deleteBooking.time,
       owners: result.owners,
       inviter: result.inviter,
+      price: result.price,
+      myTreat: result.myTreat
     });
     return {
       owners: notificationToUpdate.owners,

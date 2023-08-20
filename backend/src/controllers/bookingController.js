@@ -3,6 +3,7 @@ const field = require("../models/field");
 const notificationsController = require("./notificationsController");
 const transactions = require("../models/transactions");
 const user = require("../models/user");
+const {register} = require("./authController");
 
 async function getWeek(socket, day) {
   const from = new Date(day);
@@ -223,6 +224,10 @@ async function getFieldDistribution(req, res) {
 }
 
 async function deleteBooking({ day, field, time }) {
+  const foundBook = await bookings.findOne({ day: day, field });
+  const book = foundBook.bookings.filter(e => JSON.stringify(e.time) === JSON.stringify(time))[0];
+  await refundPlayers({day, field, time}, book);
+
   await bookings.updateOne(
     { day: day, field: field },
     {
@@ -235,8 +240,6 @@ async function deleteBooking({ day, field, time }) {
     }
   );
 
-  // TODO: Create positive transaction to refund money (only if not offered)
-
   const invitation = await notificationsController.findInvitation({
     day,
     field,
@@ -248,11 +251,43 @@ async function deleteBooking({ day, field, time }) {
   return {
     owners: invitation.owners,
     inviter: invitation.inviter,
+    price: book.price,
+    myTreat: book.myTreat
   };
 }
 
-function refoundPlayers() {
+async function refundPlayers({day, field, time}, book) {
 
+  const today = new Date();
+  const transactionDate = [today.getDate(), (today.getMonth() + 1), today.getFullYear()].join("/");
+  const transactionTime = [today.getHours(), today.getMinutes(), today.getSeconds()].join(":");
+  const owner = await user.findOne({ email: book.owner.email });
+  owner.balance = owner.balance + book.price;
+  await owner.save();
+  await transactions.create({
+    amount: book.price,
+    transaction_type: "positive",
+    description: "Rimborso per prenotazione cancellata",
+    date: transactionDate,
+    time: transactionTime,
+    user: { fullname: owner.full_name, email: owner.email },
+  });
+
+  if (!book.myTreat) {
+    for (const player of book.players) {
+      const userFound = await user.findOne({ email: player.email });
+      userFound.balance = userFound.balance + book.price;
+      await userFound.save();
+      await transactions.create({
+        amount: book.price,
+        transaction_type: "positive",
+        description: "Rimborso per prenotazione cancellata",
+        date: transactionDate,
+        time: transactionTime,
+        user: { fullname: userFound.full_name, email: userFound.email },
+      });
+    }
+  }
 }
 
 module.exports = {

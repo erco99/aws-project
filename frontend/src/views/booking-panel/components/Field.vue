@@ -280,7 +280,6 @@ export default {
         @match-update="(value) => (match = value)"
         @services-update="
           (update) => {
-            console.log(update)
             newBooking.services = update.value;
             newBooking.price = update.price;
           }
@@ -288,7 +287,6 @@ export default {
         @players-update="(value) => (newBooking.players = value)"
         @my-treat-update="
           (update) => {
-            console.log(update)
             newBooking.myTreat = update.value;
             newBooking.price = update.price;
           }
