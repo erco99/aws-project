@@ -42,6 +42,7 @@ async function depositWithdrawMoney(req, res) {
   try {
     await Transactions.create({amount: amountValue, transaction_type, description, date, time, user});
     await User.findOneAndUpdate(filter, update)
+    return res.status(200).json({amount: parseFloat(transaction_type === 'negative' ? - amountValue : amountValue)})
   } catch (error) {
       console.log(error);
       return res.status(500).json({'message': 'Error'});

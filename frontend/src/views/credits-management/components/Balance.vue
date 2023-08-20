@@ -228,9 +228,8 @@ export default {
                 email: this.userEmail,
               },
             };
-            this.$store.dispatch("user/depositWithdrawMoney", data);
+            this.$store.dispatch("user/depositWithdrawMoney", data).then(() => this.balance = this.$store.getters.userBalance);
             this.dialog = false;
-            this.$refs.form.submit();
           } else {
             if (
               parseFloat(amountValue.replace(",", ".")) >
@@ -323,6 +322,6 @@ export default {
   },
   unmounted() {
     this.socket.disconnect();
-  }
+  },
 };
 </script>
