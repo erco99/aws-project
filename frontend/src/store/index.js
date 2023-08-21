@@ -4,6 +4,7 @@ import user from './modules/user'
 import routes from './modules/routes'
 import weather from "@/store/modules/weather";
 import transactions from './modules/transactions';
+import notifications from "@/store/modules/notifications";
 
 const store = new Vuex.Store({
   getters, 
@@ -11,7 +12,8 @@ const store = new Vuex.Store({
     user,
     routes,
     weather,
-    transactions
+    transactions,
+    notifications
   }
 })
 

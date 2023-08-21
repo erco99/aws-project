@@ -14,6 +14,8 @@ const getters = {
   hourlyWeather: state => state.weather.weatherData.fullHourly,
   dailyWeather: state => state.weather.weatherData.fullDaily,
   weatherDataReady: state => state.weather.dataReady,
-  transactions: state => state.transactions.transactions
+  transactions: state => state.transactions.transactions,
+  unreadNotifications: state => state.notifications.unread > 0,
+  unreadNotificationsNumber: state => state.notifications.unread,
 }
 export default getters

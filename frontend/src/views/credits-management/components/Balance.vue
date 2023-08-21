@@ -303,6 +303,12 @@ export default {
         this.balance = this.$store.getters.userBalance;
       }
     });
+    // TODO: Move this inside index.vue
+    this.socket.on("new-notification", (data) => {
+      if (data.owner === this.$store.getters.userEmail) {
+        this.$store.commit("notifications/NEW_UNREAD");
+      }
+    });
   },
   unmounted() {
     this.socket.disconnect();

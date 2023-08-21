@@ -50,6 +50,7 @@ export default {
       }
     });
     this.socket.emit("getNotifications", this.$store.getters.userEmail);
+    this.$store.commit("notifications/RESET_UNREAD");
   },
   unmounted() {
     this.socket.disconnect();

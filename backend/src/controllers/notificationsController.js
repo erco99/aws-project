@@ -27,12 +27,13 @@ async function notifyOwner(newBooking) {
   text =
     text +
     " ricevuto il tuo invito. Torna qui per controllare nuovi aggiornamenti.";
-  await notifications.create({
+  const notificationData = {
     title: title,
     subtitle: subtitle,
     text: text,
-    owners: new Array(newBooking.owner.email),
-  });
+    owners: new Array(newBooking.owner.email)};
+  await notifications.create(notificationData);
+  global.io.emit("new-notification", { owner: notificationData.owners[0] });
 }
 
 async function notifyPlayers(newBooking) {
@@ -55,7 +56,7 @@ async function notifyPlayers(newBooking) {
   text =
     text +
     " se non ci sei puoi rifiutare l'invito cancellando la prenotazione. Hai tempo fino al giorno prima della prenotazione per decidere.";
-  await notifications.create({
+  const notificationData = {
     title: title,
     subtitle: subtitle,
     text: text,
@@ -65,8 +66,11 @@ async function notifyPlayers(newBooking) {
     field: newBooking.field,
     time: newBooking.time,
     accepters: [],
-    inviter: newBooking.owner.email,
-  });
+    inviter: newBooking.owner.email};
+  await notifications.create(notificationData);
+  for (const playerEmail of notificationData.owners) {
+    global.io.emit("new-notification", { owner: playerEmail });
+  }
 }
 
 async function notifyDelete(invitation) {
@@ -79,13 +83,16 @@ async function notifyDelete(invitation) {
     invitation.time.minutes;
   const text =
     "La prenotazione è stata cancellata. Segnala all'amministratore eventuali refusi.";
-  await notifications.create({
+  const notificationData = {
     title: title,
     subtitle: subtitle,
     text: text,
     owners: new Array(...invitation.owners, invitation.inviter),
-    invitationId: invitation._id,
-  });1
+    invitationId: invitation._id};
+  await notifications.create(notificationData);
+  for (const email of notificationData.owners) {
+    global.io.emit("new-notification", { owner: email });
+  }
 }
 
 async function accept(notificationId, userEmail) {

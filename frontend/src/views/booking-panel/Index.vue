@@ -56,6 +56,11 @@ export default {
         }
       }
     });
+    this.socket.on("new-notification", (data) => {
+      if (data.owner === this.$store.getters.userEmail) {
+        this.$store.commit("notifications/NEW_UNREAD");
+      }
+    });
     this.socket.on("error", (msg) => alert(msg));
     this.socket.on("new-transaction", (transactionData) => {
       const { transaction_type, amount, user } = transactionData;
