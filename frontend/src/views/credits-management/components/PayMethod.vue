@@ -270,7 +270,7 @@ export default {
       
         const { valid } = await this.$refs.form.validate()
         if (valid) {
-          alert('Form is valid')
+          //alert('Form is valid')
 
           let data = {
             payment_method: {
