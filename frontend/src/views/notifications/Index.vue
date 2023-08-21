@@ -36,9 +36,6 @@ export default {
     this.socket.on("new-booking", (newBooking) =>
       this.handleNewBooking(newBooking)
     );
-    this.socket.on("delete-booking", (deleteBooking) => {
-      this.updateUserBalance(deleteBooking, '+')
-    })
     this.socket.on("refuse", (invitation) => this.handleRefuse(invitation));
     this.socket.on("refresh", (notification) =>
       this.handleRefresh(notification)
@@ -46,6 +43,12 @@ export default {
     this.socket.on("invitation", (notification) =>
       this.handleInvitation(notification)
     );
+    this.socket.on("new-transaction", (transactionData) => {
+      const { transaction_type, amount, user } = transactionData;
+      if (user.email === this.$store.getters.userEmail) {
+        this.$store.commit('user/INC_USER_BALANCE', transaction_type === "negative" ? - amount : amount)
+      }
+    });
     this.socket.emit("getNotifications", this.$store.getters.userEmail);
   },
   unmounted() {
@@ -83,7 +86,6 @@ export default {
       }
     },
     handleNewBooking(newBooking) {
-      this.updateUserBalance(newBooking.newBooking, '-')
       if (
         newBooking.newBooking.players.some(
           (p) => p.email === this.$store.getters.userEmail
@@ -95,22 +97,6 @@ export default {
           time: newBooking.newBooking.time,
         });
       }
-    },
-    updateUserBalance(data, sign) {
-      const userEmail = this.$store.getters.userEmail
-      if (data.owner && data.owner.email === userEmail || data.inviter && data.inviter === userEmail) {
-        this.$store.commit('user/INC_USER_BALANCE', sign === '-' ?  - data.price : data.price)
-      }
-      const playersEmails = []
-      if (data.players) {
-        playersEmails.push(...data.players.map(player => player.email))
-      } else if (data.owners) {
-        playersEmails.push(...data.owners)
-      }
-      if (playersEmails.includes(userEmail) && !data.myTreat) {
-        this.$store.commit('user/INC_USER_BALANCE', sign === '-' ?  - data.price : data.price);
-      }
-      this.balance = this.$store.getters.userBalance;
     },
     displayCardActions(notification) {
       return new Date(notification.expiration) > new Date() &&

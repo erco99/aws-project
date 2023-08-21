@@ -112,36 +112,36 @@ async function book(newBooking) {
   await notificationsController.notifyOwner(newBooking);
   await notificationsController.notifyPlayers(newBooking);
   const today = new Date();
-  const date =
-    today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear();
-  const time =
-    today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+  const date = today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear();
+  const time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
   if (!newBooking.myTreat) {
     for (const player of newBooking.players) {
       const userFound = await user.findOne({ email: player.email });
       userFound.balance = userFound.balance - newBooking.price;
       await userFound.save();
-      await transactions.create({
+      const playerTransactionData = {
         amount: newBooking.price,
         transaction_type: "negative",
         description: "Prenotazione campo",
         date,
         time,
-        user: { fullname: userFound.full_name, email: userFound.email },
-      });
+        user: { fullname: userFound.full_name, email: userFound.email }};
+      await transactions.create(playerTransactionData);
+      global.io.emit("new-transaction", playerTransactionData);
     }
   }
   const owner = await user.findOne({ email: newBooking.owner.email });
   owner.balance = owner.balance - newBooking.price;
   await owner.save();
-  await transactions.create({
+  const ownerTransactionData = {
     amount: newBooking.price,
     transaction_type: "negative",
     description: "Prenotazione campo",
     date,
     time,
-    user: { fullname: owner.full_name, email: owner.email },
-  });
+    user: { fullname: owner.full_name, email: owner.email }};
+  await transactions.create(ownerTransactionData);
+  global.io.emit("new-transaction", ownerTransactionData);
   return {
     day: newBooking.day,
     field: newBooking.field,
@@ -264,28 +264,30 @@ async function refundPlayers({day, field, time}, book) {
   const owner = await user.findOne({ email: book.owner.email });
   owner.balance = owner.balance + book.price;
   await owner.save();
-  await transactions.create({
+  const ownerTransactionData = {
     amount: book.price,
     transaction_type: "positive",
     description: "Rimborso per prenotazione cancellata",
     date: transactionDate,
     time: transactionTime,
-    user: { fullname: owner.full_name, email: owner.email },
-  });
+    user: { fullname: owner.full_name, email: owner.email }};
+  await transactions.create(ownerTransactionData);
+  global.io.emit("new-transaction", ownerTransactionData);
 
   if (!book.myTreat) {
     for (const player of book.players) {
       const userFound = await user.findOne({ email: player.email });
       userFound.balance = userFound.balance + book.price;
       await userFound.save();
-      await transactions.create({
+      const playerTransactionData = {
         amount: book.price,
         transaction_type: "positive",
         description: "Rimborso per prenotazione cancellata",
         date: transactionDate,
         time: transactionTime,
-        user: { fullname: userFound.full_name, email: userFound.email },
-      });
+        user: { fullname: userFound.full_name, email: userFound.email }};
+      await transactions.create(playerTransactionData);
+      global.io.emit("new-transaction", playerTransactionData);
     }
   }
 }

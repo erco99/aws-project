@@ -279,22 +279,6 @@ export default {
         }, 1000);
       });
     },
-    updateUserBalance(data, sign) {
-      const userEmail = this.$store.getters.userEmail
-      if (data.owner && data.owner.email === userEmail || data.inviter && data.inviter === userEmail) {
-        this.$store.commit('user/INC_USER_BALANCE', sign === '-' ?  - data.price : data.price)
-      }
-      const playersEmails = []
-      if (data.players) {
-        playersEmails.push(...data.players.map(player => player.email))
-      } else if (data.owners) {
-        playersEmails.push(...data.owners)
-      }
-      if (playersEmails.includes(userEmail) && !data.myTreat) {
-        this.$store.commit('user/INC_USER_BALANCE', sign === '-' ?  - data.price : data.price);
-      }
-      this.balance = this.$store.getters.userBalance;
-    }
   },
   data: function (vm){
     return {
@@ -312,18 +296,10 @@ export default {
     };
   },
   mounted() {
-    // TODO: Remove this event's and use new-transaction to update balance
-    this.socket.on("new-booking", (newBooking) => {
-      this.updateUserBalance(newBooking.newBooking, '-');
-    });
-    this.socket.on("delete-booking", (deleteBooking) => {
-      this.updateUserBalance(deleteBooking, '+');
-    });
     this.socket.on("new-transaction", (transactionData) => {
-
       const { transaction_type, amount, user } = transactionData;
       if (user.email === this.$store.getters.userEmail) {
-        this.$store.commit('user/INC_USER_BALANCE', transaction_type === "negative" ? -amount : amount)
+        this.$store.commit('user/INC_USER_BALANCE', transaction_type === "negative" ? - amount : amount)
         this.balance = this.$store.getters.userBalance;
       }
     });
