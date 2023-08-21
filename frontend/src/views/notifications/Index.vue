@@ -5,7 +5,7 @@
       :key="index"
       cols="12"
       sm="6">
-      <v-card :height="cardHeight(notification)">
+      <v-card :height="cardHeight(notification)" :color="cardColor(notification)">
         <v-card-title>{{ notification.title }}</v-card-title>
         <v-card-subtitle>{{ notification.subtitle }}</v-card-subtitle>
         <v-card-text>{{ notification.text }}</v-card-text>
@@ -66,8 +66,12 @@ export default {
         this.$store.getters.userEmail
       );
       notification.accepters.push(this.$store.getters.userEmail);
+      // Workaround to get live update of notification color when accept
+      notification.type = "invitation accepted";
+      this.$forceUpdate();
     },
     handleInvitation(notification) {
+      Object.defineProperty(notification, 'color', { value: 'warning' })
       this.notifications.push(notification);
     },
     handleRefresh(notification) {
@@ -112,6 +116,19 @@ export default {
         else return 220;
       } else {
         return 220;
+      }
+    },
+    cardColor(notification) {
+      switch (notification.type) {
+        case "owner invitation":
+        case "invitation accepted":
+          return "success";
+        case "player invitation":
+          return "warning";
+        case "delete":
+          return "error";
+        default:
+          return "white";
       }
     }
   },

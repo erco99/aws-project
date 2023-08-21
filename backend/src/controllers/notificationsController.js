@@ -31,7 +31,8 @@ async function notifyOwner(newBooking) {
     title: title,
     subtitle: subtitle,
     text: text,
-    owners: new Array(newBooking.owner.email)};
+    owners: new Array(newBooking.owner.email),
+    type: "owner invitation"};
   await notifications.create(notificationData);
   global.io.emit("new-notification", { owner: notificationData.owners[0] });
 }
@@ -66,7 +67,8 @@ async function notifyPlayers(newBooking) {
     field: newBooking.field,
     time: newBooking.time,
     accepters: [],
-    inviter: newBooking.owner.email};
+    inviter: newBooking.owner.email,
+    type: "player invitation"};
   await notifications.create(notificationData);
   for (const playerEmail of notificationData.owners) {
     global.io.emit("new-notification", { owner: playerEmail });
@@ -88,7 +90,8 @@ async function notifyDelete(invitation) {
     subtitle: subtitle,
     text: text,
     owners: new Array(...invitation.owners, invitation.inviter),
-    invitationId: invitation._id};
+    invitationId: invitation._id,
+    type: "delete"};
   await notifications.create(notificationData);
   for (const email of notificationData.owners) {
     global.io.emit("new-notification", { owner: email });
@@ -98,6 +101,7 @@ async function notifyDelete(invitation) {
 async function accept(notificationId, userEmail) {
   const notificationToUpdate = await notifications.findById(notificationId);
   notificationToUpdate.accepters.push(userEmail);
+  notificationToUpdate.type = "invitation accepted"
   await notificationToUpdate.save();
 }
 
