@@ -155,8 +155,7 @@ const actions = {
 
   depositWithdrawMoney({commit}, amount) {
     return new Promise((resolve, reject) => {
-      depositWithdrawMoney(amount).then((response) => {
-        commit("INC_USER_BALANCE", response.data.amount);
+      depositWithdrawMoney(amount).then(() => {
         resolve()
       }).catch(error => {
         reject(error)
