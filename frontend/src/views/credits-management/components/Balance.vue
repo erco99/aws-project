@@ -228,7 +228,7 @@ export default {
                 email: this.userEmail,
               },
             };
-            this.$store.dispatch("user/depositWithdrawMoney", data).then(() => this.balance = this.$store.getters.userBalance);
+            this.$store.dispatch("user/depositWithdrawMoney", data);
             this.dialog = false;
           } else {
             if (
@@ -299,7 +299,7 @@ export default {
     this.socket.on("new-transaction", (transactionData) => {
       const { transaction_type, amount, user } = transactionData;
       if (user.email === this.$store.getters.userEmail) {
-        this.$store.commit('user/INC_USER_BALANCE', transaction_type === "negative" ? - amount : amount)
+        this.$store.commit('user/INC_USER_BALANCE', transaction_type === "negative" ? - amount : amount);
         this.balance = this.$store.getters.userBalance;
       }
     });

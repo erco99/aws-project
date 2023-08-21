@@ -23,12 +23,12 @@ async function depositWithdrawMoney(req, res) {
 
   let newBalance = amount
 
-  //change , to . in amount
+  let amountValue;
   if(amount.includes(',')) {
-    newBalance = amount.replace(',', '.')
+    amountValue = parseFloat(amount.replace(',', '.'));
+  } else {
+    amountValue = parseInt(amount);
   }
-
-  let amountValue = newBalance
 
   if(transaction_type == 'positive') {
     newBalance = parseFloat(retrievedUser.balance) + parseFloat(newBalance)
@@ -40,7 +40,9 @@ async function depositWithdrawMoney(req, res) {
   const update = {balance: newBalance.toFixed(2)}
 
   try {
-    await Transactions.create({amount: amountValue, transaction_type, description, date, time, user});
+    const transactionData = {amount: amountValue, transaction_type, description, date, time, user};
+    await Transactions.create(transactionData);
+    global.io.emit("new-transaction", transactionData);
     await User.findOneAndUpdate(filter, update)
     return res.status(200).json({amount: parseFloat(transaction_type === 'negative' ? - amountValue : amountValue)})
   } catch (error) {

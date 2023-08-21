@@ -56,6 +56,9 @@ export default {
     myTreat: function(value) {
       this.notifyMyTreat(value);
     }
+  },
+  mounted() {
+    this.$emit("servicesUpdate", { value: this.services, price: this.price });
   }
 };
 </script>
