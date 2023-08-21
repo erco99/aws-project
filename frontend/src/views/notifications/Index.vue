@@ -99,6 +99,7 @@ export default {
       }
     },
     displayCardActions(notification) {
+      // TODO: Sometimes throw error, notification is undefined (?)
       return new Date(notification.expiration) > new Date() &&
           !notification.accepters.includes(this.$store.getters.userEmail)
     },

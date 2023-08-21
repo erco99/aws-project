@@ -7,6 +7,9 @@ const state = {
 const mutations = {
   SET_TRANSACTIONS: (state, data) => {
     state.transactions = data
+  },
+  ADD_TRANSACTION: (state, transaction) => {
+    state.transactions.push(transaction)
   }
 }
 
