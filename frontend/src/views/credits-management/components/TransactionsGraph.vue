@@ -39,7 +39,7 @@ export default {
   data () {
     return {
       transactions: [],
-      transactions_type_map: new Map([['ritiro', 0], ['deposito', 0], ['invio', 0]]),
+      transactions_type_map: new Map([]),
       option: {
         tooltip: {
           trigger: 'item'
