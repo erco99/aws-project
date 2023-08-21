@@ -75,8 +75,6 @@ io.on("connection", (socket) => {
       time: deleteBooking.time,
       owners: result.owners,
       inviter: result.inviter,
-      price: result.price,
-      myTreat: result.myTreat
     });
   });
   socket.on("update-states", async (update) => {

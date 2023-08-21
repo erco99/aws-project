@@ -150,8 +150,6 @@ async function book(newBooking) {
       players: newBooking.players,
       owner: newBooking.owner,
       time: newBooking.time,
-      price: newBooking.price,
-      myTreat: newBooking.myTreat
     },
   };
 }
