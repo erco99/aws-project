@@ -16,6 +16,12 @@ const mutations = {
   SET_USER_DATA: (state, userData) => {
     state.userData = userData
   },
+  SET_PAYMENT_METHOD: (state, payment_method) => {
+    state.userData.payment_method = payment_method
+  },
+  UNSET_PAYMENT_METHOD: (state) => {
+    state.userData.payment_method = null
+  },
   CLEAN_USER_DATA: (state) => {
     state.userData = {}
   },
@@ -146,7 +152,8 @@ const actions = {
   paymentMethodInsert({ commit }, cardData) {
     return new Promise((resolve, reject) => {
       paymentMethodInsert(cardData).then((response) => {
-        resolve(response.data)
+        commit("SET_PAYMENT_METHOD", response.data.payment_method)
+        resolve()
       }).catch(error => {
         reject(error)
       })
@@ -165,8 +172,9 @@ const actions = {
 
   deletePaymentMethod({commit}, email) {
     return new Promise((resolve, reject) => {
-      deletePaymentMethod(email).then((response) => {
-        resolve(response.data)
+      deletePaymentMethod(email).then(() => {
+        commit("UNSET_PAYMENT_METHOD")
+        resolve()
       }).catch(error => {
         reject(error)
       })

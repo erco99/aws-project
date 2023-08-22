@@ -10,6 +10,7 @@ async function paymentMethodInsert(req, res) {
 
   try {
     await User.findOneAndUpdate({email: user_email},{payment_method: payment_method});
+    return res.status(200).json(req.body);
   } catch (error) {
       console.log(error);
       return res.status(500).json({'message': 'Error'});
@@ -62,9 +63,9 @@ async function getTransactions(req, res) {
 
 async function deletePaymentMethod(req, res) {
   const user_email = req.body.email
-  console.log(user_email)
   try {
     await User.updateOne({email: user_email}, {$unset: {payment_method:1}})
+    return res.sendStatus(200);
   } catch (error) {
       console.log(error);
       return res.status(500).json({'message': 'Error'});

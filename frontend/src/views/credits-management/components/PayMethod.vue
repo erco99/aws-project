@@ -26,7 +26,7 @@
                 :rules="cardNumberRules"
                 :value="formatCardNumber"
                 @input="updateValue"
-                v-model="valueFields.cardNumber" 
+                v-model="valueFields.cardNumber"
                 @keypress="isNumber($event)"
                 maxlength="19"
                 variant="outlined">
@@ -120,7 +120,7 @@
           style="margin-right: 5px"
           color="blue"
           text="Modifica"
-          @click="dialog = true; emptySpaces(); paymentModify=true"
+          @click="dialog = true; this.emptySpaces(); paymentModify=true;"
         ></v-btn> 
         <v-btn
           outlined
@@ -175,6 +175,7 @@
 <script>
 import VuePaycard from "/src/components/vue-paycard/vue-paycard.js"
 import { mapGetters } from 'vuex';
+import field from "@/views/booking-panel/components/Field.vue";
 
 export default {
   components: {
@@ -188,16 +189,7 @@ export default {
     }
 
     if(this.$store.getters.userPaymentMethod != null) {
-      this.valueFields.cardName = this.$store.getters.userPaymentMethod.card_owner
-
-      let number = this.$store.getters.userPaymentMethod.card_number.toString()
-      this.valueFields.cardNumber = number.match(/.{1,4}/g).join(" ")
-
-      let exp_date = this.$store.getters.userPaymentMethod.card_expiration.toString()
-      this.valueFields.cardMonth = exp_date.split("/")[0]  
-      this.valueFields.cardYear = exp_date.split("/")[1]
-
-      this.valueFields.cardCvv = this.$store.getters.userPaymentMethod.card_cvv.toString()
+      this.setCardInfo()
     }
   },
   data: () => ({
@@ -234,6 +226,9 @@ export default {
     ]
   }),
   computed: {
+    field() {
+      return field
+    },
     ...mapGetters([
       'userPaymentMethod'
     ]),
@@ -253,7 +248,7 @@ export default {
     },
     updateValue(e){
       this.valueFields.cardNumber = e.target.value.replace(/ /g,'');
-      this.$forceUpdate()
+      //this.$forceUpdate()
     },
     isNumber(evt) {
       evt = (evt) ? evt : window.event;
@@ -282,10 +277,10 @@ export default {
             user_email: this.$store.getters.userEmail
           }
 
-          this.$store.dispatch('user/paymentMethodInsert', data)
+          this.$store.dispatch('user/paymentMethodInsert', data).then(() => {
+            this.setCardInfo()
+          })
           this.dialog = false
-          this.payment_method = false
-          this.$refs.form.submit();
         }
     },
     deletePayment() {
@@ -293,14 +288,26 @@ export default {
         email: this.$store.getters.userEmail
       }
       this.$store.dispatch('user/deletePaymentMethod', user_email)
-      location.reload()
+      //location.reload()
       this.deleteDialog = false
     },
     emptySpaces() {
-      this.valueFields.cardNumber = this.valueFields.cardNumber.replace(/\s/g, '');
-      console.log(this.valueFields.cardNumber)
+      this.valueFields.cardNumber = this.valueFields.cardNumber.replace(/ /g,'');
+      //console.log(this.valueFields.cardNumber)
+    },
+    setCardInfo() {
+      this.valueFields.cardName = this.$store.getters.userPaymentMethod.card_owner
+
+      let number = this.$store.getters.userPaymentMethod.card_number.toString()
+      this.valueFields.cardNumber = number.match(/.{1,4}/g).join(" ")
+
+      let exp_date = this.$store.getters.userPaymentMethod.card_expiration.toString()
+      this.valueFields.cardMonth = exp_date.split("/")[0]
+      this.valueFields.cardYear = exp_date.split("/")[1]
+
+      this.valueFields.cardCvv = this.$store.getters.userPaymentMethod.card_cvv.toString()
     }
-  }
+  },
 
 }
 </script>
