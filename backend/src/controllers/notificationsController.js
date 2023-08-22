@@ -2,9 +2,9 @@ const notifications = require("../models/notifications");
 const bookings = require("../models/bookings");
 const bookingController = require("./bookingController");
 
-async function getNotifications(socket, owner) {
-  const query = await notifications.find({ owners: owner });
-  socket.emit("notifications", query);
+async function getNotifications(socket, data) {
+  const query = await notifications.find({ owners: data.owner });
+  socket.emit("notifications", query.slice(data.from, data.to));
 }
 
 async function notifyOwner(newBooking) {

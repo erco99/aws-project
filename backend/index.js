@@ -81,8 +81,8 @@ io.on("connection", (socket) => {
     await fieldController.updateStates(update)
     io.emit("update-states", update)
   });
-  socket.on("getNotifications", (owner) =>
-    notificationsController.getNotifications(socket, owner)
+  socket.on("getNotifications", (data) =>
+    notificationsController.getNotifications(socket, data)
   );
   socket.on("refuse", async (notificationId, refuseTime) => {
     const result = await notificationsController.refuse(

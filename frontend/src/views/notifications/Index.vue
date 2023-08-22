@@ -19,6 +19,7 @@
   </v-row>
 </template>
 
+
 <script>
 import io from "socket.io-client";
 import {useDisplay} from "vuetify";
@@ -27,11 +28,18 @@ export default {
     return {
       notifications: [],
       socket: io("http://localhost:10000"),
+      currentNotificationPerPage: 0,
     };
+  },
+  setup() {
+    const display = useDisplay();
+
+    return { display };
   },
   mounted() {
     this.socket.on("notifications", (notifications) => {
-      this.notifications = notifications;
+      this.notifications.push(...notifications);
+      this.currentNotificationPerPage = this.currentNotificationPerPage + notifications.length;
     });
     this.socket.on("new-booking", (newBooking) =>
       this.handleNewBooking(newBooking)
@@ -49,7 +57,10 @@ export default {
         this.$store.commit('user/INC_USER_BALANCE', transaction_type === "negative" ? - amount : amount)
       }
     });
-    this.socket.emit("getNotifications", this.$store.getters.userEmail);
+    // Register callback for load new notifications
+    this.loadNextNotifications()
+    // Load first 'notificationPerPage' notifications
+    this.socket.emit("getNotifications", { owner: this.$store.getters.userEmail, from: 0, to: this.notificationPerPage });
     this.$store.commit("notifications/RESET_UNREAD");
   },
   unmounted() {
@@ -130,7 +141,26 @@ export default {
         default:
           return "white";
       }
+    },
+    loadNextNotifications() {
+      window.onscroll = () => {
+        const app = document.getElementById("app");
+        let bottomOfWindow = document.documentElement.scrollTop + window.innerHeight - 15 === app.scrollHeight;
+        if (bottomOfWindow) {
+          this.socket.emit("getNotifications", {
+            owner: this.$store.getters.userEmail,
+            from: this.currentNotificationPerPage,
+            to: this.currentNotificationPerPage + this.notificationPerPage });
+        }
+      }
     }
   },
+  computed: {
+    notificationPerPage() {
+      switch (this.display.name.value) {
+        default: return 10
+      }
+    }
+  }
 };
 </script>
