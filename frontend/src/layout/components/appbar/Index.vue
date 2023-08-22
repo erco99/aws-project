@@ -18,7 +18,7 @@
     </v-col>
 
     <v-col 
-    style="margin-right: 15px"
+      style="margin-right: 15px"
       xs="5"
       sm="3">
       <div v-if="this.$vuetify.display.xs"  style="float: right">
@@ -27,7 +27,7 @@
       </div>
       <v-sheet class="pa-2 ma-2" style="float: right" v-else>
         <notifications />
-        <profile />
+        <profile class="row-pointer"/>
       </v-sheet>
     </v-col>
   </v-row>
@@ -54,3 +54,9 @@ export default {
 
 
 </script>
+
+<style scoped>
+.row-pointer {
+  cursor: pointer;
+}
+</style>
