@@ -33,6 +33,7 @@ echarts.use([
 ]);
 
 import { getTransactions } from "@/api/credits";
+import io from "socket.io-client";
 
 export default {
   components: { VChart },
@@ -58,7 +59,8 @@ export default {
               }
             }
           }]
-      } 
+      },
+      socket: io("http://localhost:10000"),
     }
   },
   mounted() {
@@ -67,11 +69,19 @@ export default {
       email: this.$store.getters.userEmail
     }
 
-    getTransactions(data).then(response => {
-      this.transactions = response.data
-      
-      for(let i = 0; i < this.transactions.length; i++) {
-        let type = this.transactions[i].description.toLowerCase().split(" ")[0]
+    getTransactions(data).then(response => this.addNewTransactions(response.data))
+
+    this.socket.on("new-transaction", (transactionData) => {
+      const { user } = transactionData;
+      if (user.email === this.$store.getters.userEmail) {
+        this.addNewTransactions(Array.of(transactionData));
+      }
+    });
+  },
+  methods: {
+    addNewTransactions(transactions) {
+      for(let i = 0; i < transactions.length; i++) {
+        let type = transactions[i].description.toLowerCase().split(" ")[0]
         this.transactions_type_map.set(type, (this.transactions_type_map.get(type) ?? 0) + 1)
       }
 
@@ -81,7 +91,7 @@ export default {
       }
 
       this.option.series[0].data = elements
-    })
+    }
   }
 }
 </script>
