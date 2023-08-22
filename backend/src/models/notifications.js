@@ -13,6 +13,9 @@ const notificationSchema = mongoose.Schema({
   inviter: String,
   invitationId: String,
   type: String,
-});
+  },
+  {
+    timestamps: true
+  });
 
 module.exports = mongoose.model("notifications", notificationSchema);

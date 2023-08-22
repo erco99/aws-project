@@ -83,7 +83,8 @@ export default {
     },
     handleInvitation(notification) {
       Object.defineProperty(notification, 'color', { value: 'warning' })
-      this.notifications.push(notification);
+      // Add element to the beginning because it is newer
+      this.notifications.unshift(notification);
     },
     handleRefresh(notification) {
       for (let i = 0; i < this.notifications.length; i++) {

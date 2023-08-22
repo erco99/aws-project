@@ -3,7 +3,7 @@ const bookings = require("../models/bookings");
 const bookingController = require("./bookingController");
 
 async function getNotifications(socket, data) {
-  const query = await notifications.find({ owners: data.owner });
+  const query = await notifications.find({ owners: data.owner }).sort({ createdAt: -1 });
   socket.emit("notifications", query.slice(data.from, data.to));
 }
 
