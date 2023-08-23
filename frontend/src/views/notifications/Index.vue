@@ -134,11 +134,11 @@ export default {
       switch (notification.type) {
         case "owner invitation":
         case "invitation accepted":
-          return "success";
+          return "green-lighten-1";
         case "player invitation":
-          return "warning";
+          return "deep-orange-lighten-1";
         case "delete":
-          return "error";
+          return "red-lighten-1";
         default:
           return "white";
       }
