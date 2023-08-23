@@ -6,13 +6,25 @@
           PROFILO UTENTE
         </div>
         <v-container style="display: flex; align-items: center; flex-direction: column">
-        <profile-avatar
-            v-if="!this.$store.getters.userAvatar || this.$store.getters.userAvatar === ''"
-            class="big-profile"
-            :username="this.$store.getters.userFullname"
-            customSize="150px"
-            @click="this.changeProfileImage()"></profile-avatar>
-        <v-img v-else :src="this.$store.getters.userAvatar" @click="this.changeProfileImage()" width="150px"></v-img>
+            <profile-avatar
+                v-if="!this.$store.getters.userAvatar || this.$store.getters.userAvatar === ''"
+                class="big-profile"
+                :username="this.$store.getters.userFullname"
+                customSize="150px"></profile-avatar>
+          <div class="imageContainer"
+               @mouseover = "this.wantToChangeAvatar = true"
+               @mouseleave="this.wantToChangeAvatar = false">
+            <v-icon
+                v-if="this.wantToChangeAvatar"
+                icon="mdi-pencil-outline"
+                style="font-size: 30px"
+                color="grey-darken-3"
+                @click="this.changeProfileImage()"></v-icon>
+            <v-img
+                :class="this.wantToChangeAvatar ? 'hover' : ''"
+                 :src="this.$store.getters.userAvatar"
+                 @click="this.changeProfileImage()" width="150px"></v-img>
+          </div>
         </v-container>
         <div class="text-center pb-1" style="font-weight: bold; font-size: 20px">{{ this.$store.getters.userFullname }}</div>
         <div class="text-caption text-center" style="font-style: italic">{{ "Utente ".concat(this.$store.getters.userRole) }}</div>
@@ -30,6 +42,7 @@
     data() {
       return {
         changeAvatar: false,
+        wantToChangeAvatar: false
       }
     },
     methods: {
@@ -44,4 +57,21 @@
   .big-profile .text[data-v-ebbeb36a] {
     font-size: 60px;
   }
+
+  .hover {
+    filter: blur(1.5px);
+  }
+
+  .imageContainer {
+    position: relative;
+  }
+
+  .imageContainer i {
+    top: 50%;
+    left: 50%;
+    position: absolute;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+  }
+
 </style>
