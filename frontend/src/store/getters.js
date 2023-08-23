@@ -10,6 +10,7 @@ const getters = {
   userRole: state => state.user.userData.role,
   userBalance: state => state.user.userData.balance,
   userPaymentMethod: state => state.user.userData.payment_method,
+  userAvatar: state => state.user.userData.avatar,
   routes: state => state.routes.routes,
   hourlyWeather: state => state.weather.weatherData.fullHourly,
   dailyWeather: state => state.weather.weatherData.fullDaily,

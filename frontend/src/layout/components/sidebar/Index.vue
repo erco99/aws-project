@@ -13,9 +13,11 @@
     >
       <template v-slot:prepend>
         <profile-avatar
+            v-if="!this.$store.getters.userAvatar || this.$store.getters.userAvatar === ''"
             :username="this.$store.getters.userFullname"
             customSize="40px"
             colorType="normal"></profile-avatar>
+        <v-img v-else :src="this.$store.getters.userAvatar" width="40px"></v-img>
         <div class="ml-4" style="font-size: 15px">{{ this.$store.getters.userFullname }}</div>
       </template>
       <template v-slot:append>

@@ -1,27 +1,47 @@
 <template>
-  <v-card class="mx-auto rounded-0" elevation="4">
-    <v-card-item>
+  <v-card class="mx-auto rounded-4" elevation="4">
+    <v-card-item class="justify-center">
       <div>
-        <div class="text-overline mb-1">
+        <div class="text-overline mb-1 justify-center text-center">
           PROFILO UTENTE
         </div>
-        <div class="text-h6 mb-1">
-          <v-avatar
-            color="grey"
-            size="150"
-            rounded="0"
-          >
-            <v-img cover src="https://cdn.vuetifyjs.com/images/profiles/marcus.jpg"></v-img>
-          </v-avatar>
-        </div>
-        <div class="text-caption">Greyhound divisely hello coldly fonwderfully</div>
+        <v-container style="display: flex; align-items: center; flex-direction: column">
+        <profile-avatar
+            v-if="!this.$store.getters.userAvatar || this.$store.getters.userAvatar === ''"
+            class="big-profile"
+            :username="this.$store.getters.userFullname"
+            customSize="150px"
+            @click="this.changeProfileImage()"></profile-avatar>
+        <v-img v-else :src="this.$store.getters.userAvatar" @click="this.changeProfileImage()" width="150px"></v-img>
+        </v-container>
+        <div class="text-center pb-1" style="font-weight: bold; font-size: 20px">{{ this.$store.getters.userFullname }}</div>
+        <div class="text-caption text-center" style="font-style: italic">{{ "Utente ".concat(this.$store.getters.userRole) }}</div>
       </div>
     </v-card-item>
-
-    <v-card-actions>
-      <v-btn variant="outlined">
-        Button
-      </v-btn>
-    </v-card-actions>
   </v-card>
+  <AvatarChangePopup :visible="changeAvatar" @close="changeAvatar = false"></AvatarChangePopup>
 </template>
+
+<script>
+  import ProfileAvatar from "vue-profile-avatar";
+  import AvatarChangePopup from "@/views/profile/components/AvatarChangePopup.vue";
+  export default {
+    components: { ProfileAvatar, AvatarChangePopup },
+    data() {
+      return {
+        changeAvatar: false,
+      }
+    },
+    methods: {
+      changeProfileImage() {
+        this.changeAvatar = true;
+      }
+    }
+  }
+</script>
+
+<style>
+  .big-profile .text[data-v-ebbeb36a] {
+    font-size: 60px;
+  }
+</style>

@@ -41,6 +41,11 @@ const userSchema = mongoose.Schema(
             }
         },
 
+        avatar: {
+            type: String,
+            required: false,
+        },
+
         payment_method: {
             card_number: {
                 type: Number,

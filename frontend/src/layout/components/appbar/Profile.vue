@@ -27,6 +27,6 @@ export default {
       await this.$store.dispatch("user/logout");
       this.$router.push("/login");
     },
-  },
+  }
 }
 </script>

@@ -82,3 +82,11 @@ export function getUsers() {
     method: "get",
   });
 }
+
+export function changeAvatar(data) {
+  return request({
+    url: "/users/changeAvatar",
+    method: "post",
+    data
+  })
+}

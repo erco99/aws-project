@@ -20,4 +20,15 @@ async function getUsersDistribution(req, res) {
   return res.status(200).json({ usersDistribution })
 }
 
-module.exports = { users, getUsersDistribution };
+async function changeAvatar(req, res) {
+  const { email, avatar } = req.body;
+
+  const user = await User.findOne({ email }).exec();
+  if (!user) return res.sendStatus(400);
+
+  user.avatar = avatar;
+  await user.save();
+  return res.status(200).json({ avatar });
+}
+
+module.exports = { users, getUsersDistribution, changeAvatar };

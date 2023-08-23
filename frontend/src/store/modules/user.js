@@ -1,4 +1,16 @@
-import {login, logout, register, newOTP, verifyOTP, user, refresh, cancelRegistration, changePassword, resetPassword} from '@/api/user'
+import {
+  login,
+  logout,
+  register,
+  newOTP,
+  verifyOTP,
+  user,
+  refresh,
+  cancelRegistration,
+  changePassword,
+  resetPassword,
+  changeAvatar
+} from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/authentication'
 import { paymentMethodInsert, depositWithdrawMoney, deletePaymentMethod} from '@/api/credits';
 import store from "@/store";
@@ -21,6 +33,9 @@ const mutations = {
   },
   UNSET_PAYMENT_METHOD: (state) => {
     state.userData.payment_method = null
+  },
+  SET_USER_AVATAR: (state, avatar) => {
+    state.userData.avatar = avatar;
   },
   CLEAN_USER_DATA: (state) => {
     state.userData = {}
@@ -179,7 +194,18 @@ const actions = {
         reject(error)
       })
     })
-  }
+  },
+
+  changeAvatar({ commit }, avatar) {
+    return new Promise((resolve, reject) => {
+      changeAvatar({ email: state.userData.email, avatar }).then((response) => {
+        commit("SET_USER_AVATAR", response.data.avatar)
+        resolve()
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
 
 }
 
