@@ -8,11 +8,16 @@
     style="margin:15px"
   >
     <v-list-item
-      prepend-avatar="https://randomuser.me/api/portraits/men/85.jpg"
-      :title="this.$store.getters.userFullname"
       nav
       @click="railNotMobile"
     >
+      <template v-slot:prepend>
+        <profile-avatar
+            :username="this.$store.getters.userFullname"
+            customSize="40px"
+            colorType="normal"></profile-avatar>
+        <div class="ml-4" style="font-size: 15px">{{ this.$store.getters.userFullname }}</div>
+      </template>
       <template v-slot:append>
         <v-btn
           variant="text"
@@ -40,9 +45,10 @@
 <script>
 import Item from "./Item.vue";
 import { mapGetters } from 'vuex'
+import ProfileAvatar from 'vue-profile-avatar'
 
 export default {
-  components: { Item },
+  components: { Item, ProfileAvatar },
   computed: {
     ...mapGetters([
       'routes'

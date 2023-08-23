@@ -17,6 +17,7 @@
     "vee-validate": "^4.10.3",
     "vue": "^3.3.4",
     "vue-echarts": "^6.6.1",
+    "vue-profile-avatar": "^1.2.0",
     "vue-router": "^4.2.2",
     "vuetify": "^3.3.6",
     "vuex": "^4.0.2"
