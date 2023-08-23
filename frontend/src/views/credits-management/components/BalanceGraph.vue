@@ -44,6 +44,7 @@ export default {
       monthMap: new Map([[1,'Gen'], [2,'Feb'], [3,'Mar'], [4,'Apr'], [5,'Mag'], [6,'Giu'],
                           [7,'Lug'], [8,'Ago'], [9,'Set'], [10,'Ott'], [11,'Nov'], [12,'Dic']]),
       option : {
+        tooltip: {},
         xAxis: {
           type: 'category',
           data: []
