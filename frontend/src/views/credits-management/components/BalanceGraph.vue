@@ -33,6 +33,7 @@ echarts.use([
 ]);
 
 import { getTransactions } from "@/api/credits";
+import io from "socket.io-client";
 
 
 export default {
@@ -56,7 +57,8 @@ export default {
             type: 'bar'
           }
         ]
-      }
+      },
+      socket: io("http://localhost:10000"),
     }
   },
   mounted() {
@@ -73,10 +75,23 @@ export default {
 
     getTransactions(data).then(response => {
       this.transactions = response.data
-      const d = new Date();   
+      this.computeGraphData();
+    })
+
+    this.socket.on("new-transaction", (transactionData) => {
+      const { user } = transactionData;
+      if (user.email === this.$store.getters.userEmail) {
+        this.transactions.push(transactionData);
+        this.computeGraphData();
+      }
+    });
+  },
+  methods: {
+    computeGraphData() {
+      const d = new Date();
       let balance = 0
       let sorted_transactions = []
-      
+
       // calculate the total balance at the begging of the year
       for(let i = 0; i < this.transactions.length; i++) {
         let year = this.transactions[i].date.split("/")[2]
@@ -87,12 +102,12 @@ export default {
             balance -= this.transactions[i].amount
           }
         } else {
-            // create same array of transactions but minimilized and sorted by month
-            sorted_transactions.push({
-              month: this.transactions[i].date.split("/")[1],
-              amount: this.transactions[i].amount,
-              type: this.transactions[i].transaction_type
-            })
+          // create same array of transactions but minimilized and sorted by month
+          sorted_transactions.push({
+            month: this.transactions[i].date.split("/")[1],
+            amount: this.transactions[i].amount,
+            type: this.transactions[i].transaction_type
+          })
         }
       }
 
@@ -104,14 +119,14 @@ export default {
         for(let j = 0; j < sorted_transactions.length; j++) {
           if (sorted_transactions[j].month == i+1) {
             (sorted_transactions[j].type == 'positive') ?
-            (balance += sorted_transactions[j].amount) :
-            (balance -= sorted_transactions[j].amount)
+                (balance += sorted_transactions[j].amount) :
+                (balance -= sorted_transactions[j].amount)
           }
         }
         balance_variations.push(balance)
       }
       this.option.series[0].data = balance_variations
-    })
+    }
   }
 }
 </script>
