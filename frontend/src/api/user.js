@@ -90,3 +90,11 @@ export function changeAvatar(data) {
     data
   })
 }
+
+export function getAllPlayedBookings(email) {
+  return request({
+    url: "/users/getAllPlayedBookings",
+    method: "get",
+    params: email
+  })
+}

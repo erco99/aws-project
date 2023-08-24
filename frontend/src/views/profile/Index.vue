@@ -9,6 +9,12 @@
     </v-col>
 
   </v-row>
+
+  <v-row>
+    <v-col cols="12">
+      <Timeline></Timeline>
+    </v-col>
+  </v-row>
 </template>
 
 <script>
@@ -22,7 +28,6 @@ export default {
     User,
     Activity,
     Timeline
-  }
-  
+  },
 }
 </script>

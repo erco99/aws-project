@@ -9,7 +9,7 @@ import {
   cancelRegistration,
   changePassword,
   resetPassword,
-  changeAvatar
+  changeAvatar, getAllPlayedBookings
 } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/authentication'
 import { paymentMethodInsert, depositWithdrawMoney, deletePaymentMethod} from '@/api/credits';
@@ -206,6 +206,16 @@ const actions = {
       })
     })
   },
+
+  getAllPlayedBookings({ commit }) {
+    return new Promise((resolve, reject) => {
+      getAllPlayedBookings({ email: state.userData.email }).then((response) => {
+        resolve(response.data.playedBookings)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  }
 
 }
 

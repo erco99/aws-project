@@ -4,6 +4,7 @@ const notificationsController = require("./notificationsController");
 const transactions = require("../models/transactions");
 const user = require("../models/user");
 const {register} = require("./authController");
+const {all} = require("express/lib/application");
 
 async function getWeek(socket, day) {
   const from = new Date(day);
@@ -259,7 +260,7 @@ async function refundPlayers({day, field, time}, book) {
   const today = new Date();
   const transactionDate = [today.getDate(), (today.getMonth() + 1), today.getFullYear()].join("/");
   const transactionTime = [today.getHours(), today.getMinutes(), today.getSeconds()].join(":");
-  const owner = await user.findOne({ email: book.owner.email });
+  const owner = await user.findOne({email: book.owner.email});
   owner.balance = owner.balance + book.price;
   await owner.save();
   const ownerTransactionData = {
@@ -268,13 +269,14 @@ async function refundPlayers({day, field, time}, book) {
     description: "Rimborso per prenotazione cancellata",
     date: transactionDate,
     time: transactionTime,
-    user: { fullname: owner.full_name, email: owner.email }};
+    user: {fullname: owner.full_name, email: owner.email}
+  };
   await transactions.create(ownerTransactionData);
   global.io.emit("new-transaction", ownerTransactionData);
 
   if (!book.myTreat) {
     for (const player of book.players) {
-      const userFound = await user.findOne({ email: player.email });
+      const userFound = await user.findOne({email: player.email});
       userFound.balance = userFound.balance + book.price;
       await userFound.save();
       const playerTransactionData = {
@@ -283,11 +285,41 @@ async function refundPlayers({day, field, time}, book) {
         description: "Rimborso per prenotazione cancellata",
         date: transactionDate,
         time: transactionTime,
-        user: { fullname: userFound.full_name, email: userFound.email }};
+        user: {fullname: userFound.full_name, email: userFound.email}
+      };
       await transactions.create(playerTransactionData);
       global.io.emit("new-transaction", playerTransactionData);
     }
   }
+}
+
+async function getAllPlayedBookings(req, res) {
+  const email = req.query.email;
+  if (!email) return res.sendStatus(400);
+
+  const now = new Date();
+  const foundBookings = await bookings.find({
+    $or: [
+      { "bookings.owner.email": email },
+      { "bookings.players.email": email },
+    ],
+    day: { $lt: now }
+  });
+
+  const playedBookings = new Array(12).fill(0);
+  for (const book of foundBookings) {
+    const nowDate = now.toISOString().split("T")[0];
+    const bookDate = book.day.toISOString().split("T")[0];
+    const month = book.day.getMonth();
+    for (const singleBook of book.bookings) {
+      if (
+        (nowDate === bookDate && before({hours: now.getHours(), minutes: now.getMinutes()}, singleBook.time) < 0)
+        || nowDate !== bookDate) {
+          playedBookings[month] = playedBookings[month] + 1;
+      }
+    }
+  }
+  return res.status(200).json({ playedBookings });
 }
 
 module.exports = {
@@ -296,6 +328,7 @@ module.exports = {
   getYearDistribution,
   getFieldDistribution,
   deleteBooking,
+  getAllPlayedBookings
 };
 
 // Workaround for circular imports
