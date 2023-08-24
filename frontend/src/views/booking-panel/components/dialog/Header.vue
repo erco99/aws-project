@@ -43,9 +43,6 @@ export default {
     </v-col>
     <v-col cols="12" sm="4">
       <v-card-title class="text-center"> {{ getStringDay(day) }} </v-card-title>
-      <v-card-subtitle class="text-center">
-        {{ getStringDay(day) }}
-      </v-card-subtitle>
     </v-col>
     <v-col cols="12" sm="4">
       <v-card-title class="text-center text-sm-right">

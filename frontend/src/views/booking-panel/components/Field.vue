@@ -270,6 +270,7 @@ export default {
         :minutes="newBooking.time.minutes"
         :name="name"
         :day="day"></Header>
+        <v-divider></v-divider>
       <Body
         :next="isNextFree"
         :defaultDuration="1"
@@ -291,10 +292,16 @@ export default {
             newBooking.price = update.price;
           }
         "></Body>
+        <v-divider></v-divider>
       <v-card-actions class="justify-center">
-        <v-btn color="primary" @click="dialog = false">Annulla</v-btn>
+        <v-btn 
+          variant="flat"
+          color="red-darken-3"
+          @click="dialog = false
+          ">Annulla</v-btn>
         <v-btn
-          color="primary"
+          variant="flat"
+          color="indigo-darken-3"
           @click="notifyNewBooking()"
           :disabled="newBooking.price > this.$store.getters.userBalance"
           >Prenota ora</v-btn

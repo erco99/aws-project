@@ -92,6 +92,7 @@ export default {
         @duration-update="notifyDuration"
         @match-update="notifyMatch"></Est>
     </v-col>
+    <v-divier vertical></v-divier>
     <v-col cols="12" md="4" sm="5">
       <Middle
         :inside="inside"
