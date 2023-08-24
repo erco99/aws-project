@@ -1,7 +1,8 @@
 <template>
   <v-dialog :model-value="visible" scrollable persistent width="500" height="600">
-    <v-card>
+    <v-card class="imageDialog">
       <v-card-title class="max-auto justify-center text-center"> Modifica l'immagine del tuo profilo </v-card-title>
+      <v-card-text class="images">
       <v-row v-for="(item, typeNumber) in imagesTypes" :key="item" no-gutters>
         <div class="pt-5 mx-auto justify-center text-center">{{ item.toUpperCase() }}</div>
         <v-divider class="mb-4 border-opacity-100"></v-divider>
@@ -16,6 +17,7 @@
           </v-card>
         </v-col>
       </v-row>
+      </v-card-text>
       <v-card-actions class="justify-center pt-5">
         <v-btn color="primary" @click="this.$emit('close')">Annulla</v-btn>
         <v-btn
@@ -89,3 +91,19 @@
     }
   }
 </script>
+
+<style>
+  html {
+    overflow: hidden !important;
+  }
+
+  .imageDialog {
+    display: flex !important;
+    flex-direction: column;
+  }
+
+  .images {
+    flex-grow: 1;
+    overflow: auto;
+  }
+</style>

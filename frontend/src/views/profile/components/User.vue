@@ -6,24 +6,24 @@
           PROFILO UTENTE
         </div>
         <v-container style="display: flex; align-items: center; flex-direction: column">
-            <profile-avatar
-                v-if="!this.$store.getters.userAvatar || this.$store.getters.userAvatar === ''"
-                class="big-profile"
-                :username="this.$store.getters.userFullname"
-                customSize="150px"></profile-avatar>
           <div class="imageContainer"
                @mouseover = "this.wantToChangeAvatar = true"
-               @mouseleave="this.wantToChangeAvatar = false">
+               @mouseleave="this.wantToChangeAvatar = false"
+               @click="this.changeProfileImage()">
+            <profile-avatar
+                v-if="!this.$store.getters.userAvatar || this.$store.getters.userAvatar === ''"
+                :class="'big-profile '.concat(this.wantToChangeAvatar ? 'hover' : '')"
+                :username="this.$store.getters.userFullname"
+                customSize="150px"></profile-avatar>
+            <v-img v-else
+                :class="this.wantToChangeAvatar ? 'hover' : ''"
+                :src="this.$store.getters.userAvatar"
+                width="150px"></v-img>
             <v-icon
                 v-if="this.wantToChangeAvatar"
                 icon="mdi-pencil-outline"
                 style="font-size: 30px"
-                color="grey-darken-3"
-                @click="this.changeProfileImage()"></v-icon>
-            <v-img
-                :class="this.wantToChangeAvatar ? 'hover' : ''"
-                 :src="this.$store.getters.userAvatar"
-                 @click="this.changeProfileImage()" width="150px"></v-img>
+                color="grey-darken-3"></v-icon>
           </div>
         </v-container>
         <div class="text-center pb-1" style="font-weight: bold; font-size: 20px">{{ this.$store.getters.userFullname }}</div>
