@@ -144,6 +144,7 @@ export default {
         this.deleteTime = time;
         this.adminDialog = true;
       } else {
+        this.newBooking.players = [];
         this.newBooking.myTreat = false;
         this.newBooking.price = 5.5;
         this.duration = 1;
@@ -204,14 +205,6 @@ export default {
         }
       }
     },
-  },
-  mounted() {
-    this.socket.on("error", () => {
-      this.dialog = false;
-    });
-  },
-  unmounted() {
-    this.socket.disconnect();
   }
 };
 </script>

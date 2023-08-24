@@ -62,8 +62,8 @@ export default {
       }
     });
     this.socket.on("error", (msg) => {
-      alert(msg)
       this.loading = false;
+      alert(msg)
     });
     this.socket.on("new-transaction", (transactionData) => {
       const { transaction_type, amount, user } = transactionData;
