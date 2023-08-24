@@ -1,19 +1,13 @@
 <template>
   <v-row >
-    <v-col sm="12" md="4" class="align-self-baseline">
+    <v-col cols="12" md="4" class="align-self-baseline">
         <user />
-        <timeline  style="margin-top: 15px;"/>
     </v-col>
 
-    <v-col sm="12" md="8">
+    <v-col cols="12" md="8" class="align-self-baseline">
       <activity/>
     </v-col>
 
-  </v-row>
-  <v-row>
-    <v-col md="4" class="align-self-baseline">
-   
-    </v-col>
   </v-row>
 </template>
 

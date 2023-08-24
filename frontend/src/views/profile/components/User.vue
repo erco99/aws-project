@@ -1,5 +1,5 @@
 <template>
-  <v-card class="mx-auto rounded-4" elevation="4">
+  <v-card class="mx-auto rounded-4" elevation="4" height="292">
     <v-card-item class="justify-center">
       <div>
         <div class="text-overline mb-1 justify-center text-center">
