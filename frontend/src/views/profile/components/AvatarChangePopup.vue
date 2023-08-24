@@ -93,7 +93,7 @@
   }
 </script>
 
-<style>
+<style scoped>
   html {
     overflow: hidden !important;
   }
