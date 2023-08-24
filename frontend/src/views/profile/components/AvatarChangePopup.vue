@@ -4,8 +4,9 @@
       <v-card-title class="max-auto justify-center text-center"> Modifica l'immagine del tuo profilo </v-card-title>
       <v-card-text class="images">
       <v-row v-for="(item, typeNumber) in imagesTypes" :key="item" no-gutters>
-        <div class="pt-5 mx-auto justify-center text-center">{{ item.toUpperCase() }}</div>
-        <v-divider class="mb-4 border-opacity-100"></v-divider>
+        <v-col cols="12" style="vertical-align: text-top">
+          <div class="imagesHeader">{{ item.toUpperCase() }}</div>
+        </v-col>
         <v-col v-for="(image, imageNumber) in map.get(item)" :key="image" cols="12" sm="6">
           <v-card class="elevation-0 ma-0 pa-0 rounded-lg" :color="this.cardColor(this.getGlobalIndex(imageNumber, typeNumber))">
             <v-card-item class="justify-center">
@@ -57,7 +58,7 @@
           index: -1,
           path: ''
         },
-        selectedCardColor: "grey-lighten-1",
+        selectedCardColor: "blue-lighten-4",
         defaultCardColor: "white"
       }
     },
@@ -105,5 +106,14 @@
   .images {
     flex-grow: 1;
     overflow: auto;
+  }
+
+  .imagesHeader {
+    border-radius: 3px;
+    padding-left: 4px;
+    font-weight: bold;
+    color: white;
+    background-color: #90A4AE;
+    vertical-align: text-top;
   }
 </style>
