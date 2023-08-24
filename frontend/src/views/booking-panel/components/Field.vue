@@ -6,6 +6,7 @@ import AdminDialog from "./admin-dialog/AdminDialog.vue";
 import StatusDialog from "./status-dialog/Index.vue";
 import { stringfy, domainDate } from "./commons";
 import { useDisplay } from "vuetify";
+import io from "socket.io-client";
 export default {
   setup() {
     const display = useDisplay();
@@ -43,6 +44,7 @@ export default {
       adminDialog: false,
       statusDialog: false,
       deleteTime: {},
+      socket: io("http://localhost:10000"),
     };
   },
   watch: {
@@ -203,6 +205,14 @@ export default {
       }
     },
   },
+  mounted() {
+    this.socket.on("error", () => {
+      this.dialog = false;
+    });
+  },
+  unmounted() {
+    this.socket.disconnect();
+  }
 };
 </script>
 
