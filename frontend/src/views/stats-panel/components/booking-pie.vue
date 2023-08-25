@@ -61,9 +61,11 @@ export default {
   mounted() {
     getFieldDistribution({ year: new Date().getFullYear() }).then((response) => {
       const data = [...response.data];
-      for (let i = 0; i < data.length; i++) {
+      for (let i = 0; i < data.length;) {
         if (data[i].value === 0) {
           data.splice(i, 1)
+        } else {
+          i++;
         }
       }
       this.option.series[0].data = data;

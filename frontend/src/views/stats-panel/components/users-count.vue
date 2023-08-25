@@ -76,7 +76,6 @@ export default {
   mounted() {
     getUsersDistribution().then(response => {
       const { usersDistribution } = response.data;
-      console.log(usersDistribution);
       let totalCount = 0;
       for (const userCount of usersDistribution) {
         totalCount = totalCount + userCount.value;
