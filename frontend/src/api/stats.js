@@ -22,3 +22,10 @@ export function getUsersDistribution() {
         method: "get",
     })
 }
+
+export function getEarningsStats() {
+    return request({
+        url: "/stats/earningsStats",
+        method: "get",
+    })
+}

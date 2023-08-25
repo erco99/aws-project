@@ -138,10 +138,31 @@ async function sendMoney(req, res) {
   }
 }
 
+async function getEarningStats(req, res) {
+  const transactions = await Transactions.find({}).exec();
+
+  const data = {
+    positive: new Array(12).fill(0),
+    negative: new Array(12).fill(0),
+    earning: new Array(12).fill(0)}
+  for (const transaction of transactions) {
+    const month = parseInt(transaction.date.split("/")[1]) - 1;
+    if (transaction.description.split(" ")[0] === "Prenotazione") {
+      data.positive[month] = data.positive[month] + transaction.amount;
+    } else if (transaction.description.split(" ")[0] === "Rimborso") {
+      data.negative[month] = data.negative[month] - transaction.amount;
+    }
+    data.earning[month] = data.positive[month] + data.negative[month];
+  }
+
+  return res.status(200).json(data)
+}
+
 module.exports = {
   paymentMethodInsert, 
   depositWithdrawMoney, 
   getTransactions, 
   deletePaymentMethod,
-  sendMoney
+  sendMoney,
+  getEarningStats
 }

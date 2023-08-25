@@ -24,6 +24,7 @@ export default {
   data() {
     return {
       option: {
+        color: ["#2eb62c"],
         title: {
           text: "Prenotazioni per mese",
           left: "center"
