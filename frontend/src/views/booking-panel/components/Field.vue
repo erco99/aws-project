@@ -261,6 +261,7 @@ export default {
         v-for="n in closing - opening + 1"
         :key="n"
         v-bind="hourButtonProps(opening + n - 1)"
+        :day="day"
         @click="
           book({ hours: opening + n - 1, minutes: minutes })
         "></HourButton>

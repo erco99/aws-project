@@ -3,19 +3,38 @@ export default {
   props: {
     text: { type: Array, required: true },
     disabled: Boolean,
+    day: String,
   },
   computed: {
     computedClass() {
-      switch (this.$store.getters.userRole) {
-        case "admin":
-          return (this.disabled ? "disabled" : "enabled") + " button";
-        default:
-          return (
-            (this.disabled ? "disabled unclickable" : "enabled") + " button"
-          );
+      if (this.isPlayable) {
+        switch (this.$store.getters.userRole) {
+          case "admin":
+            return (this.disabled ? "disabled" : "enabled") + " button";
+          default:
+            return (
+                (this.disabled ? "disabled unclickable" : "enabled") + " button"
+            );
+        }
+      } else {
+        return "unplayable unclickable" + " button";
       }
     },
-  },
+    isPlayable() {
+      const today = new Date();
+      if (this.day === today.toISOString().split("T")[0]) {
+        const [ hours, minutes ] = this.text[1].split(":");
+        const delta = parseInt(hours) - today.getHours();
+        if (delta === 0) {
+          return (parseInt(minutes) - today.getMinutes()) > 0
+        } else {
+          return delta > 0;
+        }
+      } else {
+        return true;
+      }
+    }
+  }
 };
 </script>
 
@@ -49,6 +68,11 @@ export default {
 .disabled {
   font-size: x-small;
   background-color: #e53935;
+  color: #eeeeee;
+}
+
+.unplayable {
+  background-color: #61616f;
   color: #eeeeee;
 }
 
