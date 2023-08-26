@@ -22,11 +22,13 @@ export default {
   mounted() {
     getUsers().then((res) => {
       for (const user of res.data) {
-        this.users.push({
-          title: user.name.concat(" ", user.surname),
-          props: { subtitle: user.email },
-          value: user,
-        });
+        if (user.email !== this.$store.getters.userEmail) {
+          this.users.push({
+            title: user.name.concat(" ", user.surname),
+            props: {subtitle: user.email},
+            value: user,
+          });
+        }
       }
       this.usersCopy = [...this.users];
     });
