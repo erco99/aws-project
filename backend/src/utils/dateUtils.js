@@ -6,4 +6,8 @@ function dateToString(date) {
         day >= 10 ? day : '0' + day].join("-");
 }
 
-module.exports = { dateToString }
+function getMinutes(minutes) {
+    return minutes < 10 ? "0".concat(minutes) : minutes
+}
+
+module.exports = { dateToString, getMinutes }

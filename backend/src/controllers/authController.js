@@ -36,7 +36,11 @@ async function register(req, res) {
         const { otp, otp_hash, iat } = await otpUtils.generateOTP(email);
 
         // Send email with OTP
-        await sendOtpEmail(name, email, otp);
+        try {
+            await sendOtpEmail(name, email, otp);
+        } catch (error) {
+            return res.sendStatus(500).json({'message': 'Could not register'});
+        }
 
         // Set cookie with otp info
         const otpInfo = {hash: otp_hash, iat, attempts: 0};

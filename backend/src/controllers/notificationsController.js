@@ -1,6 +1,7 @@
 const notifications = require("../models/notifications");
 const bookings = require("../models/bookings");
 const bookingController = require("./bookingController");
+const { getMinutes } = require('../utils/dateUtils');
 
 async function getNotifications(socket, data) {
   const query = await notifications.find({ owners: data.owner }).sort({ createdAt: -1 });
@@ -9,12 +10,7 @@ async function getNotifications(socket, data) {
 
 async function notifyOwner(newBooking) {
   const title = "Prenotazione " + newBooking.day;
-  const subtitle =
-    newBooking.field +
-    " alle " +
-    newBooking.time.hours +
-    ":" +
-    newBooking.time.minutes;
+  const subtitle = "".concat(newBooking.field, " alle ", newBooking.time.hours,  ":", getMinutes(newBooking.time.minutes));
   let text = "La tua prenotazione è andata a buon fine. ";
   for (const player of newBooking.players) {
     text = text + player.name + " " + player.surname + ",";
@@ -39,12 +35,7 @@ async function notifyOwner(newBooking) {
 
 async function notifyPlayers(newBooking) {
   const title = "Invito " + newBooking.day;
-  const subtitle =
-    newBooking.field +
-    " alle " +
-    newBooking.time.hours +
-    ":" +
-    newBooking.time.minutes;
+  const subtitle = "".concat(newBooking.field, " alle ", newBooking.time.hours,  ":", getMinutes(newBooking.time.minutes));
   let text = newBooking.owner.name + " " + newBooking.owner.surname;
   if (newBooking.players.length === 3) {
     text = text + " ha organizzato un doppio con";
@@ -57,11 +48,16 @@ async function notifyPlayers(newBooking) {
   text =
     text +
     " se non ci sei puoi rifiutare l'invito cancellando la prenotazione. Hai tempo fino al giorno prima della prenotazione per decidere.";
+  const expirationHours = newBooking.time.hours - 1;
+  const expirationMinutes = newBooking.time.minutes;
   const notificationData = {
     title: title,
     subtitle: subtitle,
     text: text,
-    expiration: newBooking.day,
+    expiration: newBooking.day.concat(
+        "T",
+        expirationHours < 10 ? "0" + expirationHours : expirationHours, ":",
+        expirationMinutes < 10 ? "0" + expirationMinutes : expirationMinutes),
     owners: newBooking.players.map((player) => player.email),
     day: newBooking.day,
     field: newBooking.field,
@@ -77,12 +73,7 @@ async function notifyPlayers(newBooking) {
 
 async function notifyDelete(invitation) {
   const title = "Cancellazione " + invitation.day.toISOString().split("T")[0];
-  const subtitle =
-    invitation.field +
-    " alle " +
-    invitation.time.hours +
-    ":" +
-    invitation.time.minutes;
+  const subtitle = "".concat(invitation.field, " alle ", invitation.time.hours,  ":", getMinutes(invitation.time.minutes));
   const text =
     "La prenotazione è stata cancellata. Segnala all'amministratore eventuali refusi.";
   const notificationData = {
