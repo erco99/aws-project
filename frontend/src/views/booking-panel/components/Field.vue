@@ -266,7 +266,7 @@ export default {
         "></HourButton>
     </div>
   </div>
-  <v-dialog v-model="dialog" scrollable width="1024"
+  <v-dialog v-model="dialog" scrollable width="1024"  persistent
     ><v-card>
       <Header
         :hours="newBooking.time.hours"

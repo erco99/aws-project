@@ -77,7 +77,11 @@ export default {
 
 <template>
   <v-container fluid>
-    <v-card-text class="text-center">Con chi giochi?</v-card-text>
+    <v-card-text class="text-center">
+      <p class="font-weight-bold">
+        Con chi giochi?
+      </p>
+    </v-card-text>
     <v-row class="justify-center">
       <v-col cols="10">
         <v-select

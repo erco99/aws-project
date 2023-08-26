@@ -41,7 +41,11 @@ export default {
 
 <template>
   <v-container fluid>
-    <v-card-text class="text-center">Durata</v-card-text>
+    <v-card-text class="text-center">
+      <p class="font-weight-bold">
+        Durata
+      </p>
+    </v-card-text>
     <v-row class="justify-center">
       <v-col style="min-width: 120px" class="flex-grow-0">
         <v-radio-group
@@ -56,7 +60,11 @@ export default {
         </v-radio-group>
       </v-col>
     </v-row>
-    <v-card-text class="text-center">Cosa vuoi prenotare?</v-card-text>
+    <v-card-text class="text-center">
+      <p class="font-weight-bold">
+        Cosa vuoi prenotare?
+      </p>
+    </v-card-text>
     <v-row class="justify-center">
       <v-col style="min-width: 130px" class="flex-grow-0">
         <v-radio-group

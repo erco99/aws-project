@@ -92,7 +92,7 @@ export default {
         @duration-update="notifyDuration"
         @match-update="notifyMatch"></Est>
     </v-col>
-    <v-divier vertical></v-divier>
+    <v-divider vertical  width="20"></v-divider>
     <v-col cols="12" md="4" sm="5">
       <Middle
         :inside="inside"
@@ -102,6 +102,7 @@ export default {
         @services-update="notifyServices"
         @my-treat-update="notifyMyTreat"></Middle>
     </v-col>
+        <v-divider vertical></v-divider>
     <v-col cols="12" md="4" sm="8">
       <West
         :players-number="numberOfPlayers - 1"
@@ -109,3 +110,10 @@ export default {
     </v-col>
   </v-row>
 </template>
+
+<style scoped>
+.v-divider {
+  margin-top: 11px;
+  margin-bottom: 11px;
+}
+</style>

@@ -65,7 +65,11 @@ export default {
 
 <template>
   <v-container fluid>
-    <v-card-text class="text-center">Quali servizi vuoi attivare?</v-card-text>
+    <v-card-text class="text-center">
+      <p class="font-weight-bold">
+        Quali servizi vuoi attivare?
+      </p>
+    </v-card-text>
     <v-row class="justify-center">
       <v-col style="min-width: 190px" class="flex-grow-0">
         <v-switch
@@ -82,7 +86,11 @@ export default {
           label="Riscaldamento"></v-switch>
       </v-col>
     </v-row>
-    <v-card-text class="text-center">Totale costo prenotazione</v-card-text>
+    <v-card-text class="text-center">
+      <p class="font-weight-bold">
+        Totale costo prenotazione
+      </p>
+    </v-card-text>
     <v-card-text class="text-center py-0">{{ price }}</v-card-text>
     <v-row class="justify-center">
       <v-col style="min-width: 180px" class="flex-grow-0">
@@ -92,7 +100,11 @@ export default {
           v-model="myTreat"></v-checkbox>
       </v-col>
     </v-row>
-    <v-card-text class="text-center pt-0">Saldo disponibile</v-card-text>
+    <v-card-text class="text-center pt-0">
+      <p class="font-weight-bold">
+        Saldo disponibile
+      </p>
+    </v-card-text>
     <v-card-text
       class="text-center pt-0"
       :style="price > this.$store.getters.userBalance ? 'color:' + 'red' : ''"

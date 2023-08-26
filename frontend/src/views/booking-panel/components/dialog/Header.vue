@@ -32,7 +32,9 @@ export default {
   <v-row>
     <v-col cols="12" sm="4">
       <v-card-title class="text-center text-sm-left">
-        {{ name }}
+        <p class="font-weight-bold">
+          {{ name }}
+        </p>
       </v-card-title>
       <v-card-subtitle class="text-center text-sm-left">
         dalle
@@ -42,11 +44,17 @@ export default {
       </v-card-subtitle>
     </v-col>
     <v-col cols="12" sm="4">
-      <v-card-title class="text-center"> {{ getStringDay(day) }} </v-card-title>
+      <v-card-title class="text-center">
+        <p class="font-weight-bold">
+          {{ getStringDay(day) }} 
+        </p> 
+      </v-card-title>
     </v-col>
     <v-col cols="12" sm="4">
       <v-card-title class="text-center text-sm-right">
-        {{ getTemp(day, hours) }}
+        <p class="font-weight-bold">
+          {{ getTemp(day, hours) }}
+        </p>
       </v-card-title>
       <v-card-subtitle class="text-center text-sm-right">
         {{ getWeatherCodeString(day, hours) }}

@@ -21,7 +21,11 @@ export default {
 
 <template>
   <div role="button" :class="computedClass">
-    <div class="inner">{{ text[0] }}</div>
+    <div class="inner">
+           <p class="font-weight-bold">
+              {{ text[0] }}
+      </p>
+    </div>
     <div class="inner">{{ text[1] }}</div>
     <div class="inner">{{ text[2] }}</div>
     <div class="inner">{{ text[3] }}</div>
@@ -30,7 +34,7 @@ export default {
 
 <style scoped>
 .inner {
-  height: 25%;
+  height: 30%;
 }
 .button {
   border-radius: 3%;
