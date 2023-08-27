@@ -100,13 +100,6 @@
       const certAccept = useField('certAccept')
       const signupButtonLoading = ref(false)
 
-      // Default val for debug
-      full_name.value.value = "Utente Test"
-      email.value.value = "miho@lybyz.com"
-      number.value.value = "2668945637"
-      password.value.value = "123er56#"
-      retypePassword.value.value = "123er56#"
-
       const alert = ref(false);
 
       const store = useStore()
