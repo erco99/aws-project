@@ -36,7 +36,8 @@
           },
           legend: {
             data: ['Entrate', 'Uscite', 'Guadagno'],
-            left: 10
+            left: 'center',
+            top: 30
           },
           grid: {
             left: '3%',
