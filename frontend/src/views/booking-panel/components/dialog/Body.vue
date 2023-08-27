@@ -92,7 +92,8 @@ export default {
         @duration-update="notifyDuration"
         @match-update="notifyMatch"></Est>
     </v-col>
-    <v-divider vertical  width="20"></v-divider>
+    <v-divider vertical v-if="this.$vuetify.display.xs" style="margin-bottom: 0px" ></v-divider>
+    <v-divider vertical v-else></v-divider>
     <v-col cols="12" md="4" sm="5">
       <Middle
         :inside="inside"
@@ -102,7 +103,8 @@ export default {
         @services-update="notifyServices"
         @my-treat-update="notifyMyTreat"></Middle>
     </v-col>
-        <v-divider vertical></v-divider>
+    <v-divider v-if="this.$vuetify.display.xs" style="margin-top: 0px" ></v-divider>
+    <v-divider vertical v-else></v-divider>
     <v-col cols="12" md="4" sm="8">
       <West
         :players-number="numberOfPlayers - 1"
