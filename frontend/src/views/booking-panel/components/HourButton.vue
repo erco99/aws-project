@@ -4,6 +4,10 @@ export default {
     text: { type: Array, required: true },
     disabled: Boolean,
     day: String,
+    time: {
+      hours: { type: Number, required: true },
+      minutes: { type: Number, required: true }
+    }
   },
   computed: {
     computedClass() {
@@ -12,18 +16,17 @@ export default {
           case "admin":
             return (this.disabled ? "disabled" : "enabled") + " button";
           default:
-            return (
-                (this.disabled ? "disabled unclickable" : "enabled") + " button"
-            );
+            return ((this.disabled ? "disabled unclickable" : "enabled") + " button");
         }
       } else {
+        console.log("Not playable", this.text)
         return "unplayable unclickable" + " button";
       }
     },
     isPlayable() {
       const today = new Date();
       if (this.day === today.toISOString().split("T")[0]) {
-        const [ hours, minutes ] = this.text[1].split(":");
+        const { hours, minutes } = this.time;
         const delta = parseInt(hours) - today.getHours();
         if (delta === 0) {
           return (parseInt(minutes) - today.getMinutes()) > 0
