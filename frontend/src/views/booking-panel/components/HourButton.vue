@@ -51,7 +51,7 @@ export default {
 
 <style scoped>
 .inner {
-  height: 30%;
+  height: 25%;
 }
 .button {
   border-radius: 3%;
