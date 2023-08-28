@@ -11,16 +11,11 @@ export default {
   },
   computed: {
     computedClass() {
-      if (this.isPlayable) {
-        switch (this.$store.getters.userRole) {
-          case "admin":
-            return (this.disabled ? "disabled" : "enabled") + " button";
-          default:
-            return ((this.disabled ? "disabled unclickable" : "enabled") + " button");
-        }
-      } else {
-        console.log("Not playable", this.text)
-        return "unplayable unclickable" + " button";
+      switch (this.$store.getters.userRole) {
+        case "admin":
+          return (this.disabled ? "disabled" : this.isPlayable ? "enabled" : "unplayable unclickable") + " button";
+        default:
+          return ((this.disabled ? "disabled unclickable" : this.isPlayable ? "enabled" : "unplayable unclickable") + " button");
       }
     },
     isPlayable() {
