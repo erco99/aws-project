@@ -2,7 +2,7 @@
   <v-card-text>
     <v-form @submit.prevent="submit">
 
-      <div class="text-center text-medium-emphasis text-subtitle-1 font-weight-bold pb-10">ASD Forum Tennis</div>
+      <div class="text-center text-medium-emphasis text-subtitle-1 font-weight-bold pb-10">A.S.D. Tennis Pro</div>
 
       <v-fade-transition>
       <v-alert closable text="Incorrect email of password." variant="tonal" color="error" v-model="alert"></v-alert>
