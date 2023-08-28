@@ -221,7 +221,7 @@ const actions = {
     return new Promise((resolve, reject) => {
       getAllUnreadNotifications({ email: state.userData.email }).then((response) => {
         console.log("Unread notifications: ", response.data.unread);
-        commit('notifications/ADD_UNREAD', response.data.unread, { root: true })
+        commit('notifications/SET_UNREAD', response.data.unread, { root: true })
         resolve()
       }).catch(error => {
         reject(error);
