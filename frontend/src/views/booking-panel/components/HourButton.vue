@@ -31,6 +31,11 @@ export default {
       } else {
         return true;
       }
+    },
+    innerClass() {
+      console.log(this.text)
+      console.log(this.text[1].match("[0-2][0-9]:[0-6][0-9]"))
+      return this.text[1].match("[0-2][0-9]:[0-6][0-9]") ? "innerHour" : "innerText";
     }
   }
 };
@@ -38,21 +43,26 @@ export default {
 
 <template>
   <div role="button" :class="computedClass">
-    <div class="inner">
+    <div :class="innerClass">
            <p class="font-weight-bold">
               {{ text[0] }}
       </p>
     </div>
-    <div class="inner">{{ text[1] }}</div>
-    <div class="inner">{{ text[2] }}</div>
-    <div class="inner">{{ text[3] }}</div>
+    <div :class="innerClass">{{ text[1] }}</div>
+    <div :class="innerClass">{{ text[2] }}</div>
+    <div :class="innerClass">{{ text[3] }}</div>
   </div>
 </template>
 
 <style scoped>
-.inner {
+.innerHour {
+  height: 30%;
+}
+
+.innerText {
   height: 25%;
 }
+
 .button {
   border-radius: 3%;
   margin-right: 1px;
