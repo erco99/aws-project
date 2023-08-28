@@ -3,7 +3,7 @@
   <v-card-text :style="{visibility: visible}">
     <v-form @submit.prevent="signup">
 
-      <div class="text-center text-medium-emphasis text-subtitle-1 font-weight-bold pb-8 pt-5">ASD Forum Tennis</div>
+      <div class="text-center text-medium-emphasis text-subtitle-1 font-weight-bold pb-8 pt-5">A.S.D. Tennis Pro</div>
 
       <v-fade-transition>
       <v-alert density="compact" closable text="L'account esiste già" variant="tonal" color="error" v-model="alert"></v-alert>
