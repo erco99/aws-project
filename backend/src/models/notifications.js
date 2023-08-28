@@ -13,6 +13,7 @@ const notificationSchema = mongoose.Schema({
   inviter: String,
   invitationId: String,
   type: String,
+  read: { type: Boolean, default: false }
   },
   {
     timestamps: true

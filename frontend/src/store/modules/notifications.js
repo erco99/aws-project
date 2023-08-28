@@ -6,8 +6,12 @@ const mutations = {
     NEW_UNREAD: (state) => {
         state.unread = state.unread + 1;
     },
-    RESET_UNREAD: (state) => {
-        state.unread = 0;
+    ADD_UNREAD: (state, unread) => {
+      state.unread = state.unread + unread;
+    },
+    DECR_UNREAD: (state, read) => {
+        const delta = state.unread - read;
+        state.unread = delta > 0 ? delta : 0;
     }
 }
 

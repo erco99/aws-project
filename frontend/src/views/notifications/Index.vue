@@ -61,7 +61,7 @@ export default {
     this.loadNextNotifications()
     // Load first 'notificationPerPage' notifications
     this.socket.emit("getNotifications", { owner: this.$store.getters.userEmail, from: 0, to: this.notificationPerPage });
-    this.$store.commit("notifications/RESET_UNREAD");
+    this.$store.commit("notifications/DECR_UNREAD", this.notificationPerPage);
   },
   unmounted() {
     this.socket.disconnect();
@@ -85,6 +85,8 @@ export default {
       Object.defineProperty(notification, 'color', { value: 'warning' })
       // Add element to the beginning because it is newer
       this.notifications.unshift(notification);
+      // Set notification to read
+      this.$store.dispatch('user/setNotificationToRead', notification);
     },
     handleRefresh(notification) {
       for (let i = 0; i < this.notifications.length; i++) {
@@ -151,6 +153,7 @@ export default {
             owner: this.$store.getters.userEmail,
             from: this.currentNotificationPerPage,
             to: this.currentNotificationPerPage + this.notificationPerPage });
+          this.$store.commit("notifications/DECR_UNREAD", this.notificationPerPage);
         }
       }
     }

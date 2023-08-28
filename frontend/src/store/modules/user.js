@@ -9,7 +9,7 @@ import {
   cancelRegistration,
   changePassword,
   resetPassword,
-  changeAvatar, getAllPlayedBookings
+  changeAvatar, getAllPlayedBookings, getAllUnreadNotifications, setNotificationToRead
 } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/authentication'
 import { paymentMethodInsert, depositWithdrawMoney, deletePaymentMethod} from '@/api/credits';
@@ -213,6 +213,28 @@ const actions = {
         resolve(response.data.playedBookings)
       }).catch(error => {
         reject(error)
+      })
+    })
+  },
+
+  getAllUnreadNotifications({ commit }) {
+    return new Promise((resolve, reject) => {
+      getAllUnreadNotifications({ email: state.userData.email }).then((response) => {
+        console.log("Unread notifications: ", response.data.unread);
+        commit('notifications/ADD_UNREAD', response.data.unread, { root: true })
+        resolve()
+      }).catch(error => {
+        reject(error);
+      })
+    })
+  },
+
+  setNotificationToRead({ commit }, notification) {
+    return new Promise((resolve, reject) => {
+      setNotificationToRead({ notification }).then(() => {
+        resolve();
+      }).catch(error => {
+        reject(error);
       })
     })
   }

@@ -98,3 +98,19 @@ export function getAllPlayedBookings(email) {
     params: email
   })
 }
+
+export function getAllUnreadNotifications(email) {
+  return request({
+    url: "/users/getAllUnreadNotifications",
+    method: "get",
+    params: email
+  })
+}
+
+export function setNotificationToRead(data) {
+  return request({
+    url: "/users/setNotificationToRead",
+    method: "post",
+    data
+  })
+}

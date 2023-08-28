@@ -5,7 +5,27 @@ const { getMinutes } = require('../utils/dateUtils');
 
 async function getNotifications(socket, data) {
   const query = await notifications.find({ owners: data.owner }).sort({ createdAt: -1 });
-  socket.emit("notifications", query.slice(data.from, data.to));
+  // Requested notifications must be setted to true
+  const slicedNotifications = query.slice(data.from, data.to);
+  for (const notification of slicedNotifications) {
+    notification.read = true;
+    await notification.save();
+  }
+  socket.emit("notifications", slicedNotifications);
+}
+
+async function getUnreadNotifications(req, res) {
+  if (!req.query.email) return res.sendStatus(400);
+  const unread = await notifications.find({owners: req.query.email, read: false});
+  res.status(200).json({unread: unread.length});
+}
+
+async function setNotificationToRead(req, res) {
+  if (!req.body.notification) return res.sendStatus(400);
+  const { day, field, time } = req.body.notification;
+  await notifications.updateOne({day, field, time}, {read: true});
+
+  return res.sendStatus(200);
 }
 
 async function notifyOwner(newBooking) {
@@ -152,4 +172,6 @@ module.exports = {
   findInvitation,
   findNotificationById,
   findByInvitationId,
+  getUnreadNotifications,
+  setNotificationToRead
 };

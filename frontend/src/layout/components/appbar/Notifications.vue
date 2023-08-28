@@ -16,6 +16,9 @@ export default {
       const unreadNotificationsNumber = this.$store.getters.unreadNotificationsNumber;
       return unreadNotificationsNumber < 99 ? unreadNotificationsNumber : "99+";
     }
+  },
+  async mounted() {
+    await this.$store.dispatch('user/getAllUnreadNotifications');
   }
 }
 </script>
