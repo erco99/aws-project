@@ -1,5 +1,5 @@
 <template>
-  <v-card class="mx-auto rounded-4" elevation="4">
+  <v-card class="mx-auto rounded-0" elevation="4">
     <v-card-item>
       <v-chart class="chart" :option="option" autoresize></v-chart>
     </v-card-item>

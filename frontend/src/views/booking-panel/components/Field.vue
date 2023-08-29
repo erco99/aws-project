@@ -269,7 +269,7 @@ export default {
     </div>
   </div>
   <v-dialog v-model="dialog" scrollable width="1024"  persistent
-    ><v-card>
+    ><v-card >
       <Header
         :hours="newBooking.time.hours"
         :minutes="newBooking.time.minutes"

@@ -1,5 +1,5 @@
 <template>
-  <v-container class="container">
+  <div>
     <v-row>
       <v-col cols="12" lg="8">
         <BookingsGraph></BookingsGraph>
@@ -18,7 +18,7 @@
         <EarningsGraph></EarningsGraph>
       </v-col>
     </v-row>
-  </v-container>
+  </div>
 </template>
 
 <script>

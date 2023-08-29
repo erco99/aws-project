@@ -124,7 +124,7 @@ export default {
 <template>
   <div class="mx-auto">
     <DayPicker @day-update="(newDay) => (day = newDay)"></DayPicker>
-    <v-card :loading="loading" class="mx-auto mt-4 mb-4" elevation="4">
+    <v-card :loading="loading" class="mx-auto rounded-0 mt-4 mb-4" elevation="4">
       <div class="overflow-x-auto px-4 py-2">
         <div class="py-2" v-for="field in fields" :key="field.name">
           <Field

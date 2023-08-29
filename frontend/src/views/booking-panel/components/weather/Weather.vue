@@ -1,5 +1,5 @@
 <template>
-  <v-card class="mx-auto" elevation="4">
+  <v-card class="mx-auto rounded-0" elevation="4">
     <v-card-title class="text-center">{{ getWeatherHeaderString }}</v-card-title>
     <v-divider class="mx-auto" :thickness="2" style="width: 95%"></v-divider>
     <div class="loading-circular" v-if="(!this.dataReady || this.positionAcquired.acquired === false) && !error">
