@@ -117,7 +117,7 @@
         <v-btn
           outlined
           width="150"
-          style="margin-right: 5px"
+          style="margin-right: 5px; margin-top: 3px"
           color="blue"
           text="Modifica"
           @click="dialog = true; this.emptySpaces(); paymentModify=true;"
@@ -125,6 +125,7 @@
         <v-btn
           outlined
           width="150"
+          style="margin-top: 3px"
           color="red"
           text="Elimina"
           @click="deleteDialog = true;"

@@ -22,7 +22,7 @@
           operationType = 'positive';
         "
         color="green-darken-4"
-        style="margin-right: 5px"
+        style="margin-right: 5px; margin-top: 3px"
         width="150">
         Deposita
       </v-btn>
@@ -33,7 +33,7 @@
           operationType = 'negative';
         "
         color="red-darken-4"
-        style="margin-right: 5px"
+        style="margin-right: 5px; margin-top: 3px "
         width="150">
         Ritira
       </v-btn>
@@ -44,6 +44,7 @@
           operationType = 'send';
         "
         color="yellow-darken-4"
+        style="margin-top: 3px"
         width="150">
         Invia
       </v-btn>
