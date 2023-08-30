@@ -13,9 +13,9 @@ export default {
     computedClass() {
       switch (this.$store.getters.userRole) {
         case "admin":
-          return (this.disabled ? "disabled" : this.isPlayable ? "enabled" : "unplayable unclickable") + " button";
+          return (this.isPlayable ? this.disabled ? "disabled" : "enabled" : (this.disabled ? "disabled" :  "unplayable") + " unclickable") + " button";
         default:
-          return ((this.disabled ? "disabled unclickable" : this.isPlayable ? "enabled" : "unplayable unclickable") + " button");
+          return (this.isPlayable ? this.disabled ? "disabled unclickable" : "enabled" : (this.disabled ? "disabled" :  "unplayable") + " unclickable") + " button";
       }
     },
     isPlayable() {
