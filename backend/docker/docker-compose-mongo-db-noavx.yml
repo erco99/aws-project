@@ -32,6 +32,8 @@ services:
       - ./db-data/:/db-data
     command: /bin/bash -c "mongorestore --host=mongodb -d aws-project-db -c users /db-data/aws-project-db/users.bson &&
                            mongorestore --host=mongodb -d aws-project-db -c fields /db-data/aws-project-db/fields.bson &&
-                           mongorestore --host=mongodb -d aws-project-db -c bookings /db-data/aws-project-db/bookings.bson"
+                           mongorestore --host=mongodb -d aws-project-db -c bookings /db-data/aws-project-db/bookings.bson &&
+                           mongorestore --host=mongodb -d aws-project-db -c notifications /db-data/aws-project-db/notifications &&
+                           mongorestore --host=mongodb -d aws-project-db -c transactions /db-data/aws-project-db/transactions"
     env_file:
       - config.env
